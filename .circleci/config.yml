@@ -77,13 +77,13 @@ commands:
       - run:
           name: Build lambda
           command: |
-            cd ./BaseApi/
+            cd ./ApiAuthTokenGenerator/
             chmod +x ./build.sh
             ./build.sh
       - run:
           name: Deploy lambda
           command: |
-            cd ./BaseApi/
+            cd ./ApiAuthTokenGenerator/
             sls deploy --stage <<parameters.stage>> --conceal
 
 jobs:
@@ -104,10 +104,10 @@ jobs:
       - setup_remote_docker
       - run:
           name: build
-          command: docker-compose build base-api-test
+          command: docker-compose build api-auth-token-generator-test
       - run:
           name: Run tests
-          command: docker-compose run base-api-test
+          command: docker-compose run api-auth-token-generator-test
   assume-role-development:
     executor: docker-python
     steps:
