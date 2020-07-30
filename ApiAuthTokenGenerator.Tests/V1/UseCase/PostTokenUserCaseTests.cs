@@ -27,11 +27,16 @@ namespace ApiAuthTokenGenerator.Tests.V1.UseCase
         [Test]
         public void UseCaseShouldCallHelperMethodToGenerateJwtToken()
         {
-
+            var tokenRequest = new TokenRequestObject
+            {
+                Consumer = _faker.Random.String(),
+                ConsumerType = _faker.Random.String(5),
+                ExpiresAt = _faker.Date.Future()
+            };
             var jwtTokenResult = _faker.Random.AlphaNumeric(20);
             _mockGenerateJwtHelper.Setup(x => x.GenerateJwtToken(It.IsAny<GenerateJwtRequest>())).Returns(jwtTokenResult);
 
-            _classUnderTest.Execute(It.IsAny<TokenRequestObject>());
+            _classUnderTest.Execute(tokenRequest);
 
             _mockGenerateJwtHelper.Verify(x => x.GenerateJwtToken(It.IsAny<GenerateJwtRequest>()), Times.Once);
         }

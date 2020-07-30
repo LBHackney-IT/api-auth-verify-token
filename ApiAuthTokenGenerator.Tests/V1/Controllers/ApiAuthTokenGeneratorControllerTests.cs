@@ -35,7 +35,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Controllers
         {
             var response = new GenerateTokenResponse();
             _mockPostTokenUseCase.Setup(x => x.Execute(It.IsAny<TokenRequestObject>())).Returns(response);
-             _classUnderTest.GenerateToken(It.IsAny<TokenRequestObject>());
+            _classUnderTest.GenerateToken(It.IsAny<TokenRequestObject>());
 
             _mockPostTokenUseCase.Verify(x => x.Execute(It.IsAny<TokenRequestObject>()), Times.Once);
         }
@@ -59,7 +59,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Controllers
             var result = _classUnderTest.GenerateToken(It.IsAny<TokenRequestObject>()) as CreatedAtActionResult;
 
             result.Should().NotBeNull();
-            result.StatusCode.Should().Be(201);       
+            result.StatusCode.Should().Be(201);
         }
     }
 }

@@ -19,9 +19,9 @@ namespace ApiAuthTokenGenerator.V1.UseCase
         }
         public GenerateTokenResponse Execute(TokenRequestObject tokenRequest)
         {
-           //TODO call gateway to insert data into DB
+            //TODO call gateway to insert data into DB
             var jwtToken = _generateJwtHelper.GenerateJwtToken
-                (GenerateJwtFactory.ToJwtRequest(tokenRequest,1)); //TODO replace ID with gateway response
+                (GenerateJwtFactory.ToJwtRequest(tokenRequest, 1)); //TODO replace ID with gateway response
             if (!string.IsNullOrEmpty(jwtToken))
             {
                 //TODO return token

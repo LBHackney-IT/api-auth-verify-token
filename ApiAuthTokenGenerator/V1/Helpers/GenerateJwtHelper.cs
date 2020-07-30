@@ -30,13 +30,13 @@ namespace ApiAuthTokenGenerator.V1.Helpers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
-            if(jwtRequestObject.ExpiresAt != DateTime.MinValue)
+            if (jwtRequestObject.ExpiresAt != DateTime.MinValue)
             {
                 //expiration date has been provided
                 tokenDescriptor.Expires = jwtRequestObject.ExpiresAt;
             }
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return tokenHandler.WriteToken(token); 
+            return tokenHandler.WriteToken(token);
         }
     }
 }
