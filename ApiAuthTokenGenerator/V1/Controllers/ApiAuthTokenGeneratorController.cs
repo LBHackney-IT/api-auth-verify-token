@@ -9,11 +9,9 @@ using System.Net.Mime;
 namespace ApiAuthTokenGenerator.V1.Controllers
 {
     [ApiController]
-    //TODO: Rename to match the APIs endpoint
     [Route("api/v1/tokens")]
     [Produces("application/json")]
     [ApiVersion("1.0")]
-    //TODO: rename class to match the API name
     public class ApiAuthTokenGeneratorController : BaseController
     {
         //Not removing GET usecases for now as will be used in future endpoints
