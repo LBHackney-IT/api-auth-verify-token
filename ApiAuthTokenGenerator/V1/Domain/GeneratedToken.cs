@@ -1,11 +1,8 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace ApiAuthTokenGenerator.V1.Boundary.Response
+namespace ApiAuthTokenGenerator.V1.Domain
 {
-    public class GenerateTokenResponse
+    public class GeneratedToken
     {
         public int Id { get; set; }
         public string Token { get; set; }

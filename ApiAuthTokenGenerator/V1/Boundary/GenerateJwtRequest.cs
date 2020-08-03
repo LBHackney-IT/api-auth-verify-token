@@ -8,8 +8,8 @@ namespace ApiAuthTokenGenerator.V1.Boundary
     public class GenerateJwtRequest
     {
         public int Id { get; set; }
-        public string ConsumerType { get; set; }
+        public int ConsumerType { get; set; }
         public string ConsumerName { get; set; }
-        public DateTime ExpiresAt { get; set; }
+        public DateTime? ExpiresAt { get; set; }
     }
 }

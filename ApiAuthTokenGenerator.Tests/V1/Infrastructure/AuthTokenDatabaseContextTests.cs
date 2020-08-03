@@ -1,6 +1,7 @@
 using System.Linq;
 using ApiAuthTokenGenerator.Tests.V1.Helper;
 using ApiAuthTokenGenerator.V1.Infrastructure;
+using FluentAssertions;
 using NUnit.Framework;
 
 namespace ApiAuthTokenGenerator.Tests.V1.Infrastructure
@@ -11,14 +12,16 @@ namespace ApiAuthTokenGenerator.Tests.V1.Infrastructure
         [Test]
         public void CanGetADatabaseEntity()
         {
-            var databaseEntity = DatabaseEntityHelper.CreateDatabaseEntity();
+            //remove any record that might be left in the table
+            DatabaseContext.RemoveRange(DatabaseContext.Tokens);
+            var databaseEntity = AuthTokenDatabaseEntityHelper.CreateDatabaseEntity();
 
             DatabaseContext.Add(databaseEntity);
             DatabaseContext.SaveChanges();
 
-            var result = DatabaseContext.DatabaseEntities.ToList().FirstOrDefault();
+            var result = DatabaseContext.Tokens.ToList().FirstOrDefault();
 
-            Assert.AreEqual(result, databaseEntity);
+            result.Should().Be(databaseEntity);
         }
     }
 }

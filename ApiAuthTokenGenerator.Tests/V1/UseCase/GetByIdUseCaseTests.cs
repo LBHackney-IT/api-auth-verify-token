@@ -7,13 +7,13 @@ namespace ApiAuthTokenGenerator.Tests.V1.UseCase
 {
     public class GetByIdUseCaseTests
     {
-        private Mock<IExampleGateway> _mockGateway;
+        private Mock<IAuthTokenDatabaseGateway> _mockGateway;
         private GetByIdUseCase _classUnderTest;
 
         [SetUp]
         public void SetUp()
         {
-            _mockGateway = new Mock<IExampleGateway>();
+            _mockGateway = new Mock<IAuthTokenDatabaseGateway>();
             _classUnderTest = new GetByIdUseCase(_mockGateway.Object);
         }
 

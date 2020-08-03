@@ -1,6 +1,7 @@
 using ApiAuthTokenGenerator.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Npgsql;
 using NUnit.Framework;
 
 namespace ApiAuthTokenGenerator.Tests
@@ -8,25 +9,22 @@ namespace ApiAuthTokenGenerator.Tests
     [TestFixture]
     public class DatabaseTests
     {
-        private IDbContextTransaction _transaction;
-        protected DatabaseContext DatabaseContext { get; private set; }
+        protected TokenDatabaseContext DatabaseContext { get; private set; }
 
         [SetUp]
         public void RunBeforeAnyTests()
         {
             var builder = new DbContextOptionsBuilder();
             builder.UseNpgsql(ConnectionString.TestDatabase());
-            DatabaseContext = new DatabaseContext(builder.Options);
-
+            DatabaseContext = new TokenDatabaseContext(builder.Options);
             DatabaseContext.Database.EnsureCreated();
-            _transaction = DatabaseContext.Database.BeginTransaction();
+            DatabaseContext.Database.BeginTransaction();
         }
 
         [TearDown]
         public void RunAfterAnyTests()
         {
-            _transaction.Rollback();
-            _transaction.Dispose();
+            DatabaseContext.Database.RollbackTransaction();
         }
     }
 }
