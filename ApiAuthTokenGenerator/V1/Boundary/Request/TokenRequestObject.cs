@@ -51,6 +51,7 @@ namespace ApiAuthTokenGenerator.V1.Boundary.Request
         /// <example>
         /// 2020-05-15
         /// </example>
+        [ExpiryDateValidationAttribute(ErrorMessage = "Token expiry date should be a future date")]
         public DateTime? ExpiresAt { get; set; }
     }
 }
