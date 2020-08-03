@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace ApiAuthTokenGenerator.Tests.V1.UseCase
 {
-    public class PostTokenUserCaseTests
+    public class PostTokenUseCaseTests
     {
         private PostTokenUseCase _classUnderTest;
         private Mock<IGenerateJwtHelper> _mockGenerateJwtHelper;
