@@ -1,7 +1,9 @@
 using ApiAuthTokenGenerator.V1.Factories;
-using ApiAuthTokenGenerator.V1.Infrastructure;
+using ApiAuthTokenGenerator.V1.Domain;
 using FluentAssertions;
 using NUnit.Framework;
+using AutoFixture;
+using ApiAuthTokenGenerator.V1.Infrastructure;
 
 namespace ApiAuthTokenGenerator.Tests.V1.Factories
 {
@@ -10,14 +12,5 @@ namespace ApiAuthTokenGenerator.Tests.V1.Factories
     {
         //TODO: add assertions for all the fields being mapped in `EntityFactory.ToDomain()`. Also be sure to add test cases for
         // any edge cases that might exist.
-        [Test]
-        public void CanMapADatabaseEntityToADomainObject()
-        {
-            var databaseEntity = new DatabaseEntity();
-            var entity = databaseEntity.ToDomain();
-
-            databaseEntity.Id.Should().Be(entity.Id);
-            databaseEntity.CreatedAt.Should().BeSameDateAs(entity.CreatedAt);
-        }
     }
 }

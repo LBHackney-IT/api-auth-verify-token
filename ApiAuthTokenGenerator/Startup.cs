@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using ApiAuthTokenGenerator.V1.Gateways;
+using ApiAuthTokenGenerator.V1.Helpers;
+using ApiAuthTokenGenerator.V1.Helpers.Interfaces;
 using ApiAuthTokenGenerator.V1.Infrastructure;
 using ApiAuthTokenGenerator.V1.UseCase;
 using ApiAuthTokenGenerator.V1.UseCase.Interfaces;
@@ -108,19 +110,25 @@ namespace ApiAuthTokenGenerator
             ConfigureDbContext(services);
             RegisterGateways(services);
             RegisterUseCases(services);
+            RegisterHelpers(services);
         }
 
         private static void ConfigureDbContext(IServiceCollection services)
         {
             var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
-            services.AddDbContext<DatabaseContext>(
+            services.AddDbContext<TokenDatabaseContext>(
                 opt => opt.UseNpgsql(connectionString));
         }
 
         private static void RegisterGateways(IServiceCollection services)
         {
-            services.AddScoped<IExampleGateway, ExampleGateway>();
+            services.AddScoped<IAuthTokenDatabaseGateway, AuthTokenDatabaseGateway>();
+        }
+
+        private static void RegisterHelpers(IServiceCollection services)
+        {
+            services.AddScoped<IGenerateJwtHelper, GenerateJwtHelper>();
         }
 
         private static void RegisterUseCases(IServiceCollection services)

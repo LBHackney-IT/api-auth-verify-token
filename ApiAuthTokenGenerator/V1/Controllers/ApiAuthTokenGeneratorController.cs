@@ -1,5 +1,6 @@
 using ApiAuthTokenGenerator.V1.Boundary.Request;
 using ApiAuthTokenGenerator.V1.Boundary.Response;
+using ApiAuthTokenGenerator.V1.Domain;
 using ApiAuthTokenGenerator.V1.UseCase.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -70,10 +71,13 @@ namespace ApiAuthTokenGenerator.V1.Controllers
                 var response = _postTokenUseCase.Execute(tokenRequest);
                 return CreatedAtAction("GetToken", new { id = response.Id }, response);
             }
-            catch (Exception)
+            catch (TokenNotInsertedException)
             {
-                //TODO replace with custom exception
-                throw;
+                return StatusCode(500, "There was a problem inserting the token data into the database.");
+            }
+            catch (JwtTokenNotGeneratedException)
+            {
+                return StatusCode(500, "There was a problem generating a JWT token");
             }
         }
     }

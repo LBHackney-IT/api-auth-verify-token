@@ -25,7 +25,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Factories
             var tokenRequest = new TokenRequestObject
             {
                 Consumer = _faker.Random.String(),
-                ConsumerType = _faker.Random.String(5),
+                ConsumerType = _faker.Random.Int(5),
                 ExpiresAt = _faker.Date.Future()
             };
 

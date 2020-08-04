@@ -22,7 +22,7 @@ namespace ApiAuthTokenGenerator.V1.Boundary.Request
         /// service
         /// </example>
         [Required]
-        public string ConsumerType { get; set; }
+        public int ConsumerType { get; set; }
         /// <example>
         /// MaT
         /// </example>
@@ -32,12 +32,12 @@ namespace ApiAuthTokenGenerator.V1.Boundary.Request
         /// tenancy-information-api
         /// </example>
         [Required]
-        public string ApiName { get; set; }
+        public int ApiName { get; set; }
         /// <example>
         /// /tenancies
         /// </example>
         [Required]
-        public string ApiEndpoint { get; set; }
+        public int ApiEndpoint { get; set; }
         /// <example>
         /// staging
         /// </example>
@@ -51,6 +51,7 @@ namespace ApiAuthTokenGenerator.V1.Boundary.Request
         /// <example>
         /// 2020-05-15
         /// </example>
-        public DateTime ExpiresAt { get; set; }
+        [ExpiryDateValidationAttribute(ErrorMessage = "Token expiry date should be a future date")]
+        public DateTime? ExpiresAt { get; set; }
     }
 }
