@@ -22,7 +22,7 @@ namespace ApiAuthTokenGenerator.V1.Gateways
             var tokenToInsert = new AuthTokens
             {
                 ApiEndpointNameLookupId = tokenRequestObject.ApiEndpoint,
-                ApiNameLookupId = tokenRequestObject.ApiName,
+                ApiLookupId = tokenRequestObject.ApiName,
                 ConsumerName = tokenRequestObject.Consumer,
                 ConsumerTypeLookupId = tokenRequestObject.ConsumerType,
                 Environment = tokenRequestObject.Environment,

@@ -16,8 +16,8 @@ CREATE TABLE consumer_type_lookup (
 
 CREATE TABLE tokens (
 	id   int PRIMARY KEY,
-	api_name_lookup int REFERENCES api_lookup(id),
-	api_endpoint_lookup int REFERENCES api_endpoint_lookup(id),
+	api_lookup_id int REFERENCES api_lookup(id),
+	api_endpoint_lookup_id int REFERENCES api_endpoint_lookup(id),
 	environment varchar(255),
 	consumer_name varchar(255),
 	consumer_type_lookup int REFERENCES consumer_type_lookup(id),

@@ -63,7 +63,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Gateways
             defaultRecordRetrieved.ConsumerName.Should().Be(tokenRequest.Consumer);
             defaultRecordRetrieved.AuthorizedBy.Should().Be(tokenRequest.AuthorizedBy);
             defaultRecordRetrieved.ApiEndpointNameLookupId.Should().Be(tokenRequest.ApiEndpoint);
-            defaultRecordRetrieved.ApiNameLookupId.Should().Be(tokenRequest.ApiName);
+            defaultRecordRetrieved.ApiLookupId.Should().Be(tokenRequest.ApiName);
         }
     }
 }

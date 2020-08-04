@@ -19,7 +19,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helper
             {
                 Id = entity.Id,
                 ApiEndpointNameLookupId = entity.ApiEndpointNameLookupId,
-                ApiNameLookupId = entity.ApiNameLookupId,
+                ApiLookupId = entity.ApiLookupId,
                 AuthorizedBy = entity.AuthorizedBy,
                 ConsumerName = entity.ConsumerName,
                 ConsumerTypeLookupId = entity.ConsumerTypeLookupId,
