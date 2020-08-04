@@ -5,7 +5,7 @@ CREATE TABLE api_lookup (
 
 CREATE TABLE api_endpoint_lookup (
 	id int PRIMARY KEY,
-	api_name_lookup int REFERENCES api_lookup(id),
+	api_lookup_id int REFERENCES api_lookup(id),
 	api_endpoint_name varchar(255)
 );
 
