@@ -67,7 +67,7 @@ module "postgres_db_staging" {
   db_identifier = "auth-token-generator-dev-db"
   db_instance_class = "db.t2.micro"
   db_name = "auth-token-generator_db"
-  db_port  = 5004
+  db_port  = 5101
   db_username = data.aws_ssm_parameter.auth_token_generator_postgres_username.value
   db_password = data.aws_ssm_parameter.auth_token_generator_postgres_db_password.value
   subnet_ids = data.aws_subnet_ids.staging_private_subnets.ids
