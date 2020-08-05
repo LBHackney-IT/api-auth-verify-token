@@ -1,4 +1,4 @@
-service: auth-token-generator-api
+service: api-auth-token-generator
 provider:
   name: aws
   runtime: dotnetcore3.1
@@ -16,7 +16,7 @@ provider:
 
 package:
 # TODO: Rename zipfile in build.sh and build.cmd to match this
-  artifact: ./bin/release/netcoreapp3.1/auth-token-generator-api.zip
+  artifact: ./bin/release/netcoreapp3.1/api-auth-token-generator.zip
 
 functions:
   ApiAuthTokenGenerator:
@@ -24,7 +24,7 @@ functions:
     handler: ApiAuthTokenGenerator::ApiAuthTokenGenerator.LambdaEntryPoint::FunctionHandlerAsync
     role: lambdaExecutionRole
     environment:
-      CONNECTION_STRING: Host=${ssm:/auth-token-generator-api/${self:provider.stage}/postgres-hostname};Port=${ssm:/auth-token-generator-api/${self:provider.stage}/postgres-port};Database=auth-token-generator-api-mirror;Username=${ssm:/auth-token-generator-api/${self:provider.stage}/postgres-username};Password=${ssm:/auth-token-generator-api/${self:provider.stage}/postgres-password}
+      CONNECTION_STRING: Host=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-hostname};Port=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-port};Database=api-auth-token-generator-mirror;Username=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-username};Password=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-password}
     events:
       - http:
           path: /{proxy+}
