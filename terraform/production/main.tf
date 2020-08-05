@@ -33,7 +33,7 @@ data "aws_vpc" "production_vpc" {
     Name = "vpc-production-apis-production"  
     }
 }
-data "aws_subnet_ids" "production_private_subnets" {  
+data "aws_subnet_ids" "production" {  
   vpc_id = data.aws_vpc.production_vpc.id  
   filter {    
     name   = "tag:Type"    
@@ -61,7 +61,7 @@ module "postgres_db_production" {
   db_port  = 5100
   db_username = data.aws_ssm_parameter.auth_token_generator_postgres_username.value
   db_password = data.aws_ssm_parameter.auth_token_generator_postgres_password.value
-  subnet_ids = data.aws_subnet_ids.production_private_subnets.ids
+  subnet_ids = data.aws_subnet_ids.production.ids
   db_allocated_storage = 20
   maintenance_window ="sun:10:00-sun:10:30"
   storage_encrypted = false
