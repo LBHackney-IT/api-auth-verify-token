@@ -14,7 +14,7 @@ provider "aws" {
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 locals {
-  application_name = your application name # The name to use for your application
+  application_name = "auth token generator api"
    parameter_store = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter"
 }
 
@@ -23,7 +23,7 @@ terraform {
     bucket  = "terraform-state-development-apis"
     encrypt = true
     region  = "eu-west-2"
-    key     = services/YOUR API NAME/state #e.g. "services/transactions-api/state"
+    key     = services/auth-token-generator-api/state #e.g. "services/transactions-api/state"
   }
 }
 
@@ -41,11 +41,11 @@ data "aws_subnet_ids" "development_private_subnets" {
     }
 }
 
- data "aws_ssm_parameter" "resident_contact_postgres_db_password" {
+ data "aws_ssm_parameter" "auth_token_generator_postgres_password" {
    name = "/api-auth-token-generator/development/postgres-password"
  }
 
- data "aws_ssm_parameter" "resident_contact_postgres_username" {
+ data "aws_ssm_parameter" "auth_token_generator_postgres_username" {
    name = "/api-auth-token-generator/development/postgres-username"
  }
 
@@ -60,7 +60,7 @@ module "postgres_db_development" {
   db_name = "auth-token-generator_db"
   db_port  = 5100
   db_username = data.aws_ssm_parameter.auth_token_generator_postgres_username.value
-  db_password = data.aws_ssm_parameter.auth_token_generator_postgres_db_password.value
+  db_password = data.aws_ssm_parameter.auth_token_generator_postgres_password.value
   subnet_ids = data.aws_subnet_ids.development_private_subnets.ids
   db_allocated_storage = 20
   maintenance_window ="sun:10:00-sun:10:30"

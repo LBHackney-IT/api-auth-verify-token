@@ -14,17 +14,8 @@ provider "aws" {
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 locals {
-  application_name = your application name # The name to use for your application
+  application_name = "auth token generator api"
    parameter_store = "arn:aws:ssm:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:parameter"
-}
-
-
-data "aws_iam_role" "ec2_container_service_role" {
-  name = "ecsServiceRole"
-}
-
-data "aws_iam_role" "ecs_task_execution_role" {
-  name = "ecsTaskExecutionRole"
 }
 
 terraform {
@@ -32,7 +23,7 @@ terraform {
     bucket  = "terraform-state-production-apis"
     encrypt = true
     region  = "eu-west-2"
-    key     = services/YOUR API NAME/state #e.g. "services/transactions-api/state"
+    key     = services/auth-token-generator-api/state #e.g. "services/transactions-api/state"
   }
 }
 
@@ -50,11 +41,11 @@ data "aws_subnet_ids" "production_private_subnets" {
     }
 }
 
- data "aws_ssm_parameter" "resident_contact_postgres_db_password" {
+ data "aws_ssm_parameter" "auth_token_generator_postgres_password" {
    name = "/api-auth-token-generator/production/postgres-password"
  }
 
- data "aws_ssm_parameter" "resident_contact_postgres_username" {
+ data "aws_ssm_parameter" "auth_token_generator_postgres_username" {
    name = "/api-auth-token-generator/production/postgres-username"
  }
 
@@ -69,12 +60,12 @@ module "postgres_db_production" {
   db_name = "auth-token-generator_db"
   db_port  = 5102
   db_username = data.aws_ssm_parameter.auth_token_generator_postgres_username.value
-  db_password = data.aws_ssm_parameter.auth_token_generator_postgres_db_password.value
+  db_password = data.aws_ssm_parameter.auth_token_generator_postgres_password.value
   subnet_ids = data.aws_subnet_ids.production_private_subnets.ids
   db_allocated_storage = 20
   maintenance_window ="sun:10:00-sun:10:30"
   storage_encrypted = false
-  multi_az = false //only true if production deployment
+  multi_az = truen 
   publicly_accessible = false
   project_name = "platform apis"
 }
