@@ -28,7 +28,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helpers
         [Test]
         public void CanGenerateJwtToken()
         {
-            var jwtRequest = GenerateJwtRequestObject();
+            var jwtRequest = ValidateJwtTokenHelper.GenerateJwtRequestObject();
             var result = _classUnderTest.GenerateJwtToken(jwtRequest);
 
             result.Should().NotBeNullOrWhiteSpace();
@@ -37,7 +37,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helpers
         [Test]
         public void CanGenerateValidJwtTokenWithClaims()
         {
-            var jwtRequest = GenerateJwtRequestObject();
+            var jwtRequest = ValidateJwtTokenHelper.GenerateJwtRequestObject();
             var token = _classUnderTest.GenerateJwtToken(jwtRequest);
 
             var claimsDecrypted = ValidateJwtTokenHelper.GetJwtClaims(token, _jwtSecret);
@@ -51,7 +51,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helpers
         [Test]
         public void CanGenerateJwtTokenWithoutExpiryDate()
         {
-            var jwtRequest = GenerateJwtRequestObject();
+            var jwtRequest = ValidateJwtTokenHelper.GenerateJwtRequestObject();
             var result = _classUnderTest.GenerateJwtToken(jwtRequest);
             var token = ValidateJwtTokenHelper.GetToken(result);
 
@@ -62,23 +62,12 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helpers
         [Test]
         public void CanGenerateJwtTokenWithExpiryDate()
         {
-            var jwtRequest = GenerateJwtRequestObject(_faker.Date.Future());
+            var jwtRequest = ValidateJwtTokenHelper.GenerateJwtRequestObject(_faker.Date.Future());
             var result = _classUnderTest.GenerateJwtToken(jwtRequest);
             var token = ValidateJwtTokenHelper.GetToken(result);
 
             result.Should().NotBeNullOrWhiteSpace();
             token.ValidTo.Date.Should().Be((DateTime) jwtRequest.ExpiresAt.Value.Date);
-        }
-
-        private GenerateJwtRequest GenerateJwtRequestObject(DateTime? expiresAt = null)
-        {
-            return new GenerateJwtRequest
-            {
-                ConsumerName = _faker.Name.FullName(),
-                ConsumerType = _faker.Random.Int(1, 2),
-                ExpiresAt = expiresAt != null ? expiresAt : null,
-                Id = _faker.Random.Int(1, 100)
-            };
         }
     }
 }

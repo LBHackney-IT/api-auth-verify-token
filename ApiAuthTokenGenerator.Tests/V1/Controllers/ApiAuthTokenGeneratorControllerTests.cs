@@ -18,16 +18,12 @@ namespace ApiAuthTokenGenerator.Tests.V1.Controllers
     {
         private ApiAuthTokenGeneratorController _classUnderTest;
         private Mock<IPostTokenUseCase> _mockPostTokenUseCase;
-        private Mock<IGetAllUseCase> _mockGetAllUseCase;
-        private Mock<IGetByIdUseCase> _mockGetByIdUseCase;
 
         [SetUp]
         public void Setup()
         {
-            _mockGetAllUseCase = new Mock<IGetAllUseCase>();
-            _mockGetByIdUseCase = new Mock<IGetByIdUseCase>();
             _mockPostTokenUseCase = new Mock<IPostTokenUseCase>();
-            _classUnderTest = new ApiAuthTokenGeneratorController(_mockGetAllUseCase.Object, _mockGetByIdUseCase.Object, _mockPostTokenUseCase.Object);
+            _classUnderTest = new ApiAuthTokenGeneratorController(_mockPostTokenUseCase.Object);
         }
 
         [Test]

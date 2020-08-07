@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using ApiAuthTokenGenerator.V1.Boundary.Request;
 using ApiAuthTokenGenerator.V1.Domain;
@@ -37,6 +38,23 @@ namespace ApiAuthTokenGenerator.V1.Gateways
             _databaseContext.SaveChanges();
 
             return tokenToInsert.Id;
+        }
+
+        public AuthToken GetTokenData(int tokenId)
+        {
+            var token = _databaseContext.Tokens.Where(x => x.Id == tokenId).FirstOrDefault();
+
+            if (token == null)
+            {
+                throw new TokenDataNotFoundException(); //No match is found
+            }
+            var endpointName = _databaseContext.ApiEndpointNameLookups.Where(x => x.Id == token.ApiEndpointNameLookupId)
+                .FirstOrDefault();
+            var apiName = _databaseContext.ApiNameLookups.Where(x => x.Id == token.ApiLookupId).FirstOrDefault();
+            var consumerType = _databaseContext.ConsumerTypeLookups.Where(x => x.Id == token.ConsumerTypeLookupId)
+                .FirstOrDefault();
+
+            return token.ToDomain(endpointName.ApiEndpointName, apiName.ApiName, consumerType.TypeName);
         }
     }
 }

@@ -7,5 +7,6 @@ namespace ApiAuthTokenGenerator.V1.Gateways
     public interface IAuthTokenDatabaseGateway
     {
         int GenerateToken(TokenRequestObject tokenRequestObject);
+        AuthToken GetTokenData(int tokenId);
     }
 }
