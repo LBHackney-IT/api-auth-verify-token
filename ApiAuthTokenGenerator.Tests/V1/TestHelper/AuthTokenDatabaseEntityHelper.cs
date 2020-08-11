@@ -27,7 +27,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helper
                 Environment = entity.Environment,
                 ExpirationDate = entity.ExpirationDate,
                 RequestedBy = entity.RequestedBy,
-                Valid = entity.Valid
+                Enabled = entity.Enabled
             };
         }
     }

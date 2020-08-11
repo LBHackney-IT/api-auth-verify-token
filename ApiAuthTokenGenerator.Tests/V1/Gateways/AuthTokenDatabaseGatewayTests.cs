@@ -56,7 +56,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Gateways
             var defaultRecordRetrieved = databaseRecord.FirstOrDefault();
 
             defaultRecordRetrieved.RequestedBy.Should().Be(tokenRequest.RequestedBy);
-            defaultRecordRetrieved.Valid.Should().BeTrue();
+            defaultRecordRetrieved.Enabled.Should().BeTrue();
             defaultRecordRetrieved.ExpirationDate.Should().Be(tokenRequest.ExpiresAt);
             defaultRecordRetrieved.DateCreated.Date.Should().Be(DateTime.Now.Date);
             defaultRecordRetrieved.Environment.Should().Be(tokenRequest.Environment);
@@ -70,7 +70,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Gateways
         [Test]
         public void TokenRecordShouldBeRetrievedIfValidIdIsSupplied()
         {
-            var tokenDataInDb = AddTokebRecordToTheDatabase();
+            var tokenDataInDb = AddTokenRecordToTheDatabase();
 
             var result = _classUnderTest.GetTokenData(tokenDataInDb.Id);
 
@@ -81,7 +81,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Gateways
             result.Environment.Should().Be(tokenDataInDb.Environment);
             result.ConsumerName.Should().Be(tokenDataInDb.ConsumerName);
             result.ConsumerType.Should().Be(tokenDataInDb.ConsumerType);
-            result.Valid.Should().Be(tokenDataInDb.Valid);
+            result.Enabled.Should().Be(tokenDataInDb.Enabled);
             result.ApiEndpointName.Should().Be(tokenDataInDb.ApiEndpointName);
             result.ApiName.Should().Be(tokenDataInDb.ApiName);
         }
@@ -91,7 +91,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Gateways
             Func<AuthToken> testDelegate = () => _classUnderTest.GetTokenData(_fixture.Create<int>());
             testDelegate.Should().Throw<TokenDataNotFoundException>();
         }
-        private AuthToken AddTokebRecordToTheDatabase()
+        private AuthToken AddTokenRecordToTheDatabase()
         {
             var api = _fixture.Build<ApiNameLookup>().Create();
             DatabaseContext.Add(api);
@@ -119,7 +119,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Gateways
                 ConsumerName = tokenData.ConsumerName,
                 Environment = tokenData.Environment,
                 ExpirationDate = tokenData.ExpirationDate,
-                Valid = tokenData.Valid,
+                Enabled = tokenData.Enabled,
                 Id = tokenData.Id
             };
         }

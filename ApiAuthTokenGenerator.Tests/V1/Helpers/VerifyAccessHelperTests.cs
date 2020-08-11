@@ -20,7 +20,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helpers
             var request = GenerateAuthorizerRequest();
             var apiName = _faker.Random.Word();
             var tokenData = GenerateTokenData(request, apiName);
-            tokenData.Valid = false;
+            tokenData.Enabled = false;
             var result = VerifyAccessHelper.ShouldHaveAccess(request, tokenData, apiName);
             result.Should().BeFalse();
         }
@@ -99,7 +99,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helpers
                 ApiName = apiName,
                 Environment = request.Environment,
                 ExpirationDate = null,
-                Valid = true,
+                Enabled = true,
             };
         }
 

@@ -5,10 +5,7 @@ using ApiAuthTokenGenerator.V1.UseCase.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-//[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
 namespace ApiAuthTokenGenerator
 {
     public class LambdaHandler

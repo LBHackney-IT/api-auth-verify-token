@@ -66,7 +66,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.UseCase
                 ApiEndpointName = request.ApiEndpointName,
                 ApiName = apiName,
                 Environment = request.Environment,
-                Valid = true,
+                Enabled = true,
                 ExpirationDate = null
             };
 

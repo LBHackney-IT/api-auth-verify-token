@@ -31,7 +31,7 @@ namespace ApiAuthTokenGenerator.V1.Gateways
                 RequestedBy = tokenRequestObject.RequestedBy,
                 DateCreated = DateTime.Now,
                 ExpirationDate = tokenRequestObject.ExpiresAt,
-                Valid = true
+                Enabled = true
             };
 
             _databaseContext.Tokens.Add(tokenToInsert);

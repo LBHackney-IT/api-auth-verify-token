@@ -26,10 +26,12 @@ namespace ApiAuthTokenGenerator.V1.UseCase
             if (validTokenClaims != null && validTokenClaims.Count > 0)
             {
                 var tokenId = validTokenClaims.Find(x => x.Type == "id").Value;
-                var tokenData = _databaseGateway.GetTokenData(Int16.Parse(tokenId, CultureInfo.InvariantCulture));
-
-                var apiName = _awsApiGateway.GetApiName(authorizerRequest.ApiAwsId);
-                return VerifyAccessHelper.ShouldHaveAccess(authorizerRequest, tokenData, apiName);
+                if (Int32.TryParse(tokenId, out int id))
+                {
+                    var tokenData = _databaseGateway.GetTokenData(id);
+                    var apiName = _awsApiGateway.GetApiName(authorizerRequest.ApiAwsId);
+                    return VerifyAccessHelper.ShouldHaveAccess(authorizerRequest, tokenData, apiName);
+                }
             }
             return false;
         }

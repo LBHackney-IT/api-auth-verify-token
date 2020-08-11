@@ -47,7 +47,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Domain
         [Test]
         public void AuthTokenHasBooleanValid()
         {
-            _entity.Valid.Should().BeFalse();
+            _entity.Enabled.Should().BeFalse();
         }
         [Test]
         public void AuthTokenHasExpiryDate()

@@ -57,7 +57,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.AcceptanceTests
                 ApiEndpointName = lambdaRequest.RequestContext.ResourcePath,
                 ApiName = apiName,
                 Environment = lambdaRequest.RequestContext.Stage,
-                Valid = true,
+                Enabled = true,
                 ExpirationDate = null
             };
             _mockDatabaseGateway.Setup(x => x.GetTokenData(It.IsAny<int>())).Returns(tokenData);

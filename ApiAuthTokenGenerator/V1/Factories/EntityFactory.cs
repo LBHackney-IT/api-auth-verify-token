@@ -18,7 +18,7 @@ namespace ApiAuthTokenGenerator.V1.Factories
                 ConsumerType = consumerType,
                 Environment = token.Environment,
                 ExpirationDate = token.ExpirationDate,
-                Valid = token.Valid
+                Enabled = token.Enabled
             };
         }
     }

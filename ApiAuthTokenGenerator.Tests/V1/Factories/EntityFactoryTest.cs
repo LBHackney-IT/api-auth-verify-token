@@ -28,7 +28,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Factories
             response.ExpirationDate.Should().Be(tokenData.ExpirationDate);
             response.Environment.Should().Be(tokenData.Environment);
             response.ConsumerName.Should().Be(tokenData.ConsumerName);
-            response.Valid.Should().Be(tokenData.Valid);
+            response.Enabled.Should().Be(tokenData.Enabled);
         }
     }
 }

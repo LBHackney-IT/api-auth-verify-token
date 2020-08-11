@@ -13,7 +13,7 @@ namespace ApiAuthTokenGenerator.V1.Domain
         public string Environment { get; set; }
         public string ConsumerName { get; set; }
         public string ConsumerType { get; set; }
-        public bool Valid { get; set; }
+        public bool Enabled { get; set; }
         public DateTime? ExpirationDate { get; set; }
     }
 }
