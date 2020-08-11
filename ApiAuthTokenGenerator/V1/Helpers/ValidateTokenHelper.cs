@@ -1,3 +1,4 @@
+using Amazon.Lambda.Core;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace ApiAuthTokenGenerator.V1.Helpers
             }
             catch (SecurityTokenInvalidSignatureException)
             {
+                LambdaLogger.Log($"Token beginning with {token.Substring(0, 8)} is not valid");
                 return null; //token invalid, return null
             }
         }
