@@ -32,7 +32,7 @@ namespace ApiAuthTokenGenerator.V1.Infrastructure
         public DateTime DateCreated { get; set; }
         [Column("expiration_date")]
         public DateTime? ExpirationDate { get; set; }
-        [Column("valid")]
-        public bool Valid { get; set; }
+        [Column("enabled")]
+        public bool Enabled { get; set; }
     }
 }

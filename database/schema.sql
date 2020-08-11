@@ -25,5 +25,5 @@ CREATE TABLE tokens (
 	authorized_by varchar(255),
 	date_created timestamp NOT NULL,
 	expiration_date timestamp NULL,
-	valid boolean NOT NULL
+	enabled boolean NOT NULL
 );

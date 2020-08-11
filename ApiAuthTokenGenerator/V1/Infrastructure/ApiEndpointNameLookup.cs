@@ -17,6 +17,6 @@ namespace ApiAuthTokenGenerator.V1.Infrastructure
         public string ApiEndpointName { get; set; }
         [Column("api_lookup_id")]
         [ForeignKey("api_lookup")]
-        public string ApiLookupId { get; set; }
+        public int ApiLookupId { get; set; }
     }
 }

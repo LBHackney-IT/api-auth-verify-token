@@ -10,7 +10,25 @@ namespace ApiAuthTokenGenerator.Tests.V1.Factories
     [TestFixture]
     public class EntityFactoryTest
     {
-        //TODO: add assertions for all the fields being mapped in `EntityFactory.ToDomain()`. Also be sure to add test cases for
-        // any edge cases that might exist.
+        [Test]
+        public void CanMapDatabaseResultsToAuthToken()
+        {
+            var fixture = new Fixture();
+            var tokenData = fixture.Build<AuthTokens>().Create();
+            var apiData = fixture.Build<ApiNameLookup>().Create();
+            var apiEndpointData = fixture.Build<ApiEndpointNameLookup>().Create();
+            var consumerData = fixture.Build<ConsumerTypeLookup>().Create();
+
+            var response = tokenData.ToDomain(apiEndpointData.ApiEndpointName, apiData.ApiName, consumerData.TypeName);
+
+            response.ApiEndpointName.Should().Be(apiEndpointData.ApiEndpointName);
+            response.ApiName.Should().Be(apiData.ApiName);
+            response.ConsumerType.Should().Be(consumerData.TypeName);
+            response.Id.Should().Be(tokenData.Id);
+            response.ExpirationDate.Should().Be(tokenData.ExpirationDate);
+            response.Environment.Should().Be(tokenData.Environment);
+            response.ConsumerName.Should().Be(tokenData.ConsumerName);
+            response.Enabled.Should().Be(tokenData.Enabled);
+        }
     }
 }

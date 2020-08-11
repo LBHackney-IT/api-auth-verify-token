@@ -1,4 +1,7 @@
+using ApiAuthTokenGenerator.V1.Boundary;
+using Bogus;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -33,6 +36,17 @@ namespace ApiAuthTokenGenerator.Tests.V1.TestHelper
         {
             var handler = new JwtSecurityTokenHandler();
             return handler.ReadJwtToken(token);
+        }
+        public static GenerateJwtRequest GenerateJwtRequestObject(DateTime? expiresAt = null)
+        {
+            Faker _faker = new Faker();
+            return new GenerateJwtRequest
+            {
+                ConsumerName = _faker.Name.FullName(),
+                ConsumerType = _faker.Random.Int(1, 2),
+                ExpiresAt = expiresAt != null ? expiresAt : null,
+                Id = _faker.Random.Int(1, 100)
+            };
         }
     }
 }

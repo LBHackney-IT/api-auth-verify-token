@@ -124,6 +124,7 @@ namespace ApiAuthTokenGenerator
         private static void RegisterGateways(IServiceCollection services)
         {
             services.AddScoped<IAuthTokenDatabaseGateway, AuthTokenDatabaseGateway>();
+            services.AddScoped<IAwsApiGateway, AwsApiGateway>();
         }
 
         private static void RegisterHelpers(IServiceCollection services)
@@ -133,8 +134,6 @@ namespace ApiAuthTokenGenerator
 
         private static void RegisterUseCases(IServiceCollection services)
         {
-            services.AddScoped<IGetAllUseCase, GetAllUseCase>();
-            services.AddScoped<IGetByIdUseCase, GetByIdUseCase>();
             services.AddScoped<IPostTokenUseCase, PostTokenUseCase>();
         }
 
