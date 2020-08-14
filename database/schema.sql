@@ -13,9 +13,9 @@ CREATE TABLE consumer_type_lookup (
 	id int PRIMARY KEY,
 	type_name varchar(255)
 );
-
+-- auto generate primary keys for table
 CREATE TABLE tokens (
-	id   int PRIMARY KEY,
+	id SERIAL PRIMARY KEY,
 	api_lookup_id int REFERENCES api_lookup(id),
 	api_endpoint_lookup_id int REFERENCES api_endpoint_lookup(id),
 	environment varchar(255),
