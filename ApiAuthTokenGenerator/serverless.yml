@@ -20,7 +20,7 @@ package:
 functions:
   ApiAuthTokenGenerator:
     name: ${self:service}-${self:provider.stage}
-    handler: ApiAuthTokenGenerator::ApiAuthTokenGenerator.LambdaEntryPoint::FunctionHandlerAsync
+    handler: ApiAuthTokenGenerator::ApiAuthTokenGenerator.LambdaHandler::VerifyToken
     role: lambdaExecutionRole
     environment:
       CONNECTION_STRING: Host=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-hostname};Port=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-port};Database=auth_token_generator_db;Username=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-username};Password=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-password}
