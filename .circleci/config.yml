@@ -84,7 +84,7 @@ commands:
           name: Deploy lambda
           command: |
             cd ./ApiAuthTokenGenerator/
-            sls deploy --stage <<parameters.stage>> --conceal --force
+            sls deploy --stage <<parameters.stage>> --conceal
 
 jobs:
   check-code-formatting:
