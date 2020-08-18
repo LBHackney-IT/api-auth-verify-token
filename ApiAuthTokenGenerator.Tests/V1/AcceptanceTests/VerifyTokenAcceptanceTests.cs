@@ -39,6 +39,8 @@ namespace ApiAuthTokenGenerator.Tests.V1.AcceptanceTests
             Environment.SetEnvironmentVariable("jwtSecret", _fixture.Create<string>());
             var tokenRequest = ValidateJwtTokenHelper.GenerateJwtRequestObject();
             _jwt = new GenerateJwtHelper().GenerateJwtToken(tokenRequest);
+            //Needed for logging
+            Environment.SetEnvironmentVariable("LambdaEnvironment", "test");
 
         }
         [Test]

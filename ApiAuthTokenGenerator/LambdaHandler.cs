@@ -29,7 +29,10 @@ namespace ApiAuthTokenGenerator
 
         public APIGatewayCustomAuthorizerResponse VerifyToken(APIGatewayCustomAuthorizerRequest request)
         {
-            LambdaLogger.Log("token: " + request.AuthorizationToken + ":" + request.Headers["Authorization"]);
+            //Only log when not in production
+
+            if (Environment.GetEnvironmentVariable("LambdaEnvironment").Equals("staging", StringComparison.OrdinalIgnoreCase))
+                LambdaLogger.Log("token: " + request.AuthorizationToken + ":" + request.Headers["Authorization"]);
 
             var authorizerRequest = new AuthorizerRequest
             {
