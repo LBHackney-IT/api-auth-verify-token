@@ -33,14 +33,14 @@ namespace ApiAuthTokenGenerator
             try
             {
                 if (Environment.GetEnvironmentVariable("LambdaEnvironment").Equals("staging", StringComparison.OrdinalIgnoreCase))
-                    LambdaLogger.Log("token: " + request.AuthorizationToken + ":" + request.Headers["Authorization"]);
+                    LambdaLogger.Log("token: " + request.AuthorizationToken);
 
                 var authorizerRequest = new AuthorizerRequest
                 {
                     ApiEndpointName = request.RequestContext.ResourcePath,
                     ApiAwsId = request.RequestContext.ApiId,
                     Environment = request.RequestContext.Stage,
-                    Token = request.Headers["Authorization"]
+                    Token = request.AuthorizationToken
                 };
                 var verifyAccessUseCase = _serviceProvider.GetService<IVerifyAccessUseCase>();
 
