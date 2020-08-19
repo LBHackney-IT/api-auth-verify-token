@@ -121,6 +121,7 @@ csharp_space_between_square_brackets = false
 csharp_using_directive_placement = outside_namespace
 
 #Suppressed FxCop Errors
+dotnet_diagnostic.CA1031.severity = none
 dotnet_diagnostic.CA1032.severity = none
 dotnet_diagnostic.CA1062.severity = none
 dotnet_diagnostic.CA1303.severity = none
