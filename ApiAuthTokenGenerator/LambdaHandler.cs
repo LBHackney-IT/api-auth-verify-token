@@ -6,6 +6,10 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 
+
+// Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
+[assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
+
 namespace ApiAuthTokenGenerator
 {
     public class LambdaHandler
@@ -25,6 +29,11 @@ namespace ApiAuthTokenGenerator
 
         public APIGatewayCustomAuthorizerResponse VerifyToken(APIGatewayCustomAuthorizerRequest request)
         {
+            //Only log when not in production
+
+            if (Environment.GetEnvironmentVariable("LambdaEnvironment").Equals("staging", StringComparison.OrdinalIgnoreCase))
+                LambdaLogger.Log("token: " + request.AuthorizationToken + ":" + request.Headers["Authorization"]);
+
             var authorizerRequest = new AuthorizerRequest
             {
                 ApiEndpointName = request.RequestContext.ResourcePath,
