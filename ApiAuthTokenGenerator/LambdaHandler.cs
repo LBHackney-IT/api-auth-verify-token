@@ -30,36 +30,44 @@ namespace ApiAuthTokenGenerator
         public APIGatewayCustomAuthorizerResponse VerifyToken(APIGatewayCustomAuthorizerRequest request)
         {
             //Only log when not in production
-
-            if (Environment.GetEnvironmentVariable("LambdaEnvironment").Equals("staging", StringComparison.OrdinalIgnoreCase))
-                LambdaLogger.Log("token: " + request.AuthorizationToken + ":" + request.Headers["Authorization"]);
-
-            var authorizerRequest = new AuthorizerRequest
+            try
             {
-                ApiEndpointName = request.RequestContext.ResourcePath,
-                ApiAwsId = request.RequestContext.ApiId,
-                Environment = request.RequestContext.Stage,
-                Token = request.Headers["Authorization"]
-            };
-            var verifyAccessUseCase = _serviceProvider.GetService<IVerifyAccessUseCase>();
+                if (Environment.GetEnvironmentVariable("LambdaEnvironment").Equals("staging", StringComparison.OrdinalIgnoreCase))
+                    LambdaLogger.Log("token: " + request.AuthorizationToken + ":" + request.Headers["Authorization"]);
 
-            var result = verifyAccessUseCase.Execute(authorizerRequest);
-
-            return new APIGatewayCustomAuthorizerResponse
-            {
-                PolicyDocument = new APIGatewayCustomAuthorizerPolicy
+                var authorizerRequest = new AuthorizerRequest
                 {
-                    Version = "2012-10-17",
-                    Statement = new List<APIGatewayCustomAuthorizerPolicy.IAMPolicyStatement>() {
+                    ApiEndpointName = request.RequestContext.ResourcePath,
+                    ApiAwsId = request.RequestContext.ApiId,
+                    Environment = request.RequestContext.Stage,
+                    Token = request.Headers["Authorization"]
+                };
+                var verifyAccessUseCase = _serviceProvider.GetService<IVerifyAccessUseCase>();
+
+                var result = verifyAccessUseCase.Execute(authorizerRequest);
+
+                return new APIGatewayCustomAuthorizerResponse
+                {
+                    PolicyDocument = new APIGatewayCustomAuthorizerPolicy
+                    {
+                        Version = "2012-10-17",
+                        Statement = new List<APIGatewayCustomAuthorizerPolicy.IAMPolicyStatement>()
+                    {
                       new APIGatewayCustomAuthorizerPolicy.IAMPolicyStatement
                       {
                            Action = new HashSet<string>(){"execute-api:Invoke"},
                            Effect = result ? "Allow" : "Deny",
                            Resource = new HashSet<string>(){  request.MethodArn } // resource arn here
                       }
-                },
-                }
-            };
+                    }
+                    },
+                };
+            }
+            catch (Exception e)
+            {
+                LambdaLogger.Log("Verify token:" + e.Message);
+                return new APIGatewayCustomAuthorizerResponse();
+            }
 
         }
     }
