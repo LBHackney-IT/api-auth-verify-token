@@ -51,20 +51,22 @@ namespace ApiAuthTokenGenerator
                     PolicyDocument = new APIGatewayCustomAuthorizerPolicy
                     {
                         Version = "2012-10-17",
-                        Statement = new List<APIGatewayCustomAuthorizerPolicy.IAMPolicyStatement>() {
+                        Statement = new List<APIGatewayCustomAuthorizerPolicy.IAMPolicyStatement>()
+                    {
                       new APIGatewayCustomAuthorizerPolicy.IAMPolicyStatement
                       {
                            Action = new HashSet<string>(){"execute-api:Invoke"},
                            Effect = result ? "Allow" : "Deny",
                            Resource = new HashSet<string>(){  request.MethodArn } // resource arn here
                       }
-                },
                     }
+                    },
                 };
             }
             catch (Exception e)
             {
                 LambdaLogger.Log("Verify token:" + e.Message);
+                return new APIGatewayCustomAuthorizerResponse();
             }
 
         }
