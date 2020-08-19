@@ -16,7 +16,6 @@ provider:
 
 package:
   artifact: ./bin/release/netcoreapp3.1/api-auth-token-generator.zip
-  individually: true
 
 functions:
   ApiAuthTokenGenerator:
