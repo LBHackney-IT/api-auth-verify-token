@@ -31,7 +31,6 @@ functions:
           path: /{proxy+}
           method: ANY
           private: true
-
   ApiAuthVerifyToken:
     name: ${self:service}-${self:provider.stage}
     handler: ApiAuthTokenGenerator::ApiAuthTokenGenerator.LambdaHandler::VerifyToken
@@ -45,7 +44,6 @@ functions:
           path: /{proxy+}
           method: ANY
           private: true
-
 resources:
   Resources:
     lambdaExecutionRole:
