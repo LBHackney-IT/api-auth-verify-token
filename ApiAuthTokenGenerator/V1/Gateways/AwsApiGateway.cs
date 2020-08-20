@@ -20,7 +20,7 @@ namespace ApiAuthTokenGenerator.V1.Gateways
         }
         public string GetApiName(string apiId)
         {
-            var response = _httpClient.GetAsync(new Uri($"/restapis/{apiId}", UriKind.Relative)).Result;
+            var response = _httpClient.GetAsync(new Uri($@"/restapis/{apiId}", UriKind.Relative)).Result;
             if (response == null)
             {
                 throw new AwsApiNotFoundException();
