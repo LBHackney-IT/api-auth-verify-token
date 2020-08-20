@@ -1,4 +1,5 @@
 using Amazon.APIGateway.Model;
+using Amazon.Lambda.Core;
 using ApiAuthTokenGenerator.V1.Domain;
 using Newtonsoft.Json;
 using System;
@@ -25,7 +26,10 @@ namespace ApiAuthTokenGenerator.V1.Gateways
             {
                 throw new AwsApiNotFoundException();
             }
-            GetRestApiResponse apiResponse = JsonConvert.DeserializeObject<GetRestApiResponse>(response.Content.ToString());
+            var responseData = response.Content.ReadAsStringAsync().Result;
+            LambdaLogger.Log("rData: " + responseData);
+
+            GetRestApiResponse apiResponse = JsonConvert.DeserializeObject<GetRestApiResponse>(responseData);
             return apiResponse.Name;
         }
     }
