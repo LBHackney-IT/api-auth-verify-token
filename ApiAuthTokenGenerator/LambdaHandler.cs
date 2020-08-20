@@ -31,18 +31,24 @@ namespace ApiAuthTokenGenerator
 
         public APIGatewayCustomAuthorizerResponse VerifyToken(APIGatewayCustomAuthorizerRequest request)
         {
+
+            LambdaLogger.Log("p1: " + request.RequestContext.ResourcePath);
+            LambdaLogger.Log("p2: " + request.RequestContext.ApiId);
+            LambdaLogger.Log("p3: " + request.RequestContext.ResourcePath);
+            LambdaLogger.Log("p4: " + request.RequestContext.Stage);
+            LambdaLogger.Log("p5: " + request.Headers["Authorisation"]);
             //Only log when not in production
             try
             {
                 if (Environment.GetEnvironmentVariable("LambdaEnvironment").Equals("staging", StringComparison.OrdinalIgnoreCase))
-                    LambdaLogger.Log("token is: " + request.Headers["Authorisation"]);
+                    LambdaLogger.Log("token is: " + request.AuthorizationToken);
 
                 var authorizerRequest = new AuthorizerRequest
                 {
                     ApiEndpointName = request.RequestContext.ResourcePath,
                     ApiAwsId = request.RequestContext.ApiId,
                     Environment = request.RequestContext.Stage,
-                    Token = request.AuthorizationToken
+                    Token = request.Headers["Authorisation"]
                 };
                 var verifyAccessUseCase = _serviceProvider.GetService<IVerifyAccessUseCase>();
 

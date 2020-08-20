@@ -52,7 +52,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.AcceptanceTests
                 .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object));
 
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
-            lambdaRequest.AuthorizationToken = _jwt;
+            lambdaRequest.Headers["Authorisation"] = _jwt;
             var apiName = _fixture.Create<string>();
             var tokenData = new AuthToken
             {
@@ -81,7 +81,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.AcceptanceTests
                 .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object));
 
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
-            lambdaRequest.AuthorizationToken = _jwt;
+            lambdaRequest.Headers["Authorisation"] = _jwt;
             //change jwt secret to simulate failure of validating token
             Environment.SetEnvironmentVariable("jwtSecret", _fixture.Create<string>());
             var result = _classUnderTest.VerifyToken(lambdaRequest);

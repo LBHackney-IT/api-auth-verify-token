@@ -26,7 +26,7 @@ namespace ApiAuthTokenGenerator.V1.UseCase
             if (validTokenClaims != null && validTokenClaims.Count > 0)
             {
                 var tokenId = validTokenClaims.Find(x => x.Type == "id").Value;
-                if (Int32.TryParse(tokenId, out int id))
+                if (int.TryParse(tokenId, out int id))
                 {
                     var tokenData = _databaseGateway.GetTokenData(id);
                     var apiName = _awsApiGateway.GetApiName(authorizerRequest.ApiAwsId);
