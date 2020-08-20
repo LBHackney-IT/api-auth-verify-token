@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+using Amazon.Lambda.Core;
 using ApiAuthTokenGenerator.V1.Boundary.Request;
 using ApiAuthTokenGenerator.V1.Domain;
 using ApiAuthTokenGenerator.V1.Factories;
@@ -53,6 +54,8 @@ namespace ApiAuthTokenGenerator.V1.Gateways
             var apiName = _databaseContext.ApiNameLookups.Where(x => x.Id == token.ApiLookupId).FirstOrDefault();
             var consumerType = _databaseContext.ConsumerTypeLookups.Where(x => x.Id == token.ConsumerTypeLookupId)
                 .FirstOrDefault();
+
+            LambdaLogger.Log("api: " + apiName);
 
             return token.ToDomain(endpointName.ApiEndpointName, apiName.ApiName, consumerType.TypeName);
         }
