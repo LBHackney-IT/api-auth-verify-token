@@ -15,12 +15,12 @@ namespace ApiAuthTokenGenerator.V1.Gateways
         public AwsApiGateway()
         {
             _httpClient = new HttpClient();
-            _httpClient.BaseAddress = new Uri($"http://apigateway.eu-west-2.amazonaws.com");
+            _httpClient.BaseAddress = new Uri("https://apigateway.eu-west-2.amazonaws.com");
 
         }
         public string GetApiName(string apiId)
         {
-            var response = _httpClient.GetAsync(new Uri($"/restapis/{apiId}")).Result;
+            var response = _httpClient.GetAsync(new Uri($"/restapis/{apiId}", UriKind.Relative)).Result;
             if (response == null)
             {
                 throw new AwsApiNotFoundException();
