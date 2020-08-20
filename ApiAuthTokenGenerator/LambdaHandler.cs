@@ -15,6 +15,8 @@ namespace ApiAuthTokenGenerator
     public class LambdaHandler
     {
         private readonly IServiceProvider _serviceProvider;
+
+        //Initialise services
         public LambdaHandler()
         {
             var services = new ServiceCollection();
@@ -33,7 +35,7 @@ namespace ApiAuthTokenGenerator
             try
             {
                 if (Environment.GetEnvironmentVariable("LambdaEnvironment").Equals("staging", StringComparison.OrdinalIgnoreCase))
-                    LambdaLogger.Log("token: " + request.AuthorizationToken);
+                    LambdaLogger.Log("token is: " + request.Headers["Authorisation"]);
 
                 var authorizerRequest = new AuthorizerRequest
                 {
@@ -65,7 +67,7 @@ namespace ApiAuthTokenGenerator
             }
             catch (Exception e)
             {
-                LambdaLogger.Log("Verify token:" + e.Message);
+                LambdaLogger.Log("Verify token in catch:" + e.Message + " in catch: " + request.AuthorizationToken);
                 return new APIGatewayCustomAuthorizerResponse();
             }
 

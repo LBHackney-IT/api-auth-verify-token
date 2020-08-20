@@ -5,9 +5,6 @@ using ApiAuthTokenGenerator.V1.UseCase.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApiAuthTokenGenerator
 {
@@ -21,7 +18,13 @@ namespace ApiAuthTokenGenerator
                 opt => opt.UseNpgsql(connectionString));
 
             services.AddScoped<IAuthTokenDatabaseGateway, AuthTokenDatabaseGateway>();
-            services.AddScoped<IVerifyAccessUseCase, VerifyAccessUseCase>();
+            services.AddScoped<IAwsApiGateway, AwsApiGateway>();
+
+            services.AddScoped<IVerifyAccessUseCase, VerifyAccessUseCase>(sp =>
+           {
+               return new VerifyAccessUseCase(sp.GetService<IAuthTokenDatabaseGateway>(),
+                   sp.GetService<IAwsApiGateway>());
+           });
         }
     }
 }
