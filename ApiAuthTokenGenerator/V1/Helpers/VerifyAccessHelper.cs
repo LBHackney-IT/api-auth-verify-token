@@ -12,11 +12,10 @@ namespace ApiAuthTokenGenerator.V1.Helpers
         {
             if (tokenData.Enabled == false
                 || (tokenData.ExpirationDate != null && tokenData.ExpirationDate < DateTime.Now)
-                || !tokenData.Environment.Equals(authorizerRequest.Environment, StringComparison.OrdinalIgnoreCase)
-                || !tokenData.ApiEndpointName.Equals(authorizerRequest.ApiEndpointName, StringComparison.OrdinalIgnoreCase))
+                || (tokenData.Environment != authorizerRequest.Environment) == false
+                || (tokenData.ApiEndpointName != authorizerRequest.ApiEndpointName) == false)
             /* Redundant
             || tokenData.ApiName != apiName)*/
-
             {
                 LambdaLogger.Log($"Token with id {tokenData.Id} denying access for {tokenData.ApiName} with endpoint {tokenData.ApiEndpointName}" +
                    $" in {tokenData.Environment} stage does not have access to {apiName} with endpoint {authorizerRequest.ApiEndpointName} " +
