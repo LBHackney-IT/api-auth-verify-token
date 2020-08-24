@@ -21,10 +21,10 @@ namespace ApiAuthTokenGenerator
             services.AddScoped<IAwsApiGateway, AwsApiGateway>();
 
             services.AddScoped<IVerifyAccessUseCase, VerifyAccessUseCase>(sp =>
-           {
-               return new VerifyAccessUseCase(sp.GetService<IAuthTokenDatabaseGateway>(),
+            {
+                return new VerifyAccessUseCase(sp.GetService<IAuthTokenDatabaseGateway>(),
                    sp.GetService<IAwsApiGateway>());
-           });
+            });
         }
     }
 }
