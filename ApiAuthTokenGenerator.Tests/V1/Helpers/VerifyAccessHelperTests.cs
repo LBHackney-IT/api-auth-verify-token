@@ -54,6 +54,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helpers
             result.Should().BeFalse();
         }
         [Test]
+        [Ignore("Redundant")]
         public void IfApiNametInRequestDoesNotMatchDatabaseRecordShouldReturnFalse()
         {
             var request = GenerateAuthorizerRequest();

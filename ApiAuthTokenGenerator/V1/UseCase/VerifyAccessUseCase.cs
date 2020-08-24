@@ -31,7 +31,7 @@ namespace ApiAuthTokenGenerator.V1.UseCase
                     var tokenData = _databaseGateway.GetTokenData(id);
                     var apiName = tokenData.ApiName;
                     /*
-                     * AWS Gateway API call
+                     * AWS Gateway API call replaced with line 32
                     var apiName = _awsApiGateway.GetApiName(authorizerRequest.ApiAwsId);
                     */
 

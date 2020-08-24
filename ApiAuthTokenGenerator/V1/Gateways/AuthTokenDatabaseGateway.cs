@@ -56,8 +56,6 @@ namespace ApiAuthTokenGenerator.V1.Gateways
             var consumerType = _databaseContext.ConsumerTypeLookups.Where(x => x.Id == token.ConsumerTypeLookupId)
                 .First();
 
-            LambdaLogger.Log("api: " + apiName.ApiName);
-
             return token.ToDomain(endpointName.ApiEndpointName, apiName.ApiName, consumerType.TypeName);
         }
     }
