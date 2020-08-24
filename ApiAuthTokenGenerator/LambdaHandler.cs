@@ -31,13 +31,6 @@ namespace ApiAuthTokenGenerator
 
         public APIGatewayCustomAuthorizerResponse VerifyToken(APIGatewayCustomAuthorizerRequest request)
         {
-
-            LambdaLogger.Log("p1: " + request.RequestContext.ResourcePath);
-            LambdaLogger.Log("p2: " + request.RequestContext.ApiId);
-            LambdaLogger.Log("p3: " + request.RequestContext.ResourcePath);
-            LambdaLogger.Log("p4: " + request.RequestContext.Stage);
-            LambdaLogger.Log("p5: " + request.Headers["Authorisation"]);
-            //Only log when not in production
             try
             {
                 var authorizerRequest = new AuthorizerRequest
@@ -70,7 +63,7 @@ namespace ApiAuthTokenGenerator
             }
             catch (Exception e)
             {
-                LambdaLogger.Log("Verify token in catch:" + e.Message + " in catch: " + request.AuthorizationToken);
+                LambdaLogger.Log("Verify token in catch:" + e.Message);
                 return new APIGatewayCustomAuthorizerResponse();
             }
 

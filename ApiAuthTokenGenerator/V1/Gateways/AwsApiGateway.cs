@@ -27,7 +27,6 @@ namespace ApiAuthTokenGenerator.V1.Gateways
                 throw new AwsApiNotFoundException();
             }
             var responseData = response.Content.ReadAsStringAsync().Result;
-            LambdaLogger.Log("rData: " + responseData);
 
             GetRestApiResponse apiResponse = JsonConvert.DeserializeObject<GetRestApiResponse>(responseData);
             return apiResponse.Name;
