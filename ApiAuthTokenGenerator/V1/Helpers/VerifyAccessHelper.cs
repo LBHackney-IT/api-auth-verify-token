@@ -16,7 +16,6 @@ namespace ApiAuthTokenGenerator.V1.Helpers
                 || tokenData.ApiEndpointName != authorizerRequest.ApiEndpointName)
             /* Redundant
             || tokenData.ApiName != apiName)*/
-
             {
                 LambdaLogger.Log($"Token with id {tokenData.Id} allowing access for {tokenData.ApiName} with endpoint {tokenData.ApiEndpointName}" +
                     $" in {tokenData.Environment} stage does not have access to {apiName} with endpoint {authorizerRequest.ApiEndpointName} " +
