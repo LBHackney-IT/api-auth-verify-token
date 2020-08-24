@@ -38,7 +38,6 @@ namespace ApiAuthTokenGenerator.V1.Gateways
             _databaseContext.Tokens.Add(tokenToInsert);
             _databaseContext.SaveChanges();
 
-            LambdaLogger.Log("token id: " + tokenToInsert.Id);
             return tokenToInsert.Id;
         }
 
