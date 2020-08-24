@@ -38,22 +38,24 @@ namespace ApiAuthTokenGenerator.V1.Gateways
             _databaseContext.Tokens.Add(tokenToInsert);
             _databaseContext.SaveChanges();
 
+            LambdaLogger.Log("token id: " + tokenToInsert.Id);
             return tokenToInsert.Id;
         }
 
         public AuthToken GetTokenData(int tokenId)
         {
-            var token = _databaseContext.Tokens.Where(x => x.Id == tokenId).FirstOrDefault();
+            var token = _databaseContext.Tokens.Find(tokenId);  //.Where(x => x.Id == tokenId).FirstOrDefault();
 
             if (token == null)
             {
                 throw new TokenDataNotFoundException(); //No match is found
             }
             var endpointName = _databaseContext.ApiEndpointNameLookups.Where(x => x.Id == token.ApiEndpointNameLookupId)
-                .FirstOrDefault();
-            var apiName = _databaseContext.ApiNameLookups.Where(x => x.Id == token.ApiLookupId).FirstOrDefault();
+                .First();
+            var apiName = _databaseContext.ApiNameLookups.Where(x => x.Id == token.ApiLookupId)
+                .First();
             var consumerType = _databaseContext.ConsumerTypeLookups.Where(x => x.Id == token.ConsumerTypeLookupId)
-                .FirstOrDefault();
+                .First();
 
             LambdaLogger.Log("api: " + apiName.ApiName);
 
