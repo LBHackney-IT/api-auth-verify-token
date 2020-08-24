@@ -12,8 +12,8 @@ namespace ApiAuthTokenGenerator.V1.Helpers
         {
             if (!tokenData.Enabled
                 || (tokenData.ExpirationDate != null && tokenData.ExpirationDate < DateTime.Now)
-                || (tokenData.Environment != authorizerRequest.Environment)
-                || (tokenData.ApiEndpointName != authorizerRequest.ApiEndpointName))
+                || !tokenData.Environment.Equals(authorizerRequest.Environment, StringComparison.OrdinalIgnoreCase)
+                || !tokenData.ApiEndpointName.Equals(authorizerRequest.ApiEndpointName, StringComparison.OrdinalIgnoreCase))
             /* Redundant
             || tokenData.ApiName != apiName)*/
 
