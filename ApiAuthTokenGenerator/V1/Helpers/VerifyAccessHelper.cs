@@ -10,13 +10,12 @@ namespace ApiAuthTokenGenerator.V1.Helpers
     {
         public static bool ShouldHaveAccess(AuthorizerRequest authorizerRequest, AuthToken tokenData, string apiName)
         {
-            if (tokenData.Enabled == false
-                || (tokenData.ExpirationDate != null && tokenData.ExpirationDate < DateTime.Now)
-                || !tokenData.Environment.Equals(authorizerRequest.Environment, StringComparison.OrdinalIgnoreCase)
-                || !tokenData.ApiEndpointName.Equals(authorizerRequest.ApiEndpointName, StringComparison.OrdinalIgnoreCase))
+            if (!tokenData.Enabled
+                || (tokenData?.ExpirationDate < DateTime.Now) == true
+                || (tokenData.Environment != authorizerRequest.Environment) == true
+                || (tokenData.ApiEndpointName != authorizerRequest.ApiEndpointName) == true)
             /* Redundant
             || tokenData.ApiName != apiName)*/
-
             {
                 LambdaLogger.Log($"Token with id {tokenData.Id} denying access for {tokenData.ApiName} with endpoint {tokenData.ApiEndpointName}" +
                    $" in {tokenData.Environment} stage does not have access to {apiName} with endpoint {authorizerRequest.ApiEndpointName} " +
