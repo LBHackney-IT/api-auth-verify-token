@@ -20,7 +20,7 @@ namespace ApiAuthTokenGenerator.V1.Helpers
             {
                 LambdaLogger.Log($"Token with id {tokenData.Id} allowing access for {tokenData.ApiName} with endpoint {tokenData.ApiEndpointName}" +
                     $" in {tokenData.Environment} stage does not have access to {apiName} with endpoint {authorizerRequest.ApiEndpointName} " +
-                    $"for {authorizerRequest.Environment} stage");
+                    $"for {authorizerRequest.Environment} stage { tokenData.Enabled }");
                 return false;
             }
             return true;
