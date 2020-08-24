@@ -10,10 +10,10 @@ namespace ApiAuthTokenGenerator.V1.Helpers
     {
         public static bool ShouldHaveAccess(AuthorizerRequest authorizerRequest, AuthToken tokenData, string apiName)
         {
-            if (tokenData.Enabled == false
-                || (tokenData?.ExpirationDate < DateTime.Now)
-                || (tokenData.Environment != authorizerRequest.Environment) == false
-                || (tokenData.ApiEndpointName != authorizerRequest.ApiEndpointName) == false)
+            if (!tokenData.Enabled
+                || (tokenData?.ExpirationDate < DateTime.Now) == true
+                || (tokenData.Environment != authorizerRequest.Environment) == true
+                || (tokenData.ApiEndpointName != authorizerRequest.ApiEndpointName) == true)
             /* Redundant
             || tokenData.ApiName != apiName)*/
             {
