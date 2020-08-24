@@ -40,9 +40,6 @@ namespace ApiAuthTokenGenerator
             //Only log when not in production
             try
             {
-                if (Environment.GetEnvironmentVariable("LambdaEnvironment").Equals("staging", StringComparison.OrdinalIgnoreCase))
-                    LambdaLogger.Log("token is: " + request.AuthorizationToken);
-
                 var authorizerRequest = new AuthorizerRequest
                 {
                     ApiEndpointName = request.RequestContext.ResourcePath,
