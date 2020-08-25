@@ -10,6 +10,7 @@ namespace ApiAuthTokenGenerator.V1.Helpers
     {
         public static bool ShouldHaveAccess(AuthorizerRequest authorizerRequest, AuthToken tokenData, string apiName)
         {
+            //Check that the token is enabled or that the expiration date is valid
             if (!tokenData.Enabled
                 || (tokenData.ExpirationDate != null && tokenData.ExpirationDate < DateTime.Now))
             /* Redundant
