@@ -56,9 +56,10 @@ namespace ApiAuthTokenGenerator.Tests.V1.AcceptanceTests
             var apiName = _fixture.Create<string>();
             var tokenData = new AuthToken
             {
-                ApiEndpointName = lambdaRequest.RequestContext.ResourcePath,
+                ApiEndpointName = lambdaRequest.RequestContext.Path,
                 ApiName = apiName,
                 Environment = lambdaRequest.RequestContext.Stage,
+                HttpMethodType = lambdaRequest.RequestContext.HttpMethod,
                 Enabled = true,
                 ExpirationDate = null
             };

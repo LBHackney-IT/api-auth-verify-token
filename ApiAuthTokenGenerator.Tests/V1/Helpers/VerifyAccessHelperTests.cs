@@ -44,7 +44,6 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helpers
             result.Should().BeFalse();
         }
         [Test]
-        [Ignore("value can vary if used local or from AWS API Gateway")]
         public void IfEnvironmentInRequestDoesNotMatchDatabaseRecordShouldReturnFalse()
         {
             var request = GenerateAuthorizerRequest();
@@ -55,7 +54,6 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helpers
             result.Should().BeFalse();
         }
         [Test]
-        [Ignore("Redundant")]
         public void IfApiNametInRequestDoesNotMatchDatabaseRecordShouldReturnFalse()
         {
             var request = GenerateAuthorizerRequest();
@@ -65,13 +63,22 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helpers
             result.Should().BeFalse();
         }
         [Test]
-        [Ignore("Value is not path to endpoint")]
         public void IfApiEndpointNametInRequestDoesNotMatchDatabaseRecordShouldReturnFalse()
         {
             var request = GenerateAuthorizerRequest();
             var apiName = _faker.Random.Word();
             var tokenData = GenerateTokenData(request, apiName);
             tokenData.ApiEndpointName = _faker.Random.Word();
+            var result = VerifyAccessHelper.ShouldHaveAccess(request, tokenData, apiName);
+            result.Should().BeFalse();
+        }
+        [Test]
+        public void IfHttpMethodTypetInRequestDoesNotMatchDatabaseRecordShouldReturnFalse()
+        {
+            var request = GenerateAuthorizerRequest();
+            var apiName = _faker.Random.Word();
+            var tokenData = GenerateTokenData(request, apiName);
+            tokenData.HttpMethodType = _faker.Random.AlphaNumeric(6);
             var result = VerifyAccessHelper.ShouldHaveAccess(request, tokenData, apiName);
             result.Should().BeFalse();
         }
@@ -90,6 +97,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helpers
             {
                 ApiEndpointName = _faker.Random.Word(),
                 ApiAwsId = _faker.Random.Word(),
+                HttpMethodType = _faker.Random.AlphaNumeric(6),
                 Environment = _faker.Random.Word(),
             };
         }
@@ -101,6 +109,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helpers
                 ApiEndpointName = request.ApiEndpointName,
                 ApiName = apiName,
                 Environment = request.Environment,
+                HttpMethodType = request.HttpMethodType,
                 ExpirationDate = null,
                 Enabled = true,
             };
