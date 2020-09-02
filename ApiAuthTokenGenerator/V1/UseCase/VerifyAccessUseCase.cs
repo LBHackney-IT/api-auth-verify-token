@@ -29,12 +29,8 @@ namespace ApiAuthTokenGenerator.V1.UseCase
                 if (int.TryParse(tokenId, out int id))
                 {
                     var tokenData = _databaseGateway.GetTokenData(id);
-                    var apiName = tokenData.ApiName;
-                    /*
-                     * AWS Gateway API call replaced with line 32
                     var apiName = _awsApiGateway.GetApiName(authorizerRequest.ApiAwsId);
-                    */
-
+                    LambdaLogger.Log($"API name retrieved - {apiName}");
                     return VerifyAccessHelper.ShouldHaveAccess(authorizerRequest, tokenData, apiName);
                 }
             }
