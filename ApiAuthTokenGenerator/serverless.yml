@@ -91,6 +91,14 @@ resources:
                   Action:
                     - "lambda:InvokeFunction"
                   Resource: "*"
+          - PolicyName: getAPIGatewayAPIName
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - "apigateway:GET"
+                  Resource: "*"
 custom:
   vpc:
     development:
