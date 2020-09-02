@@ -19,6 +19,7 @@ CREATE TABLE tokens (
 	id SERIAL PRIMARY KEY,
 	api_lookup_id int REFERENCES api_lookup(id),
 	api_endpoint_lookup_id int REFERENCES api_endpoint_lookup(id),
+	http_method_type varchar(6),
 	environment varchar(255),
 	consumer_name varchar(255),
 	consumer_type_lookup int REFERENCES consumer_type_lookup(id),

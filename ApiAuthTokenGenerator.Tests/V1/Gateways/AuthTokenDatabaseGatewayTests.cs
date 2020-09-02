@@ -9,6 +9,7 @@ using FluentAssertions.Extensions;
 using System.Linq;
 using System;
 using ApiAuthTokenGenerator.V1.Infrastructure;
+using System.Globalization;
 
 namespace ApiAuthTokenGenerator.Tests.V1.Gateways
 {
@@ -60,6 +61,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Gateways
             defaultRecordRetrieved.ExpirationDate.Should().Be(tokenRequest.ExpiresAt);
             defaultRecordRetrieved.DateCreated.Date.Should().Be(DateTime.Now.Date);
             defaultRecordRetrieved.Environment.Should().Be(tokenRequest.Environment);
+            defaultRecordRetrieved.HttpMethodType.Should().Be(tokenRequest.HttpMethodType.ToUpper(CultureInfo.InvariantCulture));
             defaultRecordRetrieved.ConsumerTypeLookupId.Should().Be(tokenRequest.ConsumerType);
             defaultRecordRetrieved.ConsumerName.Should().Be(tokenRequest.Consumer);
             defaultRecordRetrieved.AuthorizedBy.Should().Be(tokenRequest.AuthorizedBy);
@@ -84,6 +86,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Gateways
             result.Enabled.Should().Be(tokenDataInDb.Enabled);
             result.ApiEndpointName.Should().Be(tokenDataInDb.ApiEndpointName);
             result.ApiName.Should().Be(tokenDataInDb.ApiName);
+            result.HttpMethodType.Should().Be(tokenDataInDb.HttpMethodType);
         }
         [Test]
         public void ShouldThrowAnExceptionIfTokenMatchIsNotFound()
@@ -114,6 +117,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Gateways
             return new AuthToken
             {
                 ApiEndpointName = apiEndpoint.ApiEndpointName,
+                HttpMethodType = tokenData.HttpMethodType,
                 ApiName = api.ApiName,
                 ConsumerType = consumerType.TypeName,
                 ConsumerName = tokenData.ConsumerName,

@@ -39,6 +39,13 @@ namespace ApiAuthTokenGenerator.V1.Boundary.Request
         [Required]
         public int ApiEndpoint { get; set; }
         /// <example>
+        /// GET
+        /// </example>
+        [Required]
+        [MaxLength(6)]
+        [HttpMethodTypeValidation(ErrorMessage = "Please provide a valid HTTP method type")]
+        public string HttpMethodType { get; set; }
+        /// <example>
         /// staging
         /// </example>
         [Required]
