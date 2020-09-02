@@ -30,6 +30,11 @@ namespace ApiAuthTokenGenerator.Tests.V1.Domain
             _entity.ApiEndpointName.Should().BeNullOrWhiteSpace();
         }
         [Test]
+        public void AuthTokenHasHttpMethodType()
+        {
+            _entity.HttpMethodType.Should().BeNullOrWhiteSpace();
+        }
+        [Test]
         public void AuthTokenHasEnvironment()
         {
             _entity.Environment.Should().BeNullOrWhiteSpace().Should();

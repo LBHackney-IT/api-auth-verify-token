@@ -14,6 +14,7 @@ namespace ApiAuthTokenGenerator.V1.Factories
                 Id = token.Id,
                 ApiEndpointName = apiEndpointName,
                 ApiName = apiName,
+                HttpMethodType = token.HttpMethodType,
                 ConsumerName = token.ConsumerName,
                 ConsumerType = consumerType,
                 Environment = token.Environment,

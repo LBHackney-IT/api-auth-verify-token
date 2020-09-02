@@ -17,6 +17,9 @@ namespace ApiAuthTokenGenerator.V1.Infrastructure
         [Column("api_endpoint_lookup_id")]
         [ForeignKey("api_endpoint_lookup")]
         public int ApiEndpointNameLookupId { get; set; }
+        [MaxLength(6)]
+        [Column("http_method_type")]
+        public string HttpMethodType { get; set; }
         [Column("environment")]
         public string Environment { get; set; }
         [Column("consumer_name")]

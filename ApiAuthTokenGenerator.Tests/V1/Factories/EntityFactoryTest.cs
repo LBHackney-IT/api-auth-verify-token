@@ -23,6 +23,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Factories
 
             response.ApiEndpointName.Should().Be(apiEndpointData.ApiEndpointName);
             response.ApiName.Should().Be(apiData.ApiName);
+            response.HttpMethodType.Should().Be(tokenData.HttpMethodType);
             response.ConsumerType.Should().Be(consumerData.TypeName);
             response.Id.Should().Be(tokenData.Id);
             response.ExpirationDate.Should().Be(tokenData.ExpirationDate);

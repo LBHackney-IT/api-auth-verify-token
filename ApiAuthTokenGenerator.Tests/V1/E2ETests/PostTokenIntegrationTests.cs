@@ -35,6 +35,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.E2ETests
                 ExpiresAt = _faker.Date.Future(),
                 ApiEndpoint = _faker.Random.Int(0, 10),
                 ApiName = _faker.Random.Int(0, 10),
+                HttpMethodType = "GET",
                 AuthorizedBy = _faker.Person.Email,
                 DateRequested = DateTime.Now,
                 Environment = _faker.Random.AlphaNumeric(5),
@@ -90,6 +91,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.E2ETests
                 ExpiresAt = _faker.Date.Past(),
                 ApiEndpoint = _faker.Random.Int(0, 10),
                 ApiName = _faker.Random.Int(0, 10),
+                HttpMethodType = "GET",
                 AuthorizedBy = _faker.Person.Email,
                 DateRequested = DateTime.Now,
                 Environment = _faker.Random.AlphaNumeric(5),
@@ -111,6 +113,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.E2ETests
                 ConsumerType = _faker.Random.Int(5),
                 ApiEndpoint = _faker.Random.Int(0, 10),
                 ApiName = _faker.Random.Int(0, 10),
+                HttpMethodType = "GET",
                 AuthorizedBy = _faker.Person.Email,
                 DateRequested = DateTime.Now,
                 Environment = _faker.Random.AlphaNumeric(5),
@@ -123,6 +126,28 @@ namespace ApiAuthTokenGenerator.Tests.V1.E2ETests
             var response = await Client.PostAsync(url, content).ConfigureAwait(true);
             content.Dispose();
             response.StatusCode.Should().Be(201);
+        }
+        [Test]
+        public async Task Return400IfHttpMethodTypeSuppliedIsInvalid()
+        {
+            var tokenRequest = new TokenRequestObject
+            {
+                Consumer = _faker.Random.AlphaNumeric(10),
+                ConsumerType = _faker.Random.Int(5),
+                ApiEndpoint = _faker.Random.Int(0, 10),
+                ApiName = _faker.Random.Int(0, 10),
+                HttpMethodType = "TEST",
+                AuthorizedBy = _faker.Person.Email,
+                DateRequested = DateTime.Now,
+                Environment = _faker.Random.AlphaNumeric(5),
+                RequestedBy = _faker.Person.Email
+            };
+
+            var url = new Uri($"/api/v1/tokens", UriKind.Relative);
+            var content = new StringContent(JsonConvert.SerializeObject(tokenRequest), Encoding.UTF8, "application/json");
+            var response = await Client.PostAsync(url, content).ConfigureAwait(true);
+            content.Dispose();
+            response.StatusCode.Should().Be(400);
         }
     }
 }

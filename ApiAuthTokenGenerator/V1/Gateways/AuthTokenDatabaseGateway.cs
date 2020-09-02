@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using Amazon.Lambda.Core;
@@ -25,6 +26,7 @@ namespace ApiAuthTokenGenerator.V1.Gateways
             {
                 ApiEndpointNameLookupId = tokenRequestObject.ApiEndpoint,
                 ApiLookupId = tokenRequestObject.ApiName,
+                HttpMethodType = tokenRequestObject.HttpMethodType.ToUpper(CultureInfo.InvariantCulture),
                 ConsumerName = tokenRequestObject.Consumer,
                 ConsumerTypeLookupId = tokenRequestObject.ConsumerType,
                 Environment = tokenRequestObject.Environment,
