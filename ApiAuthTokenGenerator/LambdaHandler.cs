@@ -31,6 +31,12 @@ namespace ApiAuthTokenGenerator
 
         public APIGatewayCustomAuthorizerResponse VerifyToken(APIGatewayCustomAuthorizerRequest request)
         {
+            LambdaLogger.Log("domain:" + request.RequestContext.DomainName);
+            LambdaLogger.Log("rId:" + request.RequestContext.ResourceId);
+            LambdaLogger.Log("path: " + request.RequestContext.Path);
+            LambdaLogger.Log("stage: " + request.RequestContext.Stage);
+            LambdaLogger.Log("key: " + request.RequestContext.RouteKey);
+            LambdaLogger.Log("key: " + request.RequestContext.ToString());
             try
             {
                 var authorizerRequest = new AuthorizerRequest
@@ -50,21 +56,36 @@ namespace ApiAuthTokenGenerator
                     {
                         Version = "2012-10-17",
                         Statement = new List<APIGatewayCustomAuthorizerPolicy.IAMPolicyStatement>()
-                    {
-                      new APIGatewayCustomAuthorizerPolicy.IAMPolicyStatement
-                      {
-                           Action = new HashSet<string>(){"execute-api:Invoke"},
-                           Effect = result ? "Allow" : "Deny",
-                           Resource = new HashSet<string>(){  request.MethodArn } // resource arn here
-                      }
-                    }
+                        {
+                          new APIGatewayCustomAuthorizerPolicy.IAMPolicyStatement
+                          {
+                               Action = new HashSet<string>(){"execute-api:Invoke"},
+                               Effect = result ? "Allow" : "Deny",
+                               Resource = new HashSet<string>(){  request.MethodArn } // resource arn here
+                          }
+                        }
                     },
                 };
             }
             catch (Exception e)
             {
                 LambdaLogger.Log("Verify token in catch:" + e.Message);
-                return new APIGatewayCustomAuthorizerResponse();
+                return new APIGatewayCustomAuthorizerResponse
+                {
+                    PolicyDocument = new APIGatewayCustomAuthorizerPolicy
+                    {
+                        Version = "2012-10-17",
+                        Statement = new List<APIGatewayCustomAuthorizerPolicy.IAMPolicyStatement>()
+                        {
+                             new APIGatewayCustomAuthorizerPolicy.IAMPolicyStatement
+                             {
+                                 Action = new HashSet<string>(){"execute-api:Invoke"},
+                                 Effect = "Deny",
+                                 Resource = new HashSet<string>(){  request.MethodArn } // resource arn here
+                             }
+                        }
+                    },
+                };
             }
 
         }
