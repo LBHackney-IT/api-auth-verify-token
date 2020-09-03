@@ -3,11 +3,6 @@ using ApiAuthTokenGenerator.V1.Boundary;
 using ApiAuthTokenGenerator.V1.Gateways;
 using ApiAuthTokenGenerator.V1.Helpers;
 using ApiAuthTokenGenerator.V1.UseCase.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApiAuthTokenGenerator.V1.UseCase
 {
@@ -44,7 +39,7 @@ namespace ApiAuthTokenGenerator.V1.UseCase
                 $"Token beginning with {authorizerRequest.Token.Substring(0, 8)} is invalid or should not have access to" +
                 $" {authorizerRequest.ApiAwsId} - {authorizerRequest.ApiEndpointName}" +
                 $" in {authorizerRequest.Environment}");
-            return new AccessDetails {Allow = false, User = null};
+            return new AccessDetails { Allow = false, User = null };
         }
     }
 

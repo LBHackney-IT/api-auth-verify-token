@@ -1,21 +1,16 @@
 using Amazon.Lambda.APIGatewayEvents;
 using ApiAuthTokenGenerator.Tests.V1.TestHelper;
-using ApiAuthTokenGenerator.V1.Boundary;
 using ApiAuthTokenGenerator.V1.Domain;
 using ApiAuthTokenGenerator.V1.Gateways;
 using ApiAuthTokenGenerator.V1.Helpers;
 using ApiAuthTokenGenerator.V1.UseCase;
 using ApiAuthTokenGenerator.V1.UseCase.Interfaces;
 using AutoFixture;
-using Bogus;
 using FluentAssertions;
-using FluentAssertions.Common;
 using Moq;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApiAuthTokenGenerator.Tests.V1.AcceptanceTests
 {
