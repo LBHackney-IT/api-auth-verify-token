@@ -16,20 +16,18 @@ namespace ApiAuthTokenGenerator.V1.Gateways
     public class AwsApiGateway : IAwsApiGateway
     {
         private AmazonAPIGatewayClient _client;
-        public AwsApiGateway()
-        {
-            _client = new AmazonAPIGatewayClient();
-        }
         public string GetApiName(string apiId)
         {
-            var response = _client.GetRestApiAsync(new GetRestApiRequest { RestApiId = apiId }).Result;
-
-            if (response == null)
+            using (_client = new AmazonAPIGatewayClient())
             {
-                throw new AwsApiNotFoundException();
+                var response = _client.GetRestApiAsync(new GetRestApiRequest { RestApiId = apiId }).Result;
+
+                if (response == null)
+                {
+                    throw new AwsApiNotFoundException();
+                }
+                return response.Name;
             }
-            _client.Dispose();
-            return response.Name;
         }
     }
 }
