@@ -27,7 +27,7 @@ namespace ApiAuthTokenGenerator.V1.Gateways
                     throw new AwsApiNotFoundException();
                 }
                 return response.Name;
-            }          
+            }
         }
     }
 }
