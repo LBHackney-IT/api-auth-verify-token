@@ -45,7 +45,7 @@ namespace ApiAuthTokenGenerator
                     ApiAwsId = request.RequestContext.ApiId,
                     Environment = request.RequestContext.Stage,
                     HttpMethodType = request.RequestContext.HttpMethod,
-                    Token = request.Headers["Authorisation"]
+                    Token = request.Headers["Authorization"]
                 };
                 var verifyAccessUseCase = _serviceProvider.GetService<IVerifyAccessUseCase>();
 

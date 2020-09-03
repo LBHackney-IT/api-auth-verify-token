@@ -22,7 +22,6 @@ namespace ApiAuthTokenGenerator.Tests.V1.AcceptanceTests
     public class VerifyTokenAcceptanceTests
     {
         private LambdaHandler _classUnderTest;
-        private Mock<IVerifyAccessUseCase> _mockVerifyAccessUseCase;
         private Mock<IAuthTokenDatabaseGateway> _mockDatabaseGateway;
         private Mock<IAwsApiGateway> _mockAwsApiGateway;
         private Mock<IServiceProvider> _serviceProvider;
@@ -33,7 +32,6 @@ namespace ApiAuthTokenGenerator.Tests.V1.AcceptanceTests
         {
             _serviceProvider = new Mock<IServiceProvider>();
             _classUnderTest = new LambdaHandler(_serviceProvider.Object);
-            _mockVerifyAccessUseCase = new Mock<IVerifyAccessUseCase>();
             _mockDatabaseGateway = new Mock<IAuthTokenDatabaseGateway>();
             _mockAwsApiGateway = new Mock<IAwsApiGateway>();
             Environment.SetEnvironmentVariable("jwtSecret", _fixture.Create<string>());
@@ -52,7 +50,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.AcceptanceTests
                 .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object));
 
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
-            lambdaRequest.Headers["Authorisation"] = _jwt;
+            lambdaRequest.Headers["Authorization"] = _jwt;
             var apiName = _fixture.Create<string>();
             var tokenData = new AuthToken
             {
@@ -82,7 +80,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.AcceptanceTests
                 .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object));
 
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
-            lambdaRequest.Headers["Authorisation"] = _jwt;
+            lambdaRequest.Headers["Authorization"] = _jwt;
             //change jwt secret to simulate failure of validating token
             Environment.SetEnvironmentVariable("jwtSecret", _fixture.Create<string>());
             var result = _classUnderTest.VerifyToken(lambdaRequest);
