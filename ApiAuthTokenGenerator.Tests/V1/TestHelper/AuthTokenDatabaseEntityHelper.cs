@@ -25,6 +25,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.Helper
                 ConsumerTypeLookupId = entity.ConsumerTypeLookupId,
                 DateCreated = entity.DateCreated,
                 Environment = entity.Environment,
+                HttpMethodType = entity.HttpMethodType,
                 ExpirationDate = entity.ExpirationDate,
                 RequestedBy = entity.RequestedBy,
                 Enabled = entity.Enabled

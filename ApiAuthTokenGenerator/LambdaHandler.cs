@@ -41,9 +41,10 @@ namespace ApiAuthTokenGenerator
             {
                 var authorizerRequest = new AuthorizerRequest
                 {
-                    ApiEndpointName = request.RequestContext.ResourcePath,
+                    ApiEndpointName = request.RequestContext.Path,
                     ApiAwsId = request.RequestContext.ApiId,
                     Environment = request.RequestContext.Stage,
+                    HttpMethodType = request.RequestContext.HttpMethod,
                     Token = request.Headers["Authorisation"]
                 };
                 var verifyAccessUseCase = _serviceProvider.GetService<IVerifyAccessUseCase>();

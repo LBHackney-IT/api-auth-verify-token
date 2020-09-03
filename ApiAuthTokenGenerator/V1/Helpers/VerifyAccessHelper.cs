@@ -12,9 +12,11 @@ namespace ApiAuthTokenGenerator.V1.Helpers
         {
             //Check that the token is enabled or that the expiration date is valid
             if (!tokenData.Enabled
-                || (tokenData.ExpirationDate != null && tokenData.ExpirationDate < DateTime.Now))
-            /* Redundant
-            || tokenData.ApiName != apiName)*/
+                || (tokenData.ExpirationDate != null && tokenData.ExpirationDate < DateTime.Now)
+                || tokenData.ApiName != apiName
+                || tokenData.HttpMethodType != authorizerRequest.HttpMethodType
+                || tokenData.Environment != authorizerRequest.Environment
+                || !authorizerRequest.ApiEndpointName.Contains(tokenData.ApiEndpointName, StringComparison.InvariantCulture))
             {
                 LambdaLogger.Log($"Token with id {tokenData.Id} denying access for {tokenData.ApiName} with endpoint {tokenData.ApiEndpointName}" +
                    $" in {tokenData.Environment} stage does not have access to {apiName} with endpoint {authorizerRequest.ApiEndpointName} " +
@@ -23,7 +25,7 @@ namespace ApiAuthTokenGenerator.V1.Helpers
             }
 
             LambdaLogger.Log($"Token with id {tokenData.Id} allowing access for {tokenData.ApiName} with endpoint {tokenData.ApiEndpointName}" +
-                   $" in {tokenData.Environment} stage does not have access to {apiName} with endpoint {authorizerRequest.ApiEndpointName} " +
+                   $" in {tokenData.Environment} stage has access to {apiName} with endpoint {authorizerRequest.ApiEndpointName} " +
                    $"for {authorizerRequest.Environment} stage { tokenData.Enabled }");
 
             return true;
