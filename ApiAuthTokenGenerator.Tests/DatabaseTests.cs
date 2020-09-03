@@ -17,7 +17,6 @@ namespace ApiAuthTokenGenerator.Tests
             var builder = new DbContextOptionsBuilder();
             builder.UseNpgsql(ConnectionString.TestDatabase());
             DatabaseContext = new TokenDatabaseContext(builder.Options);
-            DatabaseContext.Database.Migrate();
             DatabaseContext.Database.EnsureCreated();
             DatabaseContext.Database.BeginTransaction();
         }
