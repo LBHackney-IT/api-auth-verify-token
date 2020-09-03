@@ -52,12 +52,14 @@ namespace ApiAuthTokenGenerator.Tests.V1.AcceptanceTests
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwt;
             var apiName = _fixture.Create<string>();
+            var consumerName = _fixture.Create<string>();
             var tokenData = new AuthToken
             {
                 ApiEndpointName = lambdaRequest.RequestContext.Path,
                 ApiName = apiName,
                 Environment = lambdaRequest.RequestContext.Stage,
                 HttpMethodType = lambdaRequest.RequestContext.HttpMethod,
+                ConsumerName = consumerName,
                 Enabled = true,
                 ExpirationDate = null
             };
@@ -69,6 +71,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.AcceptanceTests
 
             result.Should().BeOfType<APIGatewayCustomAuthorizerResponse>();
             result.PolicyDocument.Statement.First().Effect.Should().Be("Allow");
+            result.PrincipalID.Should().Be(consumerName);
         }
 
         [Test]

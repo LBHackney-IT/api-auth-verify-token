@@ -53,6 +53,7 @@ namespace ApiAuthTokenGenerator
 
                 return new APIGatewayCustomAuthorizerResponse
                 {
+                    PrincipalID = result.User,
                     PolicyDocument = new APIGatewayCustomAuthorizerPolicy
                     {
                         Version = "2012-10-17",
@@ -60,8 +61,8 @@ namespace ApiAuthTokenGenerator
                         {
                           new APIGatewayCustomAuthorizerPolicy.IAMPolicyStatement
                           {
-                               Action = new HashSet<string>(){"execute-api:Invoke"},
-                               Effect = result ? "Allow" : "Deny",
+                               Action = new HashSet<string> {"execute-api:Invoke"},
+                               Effect = result.Allow ? "Allow" : "Deny",
                                Resource = new HashSet<string>(){  request.MethodArn } // resource arn here
                           }
                         }

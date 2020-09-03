@@ -53,13 +53,15 @@ namespace ApiAuthTokenGenerator.Tests.V1.UseCase
             //change key to simulate failed validation
             Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(16));
             var result = _classUnderTest.Execute(request);
-            result.Should().BeFalse();
+            result.Allow.Should().BeFalse();
+            result.User.Should().BeNull();
         }
         [Test]
         public void ShouldAllowAccessIfTokenIsValidAndDataMatchesRecords()
         {
             var request = GenerateAuthorizerRequest();
             var apiName = _faker.Random.Word();
+            var consumerName = _faker.Random.Word();
             _mockAwsApiGateway.Setup(x => x.GetApiName(It.IsAny<string>())).Returns(apiName);
             var tokenData = new AuthToken
             {
@@ -67,6 +69,7 @@ namespace ApiAuthTokenGenerator.Tests.V1.UseCase
                 ApiName = apiName,
                 HttpMethodType = request.HttpMethodType,
                 Environment = request.Environment,
+                ConsumerName = consumerName,
                 Enabled = true,
                 ExpirationDate = null
             };
@@ -75,7 +78,8 @@ namespace ApiAuthTokenGenerator.Tests.V1.UseCase
 
             var result = _classUnderTest.Execute(request);
 
-            result.Should().BeTrue();
+            result.Allow.Should().BeTrue();
+            result.User.Should().Be(consumerName);
         }
         [Test]
         public void ShouldNotAllowAccessIfTokenIsValidButDoesNotMatchTokenDataRecords()
@@ -88,7 +92,8 @@ namespace ApiAuthTokenGenerator.Tests.V1.UseCase
 
             var result = _classUnderTest.Execute(request);
 
-            result.Should().BeFalse();
+            result.Allow.Should().BeFalse();
+            result.User.Should().BeNull();
         }
         private AuthorizerRequest GenerateAuthorizerRequest()
         {
@@ -100,6 +105,5 @@ namespace ApiAuthTokenGenerator.Tests.V1.UseCase
                 Token = _jwt
             };
         }
-
     }
 }

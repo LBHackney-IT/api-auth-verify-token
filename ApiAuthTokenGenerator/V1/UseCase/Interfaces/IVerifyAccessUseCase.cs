@@ -8,6 +8,6 @@ namespace ApiAuthTokenGenerator.V1.UseCase.Interfaces
 {
     public interface IVerifyAccessUseCase
     {
-        bool Execute(AuthorizerRequest authorizerRequest);
+        AccessDetails Execute(AuthorizerRequest authorizerRequest);
     }
 }
