@@ -28,6 +28,7 @@ namespace ApiAuthTokenGenerator.V1.Infrastructure.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("ApiEndpointName")
+                        .IsRequired()
                         .HasColumnName("endpoint_name")
                         .HasColumnType("text");
 
@@ -49,6 +50,7 @@ namespace ApiAuthTokenGenerator.V1.Infrastructure.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("ApiName")
+                        .IsRequired()
                         .HasColumnName("api_name")
                         .HasColumnType("text");
 
@@ -74,10 +76,12 @@ namespace ApiAuthTokenGenerator.V1.Infrastructure.Migrations
                         .HasColumnType("integer");
 
                     b.Property<string>("AuthorizedBy")
+                        .IsRequired()
                         .HasColumnName("authorized_by")
                         .HasColumnType("text");
 
                     b.Property<string>("ConsumerName")
+                        .IsRequired()
                         .HasColumnName("consumer_name")
                         .HasColumnType("text");
 
@@ -94,6 +98,7 @@ namespace ApiAuthTokenGenerator.V1.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Environment")
+                        .IsRequired()
                         .HasColumnName("environment")
                         .HasColumnType("text");
 
@@ -102,11 +107,13 @@ namespace ApiAuthTokenGenerator.V1.Infrastructure.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("HttpMethodType")
+                        .IsRequired()
                         .HasColumnName("http_method_type")
                         .HasColumnType("character varying(6)")
                         .HasMaxLength(6);
 
                     b.Property<string>("RequestedBy")
+                        .IsRequired()
                         .HasColumnName("requested_by")
                         .HasColumnType("text");
 
@@ -124,6 +131,7 @@ namespace ApiAuthTokenGenerator.V1.Infrastructure.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("TypeName")
+                        .IsRequired()
                         .HasColumnName("consumer_name")
                         .HasColumnType("text");
 

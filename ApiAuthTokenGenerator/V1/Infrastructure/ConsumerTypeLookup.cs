@@ -13,6 +13,7 @@ namespace ApiAuthTokenGenerator.V1.Infrastructure
         [Column("id")]
         [Key]
         public int Id { get; set; }
+        [Required]
         [Column("consumer_name")]
         public string TypeName { get; set; }
     }
