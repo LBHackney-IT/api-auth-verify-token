@@ -13,8 +13,10 @@ namespace ApiAuthTokenGenerator.V1.Infrastructure
         [Column("id")]
         [Key]
         public int Id { get; set; }
+        [Required]
         [Column("endpoint_name")]
         public string ApiEndpointName { get; set; }
+        [Required]
         [Column("api_lookup_id")]
         [ForeignKey("api_lookup")]
         public int ApiLookupId { get; set; }
