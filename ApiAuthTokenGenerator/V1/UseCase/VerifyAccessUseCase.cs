@@ -3,11 +3,6 @@ using ApiAuthTokenGenerator.V1.Boundary;
 using ApiAuthTokenGenerator.V1.Gateways;
 using ApiAuthTokenGenerator.V1.Helpers;
 using ApiAuthTokenGenerator.V1.UseCase.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ApiAuthTokenGenerator.V1.UseCase
 {
@@ -20,24 +15,37 @@ namespace ApiAuthTokenGenerator.V1.UseCase
             _databaseGateway = databaseGateway;
             _awsApiGateway = awsApiGateway;
         }
-        public bool Execute(AuthorizerRequest authorizerRequest)
+        public AccessDetails Execute(AuthorizerRequest authorizerRequest)
         {
             var validTokenClaims = ValidateTokenHelper.ValidateToken(authorizerRequest.Token);
-            if (validTokenClaims != null && validTokenClaims.Count > 0)
+            if (validTokenClaims == null || validTokenClaims.Count == 0) return ReturnNotAuthorised(authorizerRequest);
+
+            var tokenId = validTokenClaims.Find(x => x.Type == "id").Value;
+            if (!int.TryParse(tokenId, out int id)) return ReturnNotAuthorised(authorizerRequest);
+
+            var tokenData = _databaseGateway.GetTokenData(id);
+            var apiName = _awsApiGateway.GetApiName(authorizerRequest.ApiAwsId);
+            LambdaLogger.Log($"API name retrieved - {apiName}");
+            return new AccessDetails
             {
-                var tokenId = validTokenClaims.Find(x => x.Type == "id").Value;
-                if (int.TryParse(tokenId, out int id))
-                {
-                    var tokenData = _databaseGateway.GetTokenData(id);
-                    var apiName = _awsApiGateway.GetApiName(authorizerRequest.ApiAwsId);
-                    LambdaLogger.Log($"API name retrieved - {apiName}");
-                    return VerifyAccessHelper.ShouldHaveAccess(authorizerRequest, tokenData, apiName);
-                }
-            }
-            LambdaLogger.Log($"Token beginning with {authorizerRequest.Token.Substring(0, 8)} is invalid or should not have access to" +
+                Allow = VerifyAccessHelper.ShouldHaveAccess(authorizerRequest, tokenData, apiName),
+                User = tokenData.ConsumerName
+            };
+        }
+
+        private static AccessDetails ReturnNotAuthorised(AuthorizerRequest authorizerRequest)
+        {
+            LambdaLogger.Log(
+                $"Token beginning with {authorizerRequest.Token.Substring(0, 8)} is invalid or should not have access to" +
                 $" {authorizerRequest.ApiAwsId} - {authorizerRequest.ApiEndpointName}" +
                 $" in {authorizerRequest.Environment}");
-            return false;
+            return new AccessDetails { Allow = false, User = null };
         }
+    }
+
+    public class AccessDetails
+    {
+        public bool Allow { get; set; }
+        public string User { get; set; }
     }
 }
