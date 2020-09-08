@@ -77,13 +77,13 @@ commands:
       - run:
           name: Build lambda
           command: |
-            cd ./ApiAuthTokenGenerator/
+            cd ./ApiAuthTokenManagement/
             chmod +x ./build.sh
             ./build.sh
       - run:
           name: Deploy lambda
           command: |
-            cd ./ApiAuthTokenGenerator/
+            cd ./ApiAuthTokenManagement/
             sls deploy --stage <<parameters.stage>> --conceal
   migrate-database:
     description: "Migrate database"
@@ -124,7 +124,7 @@ commands:
             USERNAME=$(aws ssm get-parameter --name /api-auth-token-generator/<<parameters.stage>>/postgres-username --query Parameter.Value)
             DATABASE=$(aws ssm get-parameter --name /api-auth-token-generator/<<parameters.stage>>/postgres-database --query Parameter.Value)
             CONN_STR="Host=localhost;Password=${PASSWORD};Port=5432;Username=${USERNAME};Database=${DATABASE}"
-            cd ./ApiAuthTokenGenerator/
+            cd ./ApiAuthTokenManagement/
             CONNECTION_STRING=${CONN_STR} ./../dotnet-ef-local/dotnet-ef database update
 
 jobs:

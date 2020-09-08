@@ -4,7 +4,7 @@ services:
   api-auth-token-generator:
     image: api-auth-token-generator
     build:
-      context: ApiAuthTokenGenerator/
+      context: ApiAuthTokenManagement/
       dockerfile: ./Dockerfile
     ports:
       - 3000:3000
@@ -23,7 +23,7 @@ services:
     image: api-auth-token-generator-test
     build:
       context: .
-      dockerfile: ApiAuthTokenGenerator.Tests/Dockerfile
+      dockerfile: ApiAuthTokenManagement.Tests/Dockerfile
     environment:
       - DB_HOST=test-database
       - DB_PORT=5432
