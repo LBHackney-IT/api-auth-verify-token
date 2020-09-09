@@ -1,10 +1,10 @@
 version: "3.2"
 
 services:
-  api-auth-token-generator:
+  api-auth-verify-token:
     image: api-auth-token-generator
     build:
-      context: ApiAuthTokenGenerator/
+      context: ApiAuthVerifyToken/
       dockerfile: ./Dockerfile
     ports:
       - 3000:3000
@@ -19,11 +19,11 @@ services:
     volumes:
       - ./database:/docker-entrypoint-initdb.d
 
-  api-auth-token-generator-test:
+  api-auth-verify-token-test:
     image: api-auth-token-generator-test
     build:
       context: .
-      dockerfile: ApiAuthTokenGenerator.Tests/Dockerfile
+      dockerfile: ApiAuthVerifyToken.Tests/Dockerfile
     environment:
       - DB_HOST=test-database
       - DB_PORT=5432
