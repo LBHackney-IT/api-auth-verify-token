@@ -1,16 +1,15 @@
-using Amazon.Lambda.APIGatewayEvents;
-using Amazon.Lambda.Core;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
-using ApiAuthVerifyToken.V1.Boundary;
+using Amazon.Lambda.APIGatewayEvents;
+using Amazon.Lambda.Core;
 using ApiAuthVerifyToken.V1.UseCase.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
 
-namespace ApiAuthVerifyToken
+namespace ApiAuthVerifyToken.V1.Boundary
 {
     public class VerifyTokenHandler
     {
