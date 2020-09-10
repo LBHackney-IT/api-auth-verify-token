@@ -11,7 +11,7 @@ package:
 functions:
   ApiAuthVerifyToken:
     name: ${self:service}-${self:provider.stage}-apiauthverifytoken
-    handler: ApiAuthVerifyToken::ApiAuthVerifyToken.LambdaHandler::VerifyToken
+    handler: ApiAuthVerifyToken::ApiAuthVerifyToken.V1.Boundary.VerifyTokenHandler::VerifyToken
     role: lambdaExecutionRole
     environment:
       CONNECTION_STRING: Host=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-hostname};Port=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-port};Database=auth_token_generator_db;Username=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-username};Password=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-password}

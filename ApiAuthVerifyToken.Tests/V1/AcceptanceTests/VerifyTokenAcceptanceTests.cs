@@ -10,6 +10,7 @@ using NUnit.Framework;
 using System;
 using System.Linq;
 using ApiAuthVerifyToken.Tests.V1.TestHelper;
+using ApiAuthVerifyToken.V1.Boundary;
 
 namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
 {
