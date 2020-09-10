@@ -63,4 +63,4 @@ tmp/
 
 .fake
 .ionide
-/ApiAuthTokenGenerator/Properties/launchSettings.json
+/ApiAuthVerifyToken/Properties/launchSettings.json
