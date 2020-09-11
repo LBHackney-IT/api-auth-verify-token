@@ -48,7 +48,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
             Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(16));
             var result = _classUnderTest.Execute(request);
             result.Allow.Should().BeFalse();
-            result.User.Should().BeNull();
+            result.User.Should().Be("user");
         }
         [Test]
         public void ShouldAllowAccessIfTokenIsValidAndDataMatchesRecords()
@@ -73,7 +73,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
             var result = _classUnderTest.Execute(request);
 
             result.Allow.Should().BeTrue();
-            result.User.Should().Be(consumerName);
+            result.User.Should().Be(consumerName + tokenData.Id);
         }
         [Test]
         public void ShouldNotAllowAccessIfTokenIsValidButDoesNotMatchTokenDataRecords()
@@ -87,7 +87,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
             var result = _classUnderTest.Execute(request);
 
             result.Allow.Should().BeFalse();
-            result.User.Should().BeNull();
+            result.User.Should().Be("0");
         }
         private AuthorizerRequest GenerateAuthorizerRequest()
         {
