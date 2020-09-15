@@ -62,7 +62,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
 
             result.Should().BeOfType<APIGatewayCustomAuthorizerResponse>();
             result.PolicyDocument.Statement.First().Effect.Should().Be("Allow");
-            result.PrincipalID.Should().Be(consumerName);
+            result.PrincipalID.Should().Be(consumerName + tokenData.Id);
         }
 
         [Test]

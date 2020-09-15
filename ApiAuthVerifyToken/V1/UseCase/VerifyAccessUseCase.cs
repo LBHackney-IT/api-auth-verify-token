@@ -29,7 +29,7 @@ namespace ApiAuthVerifyToken.V1.UseCase
             return new AccessDetails
             {
                 Allow = VerifyAccessHelper.ShouldHaveAccess(authorizerRequest, tokenData, apiName),
-                User = tokenData.ConsumerName
+                User = $"{tokenData.ConsumerName}{tokenData.Id}"
             };
         }
 
@@ -39,7 +39,7 @@ namespace ApiAuthVerifyToken.V1.UseCase
                 $"Token beginning with {authorizerRequest.Token.Substring(0, 8)} is invalid or should not have access to" +
                 $" {authorizerRequest.ApiAwsId} - {authorizerRequest.ApiEndpointName}" +
                 $" in {authorizerRequest.Environment}");
-            return new AccessDetails { Allow = false, User = null };
+            return new AccessDetails { Allow = false, User = "user" };
         }
     }
 
