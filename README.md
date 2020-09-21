@@ -30,7 +30,18 @@ functions:
           private: true
 ```
 
-            
+## How it works
+
+The auth solution retrieves information about the API based on the user request. This includes:
+- API name
+- API endpoint name
+- HTTP method type
+- Environment (API stage)
+
+It then retrieves the token record for the consumer and ensures that the token is not revoked, expired or invalid. 
+
+If the token is valid, it compares the request data to the token record to ensure that the given consumer should have access to the API endpoint they are trying to consume.
+
 
 ## Contributing
 
