@@ -79,7 +79,7 @@ After the renaming is done, the ***script will ask you if you want to delete it 
 To serve the application, run it using your IDE of choice, we use Visual Studio CE and JetBrains Rider on Mac.
 
 The application can also be served locally using docker:
-1. Build and serve the application. It will be available in the port 3000.
+ Build and serve the application. It will be available in the port 3000.
 ```sh
 $ make build && make serve
 ```
