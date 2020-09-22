@@ -1,15 +1,47 @@
-# LBH Base API
+# LBH API Auth Verify Token
 
-Base API is a boilerplate code for being reused for new APIs for LBH
+Custom LBH solution to be used as a Lambda authorizer for verifying API access tokens.
 
 ## Stack
 
 - .NET Core as a web framework.
 - nUnit as a test framework.
 
-## Dependencies
+## How to use
 
-- Universal Housing Simulator
+- Notes
+    - To use this auth solution, the consumers of your API will need to first generate an access token
+    - More information on token generation can be found in the [Token Administration API](https://github.com/LBHackney-IT/token-administration-api) repository
+    - Each consumer should provide their access token in an `Authorization` header when making a request 
+    
+- Update the serverless.yml file of your API to use a lambda authorizer for authentication by including the following authorizer reference:
+
+```      
+functions:
+  nameOfApi:
+    ...
+    events:
+      - http:
+          path: /{proxy+}
+          method: ANY
+          authorizer:
+            arn: ${ssm:/platform-apis-lambda-authorizer-arn}
+            type: request
+          private: true
+```
+
+## How it works
+
+The auth solution retrieves information about the API based on the user request. This includes:
+- API name
+- API endpoint name
+- HTTP method type
+- Environment (API stage)
+
+It then retrieves the token record for the consumer and ensures that the token is not revoked, expired or invalid. 
+
+If the token is valid, it compares the request data to the token record to ensure that the given consumer should have access to the API endpoint they are trying to consume.
+
 
 ## Contributing
 
@@ -47,15 +79,7 @@ After the renaming is done, the ***script will ask you if you want to delete it 
 To serve the application, run it using your IDE of choice, we use Visual Studio CE and JetBrains Rider on Mac.
 
 The application can also be served locally using docker:
-1.  Add you security credentials to AWS CLI.
-```sh
-$ aws configure
-```
-2. Log into AWS ECR.
-```sh
-$ aws ecr get-login --no-include-email
-```
-3. Build and serve the application. It will be available in the port 3000.
+ Build and serve the application. It will be available in the port 3000.
 ```sh
 $ make build && make serve
 ```
