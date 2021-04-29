@@ -37,17 +37,23 @@ namespace ApiAuthVerifyToken.V1.Boundary
             LambdaLogger.Log("key: " + request.RequestContext.RouteKey);
             try
             {
+                var isUserAuthFlow = request.Headers.ContainsKey("LBH-User-Auth-Token"); 
+
                 var authorizerRequest = new AuthorizerRequest
                 {
                     ApiEndpointName = request.RequestContext.Path,
                     ApiAwsId = request.RequestContext.ApiId,
                     Environment = request.RequestContext.Stage,
                     HttpMethodType = request.RequestContext.HttpMethod,
-                    Token = request.Headers["Authorization"]?.Replace("Bearer ", "")
+                    AwsAccountId = request.RequestContext.AccountId,
+                    Token = isUserAuthFlow ?
+                                request.Headers["LBH-User-Auth-Token"] : request.Headers["Authorization"]?.Replace("Bearer ", "")
                 };
                 var verifyAccessUseCase = _serviceProvider.GetService<IVerifyAccessUseCase>();
+                LambdaLogger.Log($"Executing user auth flow? -> {isUserAuthFlow}");
 
-                var result = verifyAccessUseCase.Execute(authorizerRequest);
+                var result = isUserAuthFlow ?
+                            verifyAccessUseCase.ExecuteUserAuth(authorizerRequest) : verifyAccessUseCase.ExecuteServiceAuth(authorizerRequest);
 
                 return new APIGatewayCustomAuthorizerResponse
                 {

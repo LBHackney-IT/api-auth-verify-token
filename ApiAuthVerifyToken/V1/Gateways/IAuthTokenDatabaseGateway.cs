@@ -4,6 +4,6 @@ namespace ApiAuthVerifyToken.V1.Gateways
 {
     public interface IAuthTokenDatabaseGateway
     {
-        AuthToken GetTokenData(int tokenId);
+        AuthTokenServiceFlow GetTokenData(int tokenId);
     }
 }

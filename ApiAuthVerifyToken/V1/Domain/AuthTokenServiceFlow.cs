@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ApiAuthVerifyToken.V1.Domain
 {
-    public class AuthToken
+    public class AuthTokenServiceFlow
     {
         public int Id { get; set; }
         public string ApiName { get; set; }

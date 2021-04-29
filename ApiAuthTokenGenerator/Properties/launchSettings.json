@@ -1,0 +1,23 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:62900",
+      "sslPort": 44394
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "transactions_api": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "api/v1/healthcheck/ping",
+      "environmentVariables": {
+        "CONNECTION_STRING": "Host=127.0.0.1;Database=testdb;Username=postgres;Password=mypassword;",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5000"
+    }
+  }
+}

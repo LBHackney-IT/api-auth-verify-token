@@ -14,7 +14,7 @@ namespace ApiAuthVerifyToken.V1.Gateways
             _databaseContext = databaseContext;
         }
 
-        public AuthToken GetTokenData(int tokenId)
+        public AuthTokenServiceFlow GetTokenData(int tokenId)
         {
             var token = _databaseContext.Tokens.Find(tokenId);  //.Where(x => x.Id == tokenId).FirstOrDefault();
 

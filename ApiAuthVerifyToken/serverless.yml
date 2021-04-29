@@ -16,6 +16,9 @@ functions:
     environment:
       CONNECTION_STRING: Host=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-hostname};Port=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-port};Database=auth_token_generator_db;Username=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-username};Password=${ssm:/api-auth-token-generator/${self:provider.stage}/postgres-password}
       jwtSecret: ${ssm:/api-auth-token-generator/${self:provider.stage}/token-secret}
+      hackneyUserAuthTokenJwtSecret: ${ssm:/common/hackney-jwt-secret}
+      AWS_ROLE_NAME_FOR_STS_API_GATEWAY_GET: ${ssm:/api-auth-token-generator/${self:provider.stage}/sts-role-name}
+
 resources:
   Resources:
     lambdaExecutionRole:
@@ -67,6 +70,18 @@ resources:
                   Action:
                     - "lambda:InvokeFunction"
                   Resource: "*"
+          - PolicyName: assumeRoleForGettingCredentials
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - "sts:AssumeRole"
+                  Resource:
+                    Fn::Join:
+                      - ""
+                      - - "arn:aws:iam:::"
+                        - "role/LBH_Api_Gateway_Allow_GET"
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
               Version: '2012-10-17'
@@ -75,6 +90,25 @@ resources:
                   Action:
                     - "apigateway:GET"
                   Resource: "*"
+          - PolicyName: dynamoDBAccess
+            PolicyDocument:
+              Version: '2012-10-17'
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - "dynamodb:BatchGet*"
+                    - "dynamodb:DescribeStream"
+                    - "dynamodb:DescribeTable"
+                    - "dynamodb:Get*"
+                    - "dynamodb:Query"
+                    - "dynamodb:Scan"
+                  Resource:
+                    - 'Fn::Join':
+                        - ':'
+                        - - 'arn:aws:dynamodb'
+                          - Ref: 'AWS::Region'
+                          - Ref: 'AWS::AccountId'
+                          - 'table/APIAuthenticatorData'
 custom:
   vpc:
     development:
