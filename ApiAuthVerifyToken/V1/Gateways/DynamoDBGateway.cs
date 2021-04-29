@@ -24,7 +24,7 @@ namespace ApiAuthVerifyToken.V1.Gateways
             {
                 var queryResult = _dynamoDbContext.QueryAsync<APIDataUserFlowDbEntity>(apiName, QueryOperator.Equal, new object[] { environment });
 
-                var results =  queryResult.GetRemainingAsync().Result;               
+                var results = queryResult.GetRemainingAsync().Result;
 
                 if (results.Count == 0)
                 {
@@ -34,7 +34,7 @@ namespace ApiAuthVerifyToken.V1.Gateways
 
                 return results[0]?.ToDomain();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LambdaLogger.Log($"An error occurred retrieving data from DynamoDb while querying for {apiName} in {environment} environment. Message: {ex.Message}");
                 throw;

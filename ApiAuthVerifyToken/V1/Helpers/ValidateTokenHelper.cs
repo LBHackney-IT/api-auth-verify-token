@@ -11,7 +11,7 @@ namespace ApiAuthVerifyToken.V1.Helpers
 {
     public static class ValidateTokenHelper
     {
-        public static List<Claim> ValidateToken(string token,string secret)
+        public static List<Claim> ValidateToken(string token, string secret)
         {
             try
             {

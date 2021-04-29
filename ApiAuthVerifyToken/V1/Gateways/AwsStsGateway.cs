@@ -28,7 +28,7 @@ namespace ApiAuthVerifyToken.V1.Gateways
                     return credentialsResponse;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LambdaLogger.Log($"An error occurred while assuming role for AWS account with ID {awsAccount}. Message: {ex.Message}");
                 throw;

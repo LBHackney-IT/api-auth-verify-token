@@ -53,7 +53,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
 
             _serviceProvider
                 .Setup(x => x.GetService(typeof(IVerifyAccessUseCase)))
-                .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object,_mockAwsStsGateway.Object,_mockDynamoDbGateway.Object));
+                .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object, _mockAwsStsGateway.Object, _mockDynamoDbGateway.Object));
 
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwtServiceFlow;
@@ -70,7 +70,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
                 ExpirationDate = null
             };
             _mockDatabaseGateway.Setup(x => x.GetTokenData(It.IsAny<int>())).Returns(tokenData);
-            _mockAwsApiGateway.Setup(x => x.GetApiName(It.IsAny<string>(),It.IsAny<Credentials>())).Returns(apiName);
+            _mockAwsApiGateway.Setup(x => x.GetApiName(It.IsAny<string>(), It.IsAny<Credentials>())).Returns(apiName);
             _mockAwsStsGateway.Setup(x => x.GetTemporaryCredentials(It.IsAny<string>())).Returns(new AssumeRoleResponse());
 
             var result = _classUnderTest.VerifyToken(lambdaRequest);
@@ -115,7 +115,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
                 .With(x => x.AwsAccount, lambdaRequest.RequestContext.AccountId)
                 .With(x => x.ApiName, apiName).Create();
 
-            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByNameAndEnvironmentAsync(It.IsAny<string>(),It.IsAny<string>())).Returns(dbData);
+            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByNameAndEnvironmentAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(dbData);
             _mockAwsApiGateway.Setup(x => x.GetApiName(It.IsAny<string>(), It.IsAny<Credentials>())).Returns(apiName);
             _mockAwsStsGateway.Setup(x => x.GetTemporaryCredentials(It.IsAny<string>())).Returns(new AssumeRoleResponse());
 

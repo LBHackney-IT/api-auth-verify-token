@@ -37,11 +37,11 @@ namespace ApiAuthVerifyToken.V1.Helpers
 
             string[] listOfGroups = JsonConvert.DeserializeObject<string[]>(user.Groups);
             bool groupIsAllowed = apiData.AllowedGroups.Any(x => listOfGroups.Contains(x));
-        
-           if ( !groupIsAllowed
-                || apiData.ApiName != apiName
-                || apiData.Environemnt != authorizerRequest.Environment
-                || apiData.AwsAccount != authorizerRequest.AwsAccountId)
+
+            if (!groupIsAllowed
+                 || apiData.ApiName != apiName
+                 || apiData.Environemnt != authorizerRequest.Environment
+                 || apiData.AwsAccount != authorizerRequest.AwsAccountId)
             {
                 LambdaLogger.Log($"User with email {user.Email} is DENIED access for {apiName} " +
                   $" in {authorizerRequest.Environment} stage. User does not have access to {apiName} " +

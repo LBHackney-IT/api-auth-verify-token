@@ -37,7 +37,7 @@ namespace ApiAuthVerifyToken.V1.Boundary
             LambdaLogger.Log("key: " + request.RequestContext.RouteKey);
             try
             {
-                var isUserAuthFlow = request.Headers.ContainsKey("LBH-User-Auth-Token"); 
+                var isUserAuthFlow = request.Headers.ContainsKey("LBH-User-Auth-Token");
 
                 var authorizerRequest = new AuthorizerRequest
                 {

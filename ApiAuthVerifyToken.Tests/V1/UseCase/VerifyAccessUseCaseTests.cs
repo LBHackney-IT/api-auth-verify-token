@@ -31,7 +31,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
             _mockAwsApiGateway = new Mock<IAwsApiGateway>();
             _mockAwsStsGateway = new Mock<IAwsStsGateway>();
             _mockDynamoDbGateway = new Mock<IDynamoDbGateway>();
-            _classUnderTest = new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object, _mockAwsStsGateway.Object,_mockDynamoDbGateway.Object);
+            _classUnderTest = new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object, _mockAwsStsGateway.Object, _mockDynamoDbGateway.Object);
             Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(25));
             Environment.SetEnvironmentVariable("hackneyUserAuthTokenJwtSecret", _faker.Random.AlphaNumeric(25));
         }
@@ -66,7 +66,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
             var apiName = _faker.Random.Word();
             var consumerName = _faker.Random.Word();
             _mockAwsStsGateway.Setup(x => x.GetTemporaryCredentials(It.IsAny<string>())).Returns(new AssumeRoleResponse());
-            _mockAwsApiGateway.Setup(x => x.GetApiName(It.IsAny<string>(),It.IsAny<Credentials>())).Returns(apiName);
+            _mockAwsApiGateway.Setup(x => x.GetApiName(It.IsAny<string>(), It.IsAny<Credentials>())).Returns(apiName);
             var tokenData = new AuthTokenServiceFlow
             {
                 ApiEndpointName = request.ApiEndpointName,
@@ -106,7 +106,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
         [Test]
         public void VerifyThatUseCaseForUserAuthCallsGateway()
         {
-            var groups = new List<string> { _faker.Random.Word(),_faker.Random.Word()};
+            var groups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             var request = GenerateAuthorizerRequest(GenerateJwtHelper.GenerateJwtTokenUserFlow(groups));
             var dbData = _fixture.Create<APIDataUserFlow>();
             var apiName = _faker.Random.Word();

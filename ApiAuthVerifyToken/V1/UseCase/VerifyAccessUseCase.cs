@@ -33,7 +33,7 @@ namespace ApiAuthVerifyToken.V1.UseCase
 
             var tokenData = _databaseGateway.GetTokenData(id);
             var credentials = _awsStsGateway.GetTemporaryCredentials(authorizerRequest.AwsAccountId).Credentials;
-            var apiName = _awsApiGateway.GetApiName(authorizerRequest.ApiAwsId,credentials);
+            var apiName = _awsApiGateway.GetApiName(authorizerRequest.ApiAwsId, credentials);
             LambdaLogger.Log($"API name retrieved - {apiName}");
             return new AccessDetails
             {

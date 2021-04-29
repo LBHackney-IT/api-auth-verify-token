@@ -26,10 +26,10 @@ namespace ApiAuthVerifyToken.V1.Factories
         {
             return new APIDataUserFlow
             {
-               ApiName = data.ApiName,
-               Environemnt = data.Environemnt,
-               AwsAccount = data.AwsAccount,
-               AllowedGroups = data.AllowedGroups
+                ApiName = data.ApiName,
+                Environemnt = data.Environemnt,
+                AwsAccount = data.AwsAccount,
+                AllowedGroups = data.AllowedGroups
             };
         }
     }

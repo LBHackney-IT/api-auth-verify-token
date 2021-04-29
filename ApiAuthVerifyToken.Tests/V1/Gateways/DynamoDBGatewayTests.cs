@@ -20,7 +20,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
         private readonly Faker _faker = new Faker();
         // private DynamoDBContext _dynamoDBContext;
         private DynamoDBGateway _classUnderTest;
-    //    private AmazonDynamoDBClient _client;
+        //    private AmazonDynamoDBClient _client;
 
         [SetUp]
         public void Setup()
@@ -34,7 +34,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
             var apiData = _fixture.Create<APIDataUserFlowDbEntity>();
             AddDataToDynamoDb(apiData);
 
-            var result =  _classUnderTest.GetAPIDataByNameAndEnvironmentAsync(apiData.ApiName,apiData.Environemnt);
+            var result = _classUnderTest.GetAPIDataByNameAndEnvironmentAsync(apiData.ApiName, apiData.Environemnt);
 
             result.Should().BeEquivalentTo(apiData);
         }
@@ -62,7 +62,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
             testDelegate.Should().Throw<APIEntryNotFoundException>();
         }
 
-        private void AddDataToDynamoDb(APIDataUserFlowDbEntity apiData) 
+        private void AddDataToDynamoDb(APIDataUserFlowDbEntity apiData)
         {
             Dictionary<string, AttributeValue> attributes = new Dictionary<string, AttributeValue>();
             attributes["apiName"] = new AttributeValue { S = apiData.ApiName };

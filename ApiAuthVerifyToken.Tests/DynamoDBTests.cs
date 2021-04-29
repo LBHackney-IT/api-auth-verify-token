@@ -30,7 +30,7 @@ namespace ApiAuthVerifyToken.Tests
 
                 DynamoDBClient.CreateTableAsync(request).GetAwaiter().GetResult();
             }
-            catch(ResourceInUseException)
+            catch (ResourceInUseException)
             {
 
             }
