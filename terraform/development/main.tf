@@ -43,10 +43,10 @@ resource "aws_dynamodb_table" "api_authenticator_dynamodb_table" {
     }
 
     tags = {
-        Name              = "api-authenticator-${var.environment_name}"
-        Environment       = var.environment_name
+        Name              = "api-authenticator-development"
+        Environment       = "development"
         terraform-managed = true
-        project_name      = var.project_name
+        project_name      = "api-authenticator"
     }
 }
 
