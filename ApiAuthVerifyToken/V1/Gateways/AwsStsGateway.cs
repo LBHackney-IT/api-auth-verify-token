@@ -25,6 +25,8 @@ namespace ApiAuthVerifyToken.V1.Gateways
                         RoleSessionName = "Session-for-retrieving-API-name"
                     };
                     var credentialsResponse = stsClient.AssumeRoleAsync(request).ConfigureAwait(true).GetAwaiter().GetResult();
+                    LambdaLogger.Log($"Credentials assumed for Role ARN: {request.RoleArn}");
+
                     return credentialsResponse;
                 }
             }
