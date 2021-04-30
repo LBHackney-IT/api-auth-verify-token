@@ -7,6 +7,6 @@ namespace ApiAuthVerifyToken.V1.Domain
     public class HackneyUser
     {
         public string Email { get; set; }
-        public string Groups { get; set; }
+        public List<string> Groups { get; set; }
     }
 }

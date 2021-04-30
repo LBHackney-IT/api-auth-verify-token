@@ -48,20 +48,19 @@ namespace ApiAuthVerifyToken.Tests.V1.TestHelper
             {
                 email = faker.Person.Email,
                 name = faker.Name.FullName(),
-                groups = JsonConvert.SerializeObject(groups)
+                groups = groups
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(Environment.GetEnvironmentVariable("hackneyUserAuthTokenJwtSecret"));
-
+            var listOfClaims = new List<Claim>();
+            requestDetails.groups.ForEach(x => listOfClaims.Add(new Claim("groups", x)));
+            listOfClaims.Add(new Claim("email", requestDetails.email));
+            listOfClaims.Add(new Claim("name", requestDetails.name));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new Claim("email", requestDetails.email),
-                    new Claim("name", requestDetails.name),
-                    new Claim("groups", requestDetails.groups),
-                }),
+                
+                Subject = new ClaimsIdentity(listOfClaims),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Expires = DateTime.Now.AddYears(10)
             };

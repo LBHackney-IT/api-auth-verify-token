@@ -95,7 +95,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Helpers
             var allowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             var userGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             var dbData = GenerateTokenDataUserFlow(_request, _apiName, allowedGroups);
-            var hackneyUser = new HackneyUser() { Groups = JsonConvert.SerializeObject(userGroups) };
+            var hackneyUser = new HackneyUser() { Groups = userGroups };
 
             var result = VerifyAccessHelper.ShouldHaveAccessUserFlow(hackneyUser, _request, dbData, _apiName);
 
@@ -107,7 +107,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Helpers
             var allowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             var userGroups = allowedGroups;
             var dbData = GenerateTokenDataUserFlow(_request, _apiName, allowedGroups);
-            var hackneyUser = new HackneyUser() { Groups = JsonConvert.SerializeObject(userGroups) };
+            var hackneyUser = new HackneyUser() { Groups = userGroups };
             var result = VerifyAccessHelper.ShouldHaveAccessUserFlow(hackneyUser, _request, dbData, _apiName);
 
             result.Should().BeTrue();
@@ -120,7 +120,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Helpers
             var userGroups = allowedGroups;
             var dbData = GenerateTokenDataUserFlow(_request, _apiName, allowedGroups);
             dbData.Environemnt = _faker.Random.Word();
-            var hackneyUser = new HackneyUser() { Groups = JsonConvert.SerializeObject(userGroups) };
+            var hackneyUser = new HackneyUser() { Groups = userGroups };
             var result = VerifyAccessHelper.ShouldHaveAccessUserFlow(hackneyUser, _request, dbData, _apiName);
 
             result.Should().BeFalse();
@@ -132,7 +132,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Helpers
             var userGroups = allowedGroups;
             var dbData = GenerateTokenDataUserFlow(_request, _apiName, allowedGroups);
             dbData.AwsAccount = _faker.Random.Word();
-            var hackneyUser = new HackneyUser() { Groups = JsonConvert.SerializeObject(userGroups) };
+            var hackneyUser = new HackneyUser() { Groups = userGroups };
             var result = VerifyAccessHelper.ShouldHaveAccessUserFlow(hackneyUser, _request, dbData, _apiName);
 
             result.Should().BeFalse();

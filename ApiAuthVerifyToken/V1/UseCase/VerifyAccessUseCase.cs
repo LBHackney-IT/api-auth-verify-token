@@ -5,6 +5,7 @@ using ApiAuthVerifyToken.V1.Gateways;
 using ApiAuthVerifyToken.V1.Helpers;
 using ApiAuthVerifyToken.V1.UseCase.Interfaces;
 using System;
+using System.Linq;
 
 namespace ApiAuthVerifyToken.V1.UseCase
 {
@@ -49,7 +50,7 @@ namespace ApiAuthVerifyToken.V1.UseCase
             if (validTokenClaims == null || validTokenClaims.Count == 0) return ReturnNotAuthorised(authorizerRequest);
 
             var user = new HackneyUser();
-            user.Groups = validTokenClaims.Find(x => x.Type == "groups").Value;
+            user.Groups = validTokenClaims.Where(x => x.Type == "groups").Select(y => y.Value).ToList();
             user.Email = validTokenClaims.Find(x => x.Type == "email").Value;
 
             //get STS credentials and pass them to API gateway

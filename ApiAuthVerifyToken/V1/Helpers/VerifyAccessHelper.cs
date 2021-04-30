@@ -34,9 +34,7 @@ namespace ApiAuthVerifyToken.V1.Helpers
 
         public static bool ShouldHaveAccessUserFlow(HackneyUser user, AuthorizerRequest authorizerRequest, APIDataUserFlow apiData, string apiName)
         {
-
-            string[] listOfGroups = JsonConvert.DeserializeObject<string[]>(user.Groups);
-            bool groupIsAllowed = apiData.AllowedGroups.Any(x => listOfGroups.Contains(x));
+            bool groupIsAllowed = apiData.AllowedGroups.Any(x => user.Groups.Contains(x));
 
             if (!groupIsAllowed
                  || apiData.ApiName != apiName
