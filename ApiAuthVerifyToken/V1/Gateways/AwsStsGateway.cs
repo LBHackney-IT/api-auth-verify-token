@@ -24,7 +24,8 @@ namespace ApiAuthVerifyToken.V1.Gateways
                         DurationSeconds = 900, //15 mins, which is the minimum accepted
                         RoleSessionName = "Session-for-retrieving-API-name"
                     };
-                    var credentialsResponse = stsClient.AssumeRoleAsync(request).Result;
+                    LambdaLogger.Log($"Role ARN in request: {request.RoleArn}");
+                    var credentialsResponse = stsClient.AssumeRoleAsync(request).GetAwaiter().GetResult();
                     LambdaLogger.Log($"Credentials for role with ARN {request.RoleArn} retrieved for user - {credentialsResponse.AssumedRoleUser}");
 
                     return credentialsResponse;
