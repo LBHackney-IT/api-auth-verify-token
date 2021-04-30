@@ -1,5 +1,6 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
+using ApiAuthVerifyToken.V1.Gateways;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,7 @@ namespace ApiAuthVerifyToken.V1.Infrastructure
             }
             else
             {
+
                 services.AddAWSService<IAmazonDynamoDB>();
             }
 
@@ -33,6 +35,7 @@ namespace ApiAuthVerifyToken.V1.Infrastructure
                 var db = sp.GetService<IAmazonDynamoDB>();
                 return new DynamoDBContext(db);
             });
+            services.AddScoped<IDynamoDbGateway, DynamoDBGateway>();
         }
     }
 }
