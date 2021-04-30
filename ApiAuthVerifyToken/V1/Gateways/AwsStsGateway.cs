@@ -24,13 +24,13 @@ namespace ApiAuthVerifyToken.V1.Gateways
                         DurationSeconds = 900, //15 mins, which is the minimum accepted
                         RoleSessionName = "Session-for-retrieving-API-name"
                     };
-                    var credentialsResponse = stsClient.AssumeRoleAsync(request).ConfigureAwait(true).GetAwaiter().GetResult();
-                    LambdaLogger.Log($"Credentials assumed for Role ARN: {request.RoleArn}");
+                    var credentialsResponse = stsClient.AssumeRoleAsync(request).Result;
+                    LambdaLogger.Log($"Credentials for role with ARN {request.RoleArn} retrieved for user - {credentialsResponse.AssumedRoleUser}");
 
                     return credentialsResponse;
                 }
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 LambdaLogger.Log($"An error occurred while assuming role for AWS account with ID {awsAccount}. Message: {ex.Message}");
                 throw;
