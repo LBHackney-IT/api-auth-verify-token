@@ -23,7 +23,8 @@ namespace ApiAuthVerifyToken.V1.Helpers
                     ValidateIssuerSigningKey = true,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret)),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    RequireExpirationTime = false
                 };
                 var claims = handler.ValidateToken(token, validations, out var tokenSecure);
                 return claims.Claims.ToList();
