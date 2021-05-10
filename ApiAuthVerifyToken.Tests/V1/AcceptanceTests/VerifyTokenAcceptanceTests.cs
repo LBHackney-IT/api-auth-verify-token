@@ -107,7 +107,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
                 .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object, _mockAwsStsGateway.Object, _mockDynamoDbGateway.Object));
 
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
-            lambdaRequest.Headers["LBH-User-Auth-Token"] = _jwtUserFlow;
+            lambdaRequest.Headers["Authorization"] = _jwtUserFlow;
             var apiName = _fixture.Create<string>();
             var dbData = _fixture.Build<APIDataUserFlow>()
                 .With(x => x.AllowedGroups, _allowedGroups)
@@ -134,7 +134,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
                 .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object, _mockAwsStsGateway.Object, _mockDynamoDbGateway.Object));
 
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
-            lambdaRequest.Headers["LBH-User-Auth-Token"] = _jwtUserFlow;
+            lambdaRequest.Headers["Authorization"] = _jwtUserFlow;
             var apiName = _fixture.Create<string>();
             var nonAllowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             var dbData = _fixture.Build<APIDataUserFlow>()

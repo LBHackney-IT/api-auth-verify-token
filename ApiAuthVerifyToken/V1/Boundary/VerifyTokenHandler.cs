@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using ApiAuthVerifyToken.V1.Helpers;
 using ApiAuthVerifyToken.V1.UseCase.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -36,9 +37,7 @@ namespace ApiAuthVerifyToken.V1.Boundary
             LambdaLogger.Log("stage: " + request.RequestContext.Stage);
             LambdaLogger.Log("key: " + request.RequestContext.RouteKey);
             try
-            {
-                var isUserAuthFlow = request.Headers.ContainsKey("LBH-User-Auth-Token");
-
+            {              
                 var authorizerRequest = new AuthorizerRequest
                 {
                     ApiEndpointName = request.RequestContext.Path,
@@ -46,14 +45,16 @@ namespace ApiAuthVerifyToken.V1.Boundary
                     Environment = request.RequestContext.Stage,
                     HttpMethodType = request.RequestContext.HttpMethod,
                     AwsAccountId = request.RequestContext.AccountId,
-                    Token = isUserAuthFlow ?
-                                request.Headers["LBH-User-Auth-Token"] : request.Headers["Authorization"]?.Replace("Bearer ", "")
+                    Token = request.Headers["Authorization"]?.Replace("Bearer ", "")
                 };
-                var verifyAccessUseCase = _serviceProvider.GetService<IVerifyAccessUseCase>();
-                LambdaLogger.Log($"Executing user auth flow? -> {isUserAuthFlow}");
 
-                var result = isUserAuthFlow ?
-                            verifyAccessUseCase.ExecuteUserAuth(authorizerRequest) : verifyAccessUseCase.ExecuteServiceAuth(authorizerRequest);
+                var isServiceAuthFlow = DetermineTokenSourceHelper.DetermineTokenSource(authorizerRequest.Token);
+
+                var verifyAccessUseCase = _serviceProvider.GetService<IVerifyAccessUseCase>();
+                LambdaLogger.Log($"Executing service auth flow? -> {isServiceAuthFlow}");
+
+                var result = isServiceAuthFlow ?
+                            verifyAccessUseCase.ExecuteServiceAuth(authorizerRequest) : verifyAccessUseCase.ExecuteUserAuth(authorizerRequest);
 
                 return new APIGatewayCustomAuthorizerResponse
                 {
