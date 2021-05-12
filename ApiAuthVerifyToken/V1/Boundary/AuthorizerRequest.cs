@@ -9,6 +9,7 @@ namespace ApiAuthVerifyToken.V1.Boundary
     {
         public string Token { get; set; }
         public string Environment { get; set; }
+        public string AwsAccountId { get; set; }
         public string ApiAwsId { get; set; }
         public string ApiEndpointName { get; set; }
         public string HttpMethodType { get; set; }

@@ -8,6 +8,8 @@ namespace ApiAuthVerifyToken.V1.UseCase.Interfaces
 {
     public interface IVerifyAccessUseCase
     {
-        AccessDetails Execute(AuthorizerRequest authorizerRequest);
+        AccessDetails ExecuteServiceAuth(AuthorizerRequest authorizerRequest);
+        AccessDetails ExecuteUserAuth(AuthorizerRequest authorizerRequest);
+
     }
 }

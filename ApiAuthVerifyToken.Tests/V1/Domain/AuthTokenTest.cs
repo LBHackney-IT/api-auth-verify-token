@@ -8,11 +8,11 @@ namespace ApiAuthVerifyToken.Tests.V1.Domain
     [TestFixture]
     public class AuthTokenTest
     {
-        private AuthToken _entity;
+        private AuthTokenServiceFlow _entity;
         [SetUp]
         public void Setup()
         {
-            _entity = new AuthToken();
+            _entity = new AuthTokenServiceFlow();
         }
         [Test]
         public void AuthTokenHasAnId()

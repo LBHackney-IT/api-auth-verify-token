@@ -5,10 +5,10 @@ namespace ApiAuthVerifyToken.V1.Factories
 {
     public static class EntityFactory
     {
-        public static AuthToken ToDomain(this AuthTokens token, string apiEndpointName, string apiName,
+        public static AuthTokenServiceFlow ToDomain(this AuthTokens token, string apiEndpointName, string apiName,
             string consumerType)
         {
-            return new AuthToken
+            return new AuthTokenServiceFlow
             {
                 Id = token.Id,
                 ApiEndpointName = apiEndpointName,
@@ -19,6 +19,17 @@ namespace ApiAuthVerifyToken.V1.Factories
                 Environment = token.Environment,
                 ExpirationDate = token.ExpirationDate,
                 Enabled = token.Enabled
+            };
+        }
+
+        public static APIDataUserFlow ToDomain(this APIDataUserFlowDbEntity data)
+        {
+            return new APIDataUserFlow
+            {
+                ApiName = data.ApiName,
+                Environment = data.Environment,
+                AwsAccount = data.AwsAccount,
+                AllowedGroups = data.AllowedGroups
             };
         }
     }

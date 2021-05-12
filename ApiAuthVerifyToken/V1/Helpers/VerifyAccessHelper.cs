@@ -2,13 +2,14 @@ using Amazon.Lambda.Core;
 using System;
 using ApiAuthVerifyToken.V1.Boundary;
 using ApiAuthVerifyToken.V1.Domain;
-
+using System.Linq;
+using Newtonsoft.Json;
 
 namespace ApiAuthVerifyToken.V1.Helpers
 {
     public static class VerifyAccessHelper
     {
-        public static bool ShouldHaveAccess(AuthorizerRequest authorizerRequest, AuthToken tokenData, string apiName)
+        public static bool ShouldHaveAccessServiceFlow(AuthorizerRequest authorizerRequest, AuthTokenServiceFlow tokenData, string apiName)
         {
             //Check that the token is enabled or that the expiration date is valid
             if (!tokenData.Enabled
@@ -30,5 +31,29 @@ namespace ApiAuthVerifyToken.V1.Helpers
 
             return true;
         }
+
+        public static bool ShouldHaveAccessUserFlow(HackneyUser user, AuthorizerRequest authorizerRequest, APIDataUserFlow apiData, string apiName)
+        {
+            bool groupIsAllowed = apiData.AllowedGroups.Any(x => user.Groups.Contains(x));
+
+            if (!groupIsAllowed
+                 || apiData.ApiName != apiName
+                 || apiData.Environment != authorizerRequest.Environment
+                 || apiData.AwsAccount != authorizerRequest.AwsAccountId)
+            {
+                LambdaLogger.Log($"User with email {user.Email} is DENIED access for {apiName} " +
+                  $" in {authorizerRequest.Environment} stage. User does not have access to {apiName} " +
+                  $"for {apiData.Environment} stage in the following AWS account {apiData.AwsAccount}. User is in the following" +
+                  $"Google groups: {user.Groups}");
+                return false;
+            }
+
+            LambdaLogger.Log($"User with email {user.Email} is ALLOWED access for {apiName} " +
+                  $" in {authorizerRequest.Environment} stage. The API, as described in the database," +
+                  $"is deployed to the following AWS account {apiData.AwsAccount}");
+
+            return true;
+        }
+
     }
 }

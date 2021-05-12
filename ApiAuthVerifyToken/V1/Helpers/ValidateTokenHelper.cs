@@ -11,18 +11,20 @@ namespace ApiAuthVerifyToken.V1.Helpers
 {
     public static class ValidateTokenHelper
     {
-        public static List<Claim> ValidateToken(string token)
+        public static List<Claim> ValidateToken(string token, string secret)
         {
             try
             {
+                JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
                 var handler = new JwtSecurityTokenHandler();
                 var validations = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes
-                    (Environment.GetEnvironmentVariable("jwtSecret"))),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secret)),
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateAudience = false,
+                    RequireExpirationTime = false
                 };
                 var claims = handler.ValidateToken(token, validations, out var tokenSecure);
                 return claims.Claims.ToList();

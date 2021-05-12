@@ -22,6 +22,25 @@ references:
       at: *workspace_root
 
 commands:
+  terraform-init-then-apply:
+    description: "Initializes and applies terraform configuration"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+          name: get and init
+      - run:
+          name: apply
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform apply -auto-approve
   assume-role-and-persist-workspace:
     description: "Assumes deployment role and persists credentials across jobs"
     parameters:
@@ -75,7 +94,7 @@ jobs:
           command: dotnet tool install dotnet-format --tool-path ./dotnet-format-local/
       - run:
           name: Run formatter check
-          command: ./dotnet-format-local/dotnet-format --dry-run --check
+          command: ./dotnet-format-local/dotnet-format --check
   build-and-test:
     executor: docker-python
     steps:
@@ -87,6 +106,21 @@ jobs:
       - run:
           name: Run tests
           command: docker-compose run api-auth-verify-token-test
+  terraform-init-and-apply-to-development:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "development"
+  terraform-init-and-apply-to-staging:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "staging"
+  terraform-init-and-apply-to-production:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-apply:
+          environment: "production"
   assume-role-development:
     executor: docker-python
     steps:
@@ -127,6 +161,12 @@ workflows:
           context: api-assume-role-development-context
           requires:
             - build-and-test
+          filters:
+            branches:
+              only: development
+      - terraform-init-and-apply-to-development:
+          requires:
+            - assume-role-development
           filters:
             branches:
               only: development

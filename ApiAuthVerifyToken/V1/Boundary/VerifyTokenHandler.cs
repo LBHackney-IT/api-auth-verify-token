@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
+using ApiAuthVerifyToken.V1.Helpers;
 using ApiAuthVerifyToken.V1.UseCase.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -43,11 +44,17 @@ namespace ApiAuthVerifyToken.V1.Boundary
                     ApiAwsId = request.RequestContext.ApiId,
                     Environment = request.RequestContext.Stage,
                     HttpMethodType = request.RequestContext.HttpMethod,
+                    AwsAccountId = request.RequestContext.AccountId,
                     Token = request.Headers["Authorization"]?.Replace("Bearer ", "")
                 };
-                var verifyAccessUseCase = _serviceProvider.GetService<IVerifyAccessUseCase>();
 
-                var result = verifyAccessUseCase.Execute(authorizerRequest);
+                var isServiceAuthFlow = DetermineTokenSourceHelper.DetermineTokenSource(authorizerRequest.Token);
+
+                var verifyAccessUseCase = _serviceProvider.GetService<IVerifyAccessUseCase>();
+                LambdaLogger.Log($"Executing service auth flow? -> {isServiceAuthFlow}");
+
+                var result = isServiceAuthFlow ?
+                            verifyAccessUseCase.ExecuteServiceAuth(authorizerRequest) : verifyAccessUseCase.ExecuteUserAuth(authorizerRequest);
 
                 return new APIGatewayCustomAuthorizerResponse
                 {

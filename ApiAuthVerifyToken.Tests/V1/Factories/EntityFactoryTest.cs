@@ -31,5 +31,18 @@ namespace ApiAuthVerifyToken.Tests.V1.Factories
             response.ConsumerName.Should().Be(tokenData.ConsumerName);
             response.Enabled.Should().Be(tokenData.Enabled);
         }
+
+        [Test]
+        public void CanMapDatabaseResultsDynamoDbToAPIData()
+        {
+            var fixture = new Fixture();
+            var apiData = fixture.Build<APIDataUserFlowDbEntity>().Create();
+            var response = apiData.ToDomain();
+
+            response.ApiName.Should().Be(apiData.ApiName);
+            response.Environment.Should().Be(apiData.Environment);
+            response.AwsAccount.Should().Be(apiData.AwsAccount);
+            response.AllowedGroups.Should().BeEquivalentTo(apiData.AllowedGroups);
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
 
             var result = _classUnderTest.GetTokenData(tokenDataInDb.Id);
 
-            result.Should().BeOfType<AuthToken>();
+            result.Should().BeOfType<AuthTokenServiceFlow>();
             result.Should().NotBeNull();
             result.Id.Should().Be(tokenDataInDb.Id);
             result.ExpirationDate.Should().Be(tokenDataInDb.ExpirationDate);
@@ -43,10 +43,10 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
         [Test]
         public void ShouldThrowAnExceptionIfTokenMatchIsNotFound()
         {
-            Func<AuthToken> testDelegate = () => _classUnderTest.GetTokenData(_fixture.Create<int>());
+            Func<AuthTokenServiceFlow> testDelegate = () => _classUnderTest.GetTokenData(_fixture.Create<int>());
             testDelegate.Should().Throw<TokenDataNotFoundException>();
         }
-        private AuthToken AddTokenRecordToTheDatabase()
+        private AuthTokenServiceFlow AddTokenRecordToTheDatabase()
         {
             var api = _fixture.Build<ApiNameLookup>().Create();
             DatabaseContext.Add(api);
@@ -66,7 +66,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
             DatabaseContext.Add(tokenData);
 
             DatabaseContext.SaveChanges();
-            return new AuthToken
+            return new AuthTokenServiceFlow
             {
                 ApiEndpointName = apiEndpoint.ApiEndpointName,
                 HttpMethodType = tokenData.HttpMethodType,
