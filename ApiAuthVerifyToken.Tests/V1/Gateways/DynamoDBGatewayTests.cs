@@ -34,7 +34,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
             var apiData = _fixture.Create<APIDataUserFlowDbEntity>();
             AddDataToDynamoDb(apiData);
 
-            var result = _classUnderTest.GetAPIDataByNameAndEnvironmentAsync(apiData.ApiName, apiData.Environemnt);
+            var result = _classUnderTest.GetAPIDataByNameAndEnvironmentAsync(apiData.ApiName, apiData.Environment);
 
             result.Should().BeEquivalentTo(apiData);
         }
@@ -48,7 +48,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
             var otherApiData = _fixture.Create<APIDataUserFlowDbEntity>();
             AddDataToDynamoDb(otherApiData);
 
-            var result = _classUnderTest.GetAPIDataByNameAndEnvironmentAsync(apiData.ApiName, apiData.Environemnt);
+            var result = _classUnderTest.GetAPIDataByNameAndEnvironmentAsync(apiData.ApiName, apiData.Environment);
 
             result.Should().BeEquivalentTo(apiData);
         }
@@ -66,7 +66,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
         {
             Dictionary<string, AttributeValue> attributes = new Dictionary<string, AttributeValue>();
             attributes["apiName"] = new AttributeValue { S = apiData.ApiName };
-            attributes["environment"] = new AttributeValue { S = apiData.Environemnt };
+            attributes["environment"] = new AttributeValue { S = apiData.Environment };
             attributes["awsAccount"] = new AttributeValue { S = apiData.AwsAccount };
             attributes["allowedGroups"] = new AttributeValue { SS = new List<string>(apiData.AllowedGroups) };
 

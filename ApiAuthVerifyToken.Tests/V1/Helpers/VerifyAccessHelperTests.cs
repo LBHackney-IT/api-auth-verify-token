@@ -119,7 +119,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Helpers
             var allowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             var userGroups = allowedGroups;
             var dbData = GenerateTokenDataUserFlow(_request, _apiName, allowedGroups);
-            dbData.Environemnt = _faker.Random.Word();
+            dbData.Environment = _faker.Random.Word();
             var hackneyUser = new HackneyUser() { Groups = userGroups };
             var result = VerifyAccessHelper.ShouldHaveAccessUserFlow(hackneyUser, _request, dbData, _apiName);
 
@@ -169,7 +169,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Helpers
             {
                 ApiName = apiName,
                 AwsAccount = request.AwsAccountId,
-                Environemnt = request.Environment,
+                Environment = request.Environment,
                 AllowedGroups = groups
             };
         }

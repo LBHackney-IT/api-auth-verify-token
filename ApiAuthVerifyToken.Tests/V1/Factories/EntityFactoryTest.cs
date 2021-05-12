@@ -40,7 +40,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Factories
             var response = apiData.ToDomain();
 
             response.ApiName.Should().Be(apiData.ApiName);
-            response.Environemnt.Should().Be(apiData.Environemnt);
+            response.Environment.Should().Be(apiData.Environment);
             response.AwsAccount.Should().Be(apiData.AwsAccount);
             response.AllowedGroups.Should().BeEquivalentTo(apiData.AllowedGroups);
         }

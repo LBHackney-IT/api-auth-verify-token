@@ -38,12 +38,12 @@ namespace ApiAuthVerifyToken.V1.Helpers
 
             if (!groupIsAllowed
                  || apiData.ApiName != apiName
-                 || apiData.Environemnt != authorizerRequest.Environment
+                 || apiData.Environment != authorizerRequest.Environment
                  || apiData.AwsAccount != authorizerRequest.AwsAccountId)
             {
                 LambdaLogger.Log($"User with email {user.Email} is DENIED access for {apiName} " +
                   $" in {authorizerRequest.Environment} stage. User does not have access to {apiName} " +
-                  $"for {apiData.Environemnt} stage in the following AWS account {apiData.AwsAccount}. User is in the following" +
+                  $"for {apiData.Environment} stage in the following AWS account {apiData.AwsAccount}. User is in the following" +
                   $"Google groups: {user.Groups}");
                 return false;
             }

@@ -8,7 +8,7 @@ namespace ApiAuthVerifyToken.V1.Domain
     {
         public Guid Id { get; set; }
         public string ApiName { get; set; }
-        public string Environemnt { get; set; }
+        public string Environment { get; set; }
         //AWS account where API is deployed
         public string AwsAccount { get; set; }
         public List<string> AllowedGroups { get; set; }

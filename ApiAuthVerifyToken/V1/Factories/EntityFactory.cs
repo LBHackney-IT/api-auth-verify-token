@@ -27,7 +27,7 @@ namespace ApiAuthVerifyToken.V1.Factories
             return new APIDataUserFlow
             {
                 ApiName = data.ApiName,
-                Environemnt = data.Environemnt,
+                Environment = data.Environment,
                 AwsAccount = data.AwsAccount,
                 AllowedGroups = data.AllowedGroups
             };

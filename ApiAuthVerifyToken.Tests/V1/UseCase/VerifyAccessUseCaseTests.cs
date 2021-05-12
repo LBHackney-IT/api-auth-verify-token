@@ -128,7 +128,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
 
             var dbData = _fixture.Build<APIDataUserFlow>()
                 .With(x => x.AllowedGroups, groups)
-                .With(x => x.Environemnt, request.Environment)
+                .With(x => x.Environment, request.Environment)
                 .With(x => x.AwsAccount, request.AwsAccountId)
                 .With(x => x.ApiName, apiName).Create();
 

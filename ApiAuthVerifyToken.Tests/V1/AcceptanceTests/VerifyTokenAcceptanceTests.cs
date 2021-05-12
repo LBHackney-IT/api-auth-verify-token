@@ -111,7 +111,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
             var apiName = _fixture.Create<string>();
             var dbData = _fixture.Build<APIDataUserFlow>()
                 .With(x => x.AllowedGroups, _allowedGroups)
-                .With(x => x.Environemnt, lambdaRequest.RequestContext.Stage)
+                .With(x => x.Environment, lambdaRequest.RequestContext.Stage)
                 .With(x => x.AwsAccount, lambdaRequest.RequestContext.AccountId)
                 .With(x => x.ApiName, apiName).Create();
 
@@ -139,7 +139,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
             var nonAllowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             var dbData = _fixture.Build<APIDataUserFlow>()
                 .With(x => x.AllowedGroups, nonAllowedGroups)
-                .With(x => x.Environemnt, lambdaRequest.RequestContext.Stage)
+                .With(x => x.Environment, lambdaRequest.RequestContext.Stage)
                 .With(x => x.AwsAccount, lambdaRequest.RequestContext.AccountId)
                 .With(x => x.ApiName, apiName).Create();
 

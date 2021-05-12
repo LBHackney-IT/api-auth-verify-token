@@ -25,7 +25,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Domain
         [Test]
         public void ApiDataHasEnvironment()
         {
-            _entity.Environemnt.Should().BeNullOrWhiteSpace();
+            _entity.Environment.Should().BeNullOrWhiteSpace();
         }
         [Test]
         public void ApiDataHasAWSaccount()
