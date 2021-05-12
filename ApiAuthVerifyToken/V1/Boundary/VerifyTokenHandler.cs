@@ -37,7 +37,7 @@ namespace ApiAuthVerifyToken.V1.Boundary
             LambdaLogger.Log("stage: " + request.RequestContext.Stage);
             LambdaLogger.Log("key: " + request.RequestContext.RouteKey);
             try
-            {              
+            {
                 var authorizerRequest = new AuthorizerRequest
                 {
                     ApiEndpointName = request.RequestContext.Path,

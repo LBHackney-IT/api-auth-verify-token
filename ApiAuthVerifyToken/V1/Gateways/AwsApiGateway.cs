@@ -26,7 +26,7 @@ namespace ApiAuthVerifyToken.V1.Gateways
                     return response.Name;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 LambdaLogger.Log($"An error occurred while getting API name for API id {apiId}. Message: {ex.Message}, Exception: {ex.InnerException}");
                 throw;

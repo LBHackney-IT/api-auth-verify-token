@@ -59,7 +59,7 @@ namespace ApiAuthVerifyToken.Tests.V1.TestHelper
             listOfClaims.Add(new Claim("name", requestDetails.name));
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                
+
                 Subject = new ClaimsIdentity(listOfClaims),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Expires = DateTime.Now.AddYears(10)
