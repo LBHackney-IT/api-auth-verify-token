@@ -220,10 +220,9 @@ workflows:
             - assume-role-production
           filters:
             branches:
-              only: production
+              only: master
       - deploy-to-production:
           requires:
-            - permit-production-release
             - terraform-init-and-apply-to-production
           filters:
             branches:
