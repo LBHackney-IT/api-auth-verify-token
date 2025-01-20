@@ -54,7 +54,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
         {
             var request = GenerateAuthorizerRequest(GenerateJwtHelper.GenerateJwtToken());
             //change key to simulate failed validation
-            Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(16));
+            Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(50));
             var result = _classUnderTest.ExecuteServiceAuth(request);
             result.Allow.Should().BeFalse();
             result.User.Should().Be("user");
