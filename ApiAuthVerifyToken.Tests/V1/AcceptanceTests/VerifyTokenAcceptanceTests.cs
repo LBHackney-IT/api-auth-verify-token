@@ -40,8 +40,8 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
             _mockAwsStsGateway = new Mock<IAwsStsGateway>();
             _mockDynamoDbGateway = new Mock<IDynamoDbGateway>();
             //set up env vars
-            Environment.SetEnvironmentVariable("jwtSecret", _fixture.Create<string>());
-            Environment.SetEnvironmentVariable("hackneyUserAuthTokenJwtSecret", _faker.Random.AlphaNumeric(25));
+            Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(50));
+            Environment.SetEnvironmentVariable("hackneyUserAuthTokenJwtSecret", _faker.Random.AlphaNumeric(50));
             //set up JWT tokens
             _allowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             _jwtServiceFlow = GenerateJwtHelper.GenerateJwtToken();
@@ -91,7 +91,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwtServiceFlow;
             //change jwt secret to simulate failure of validating token
-            Environment.SetEnvironmentVariable("jwtSecret", _fixture.Create<string>());
+            Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(50));
             var result = _classUnderTest.VerifyToken(lambdaRequest);
 
             result.Should().BeOfType<APIGatewayCustomAuthorizerResponse>();
