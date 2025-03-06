@@ -17,6 +17,7 @@ namespace ApiAuthVerifyToken
 
             var connectionString = Environment.GetEnvironmentVariable("CONNECTION_STRING");
 
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
             services.AddDbContext<TokenDatabaseContext>(
                 opt => opt.UseNpgsql(connectionString));
 

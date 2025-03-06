@@ -32,8 +32,8 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
             _mockAwsStsGateway = new Mock<IAwsStsGateway>();
             _mockDynamoDbGateway = new Mock<IDynamoDbGateway>();
             _classUnderTest = new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object, _mockAwsStsGateway.Object, _mockDynamoDbGateway.Object);
-            Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(25));
-            Environment.SetEnvironmentVariable("hackneyUserAuthTokenJwtSecret", _faker.Random.AlphaNumeric(25));
+            Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(50));
+            Environment.SetEnvironmentVariable("hackneyUserAuthTokenJwtSecret", _faker.Random.AlphaNumeric(50));
         }
         #region Service Auth Flow
 
@@ -54,7 +54,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
         {
             var request = GenerateAuthorizerRequest(GenerateJwtHelper.GenerateJwtToken());
             //change key to simulate failed validation
-            Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(16));
+            Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(50));
             var result = _classUnderTest.ExecuteServiceAuth(request);
             result.Allow.Should().BeFalse();
             result.User.Should().Be("user");
