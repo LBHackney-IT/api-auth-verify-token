@@ -16,7 +16,7 @@ shell:
 
 .PHONY: test
 test:
-	docker compose up test-database & docker compose build base-api-test && docker compose up base-api-test
+	docker compose up test-database & docker compose build base-api-test && docker compose up api-auth-verify-token-test
 
 .PHONY: lint
 lint:
