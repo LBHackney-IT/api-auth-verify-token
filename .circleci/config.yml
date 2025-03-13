@@ -106,6 +106,9 @@ jobs:
       - checkout
       - setup_remote_docker
       - run:
+          name: build
+          command: docker compose build api-auth-verify-token-test
+      - run:
           name: Run tests
           command: docker compose run api-auth-verify-token-test
   build-and-test-new:
@@ -113,6 +116,9 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
+      - run:
+          name: build
+          command: docker compose build api-auth-verify-token-test-new
       - run:
           name: Run tests
           command: docker compose run api-auth-verify-token-test-new

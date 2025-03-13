@@ -18,4 +18,4 @@ COPY . .
 
 RUN dotnet build -c debug -o out ApiAuthVerifyToken.Tests/ApiAuthVerifyToken.Tests.csproj
 
-CMD dotnet test
+CMD dotnet test ApiAuthVerifyToken.Tests/ApiAuthVerifyToken.Tests.csproj
