@@ -13,6 +13,9 @@ executors:
   docker-dotnet:
     docker:
       - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+  docker-dotnet-8:
+    docker:
+      - image: mcr.microsoft.com/dotnet/sdk:8.0
 
 references:
   workspace_root: &workspace_root "~"
@@ -60,6 +63,9 @@ commands:
     parameters:
       stage:
         type: string
+      path:
+        type: string
+        default: "./ApiAuthVerifyToken/"
     steps:
       - *attach_workspace
       - checkout
@@ -67,7 +73,7 @@ commands:
       - run:
           name: Install Node.js
           command: |
-            curl -sL https://deb.nodesource.com/setup_13.x | bash -
+            curl -sL https://deb.nodesource.com/setup_20.x | bash -
             apt-get update && apt-get install -y nodejs
       - run:
           name: Install serverless CLI
@@ -75,13 +81,13 @@ commands:
       - run:
           name: Build lambda
           command: |
-            cd ./ApiAuthVerifyToken/
+            cd <<parameters.path>>
             chmod +x ./build.sh
             ./build.sh
       - run:
           name: Deploy lambda
           command: |
-            cd ./ApiAuthVerifyToken/
+            cd <<parameters.path>>
             sls deploy --stage <<parameters.stage>> --conceal
 jobs:
   check-code-formatting:
@@ -105,6 +111,17 @@ jobs:
       - run:
           name: Run tests
           command: docker compose run api-auth-verify-token-test
+  build-and-test-new:
+    executor: docker-python
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: build
+          command: docker compose build api-auth-verify-token-test-new
+      - run:
+          name: Run tests
+          command: docker compose run api-auth-verify-token-test-new
   terraform-init-and-apply-to-development:
     executor: docker-terraform
     steps:
@@ -145,6 +162,12 @@ jobs:
     steps:
       - deploy-lambda:
           stage: "staging"
+  deploy-to-staging-new:
+    executor: docker-dotnet-8
+    steps:
+      - deploy-lambda:
+          stage: "staging"
+          path: "./ApiAuthVerifyTokenNew/"
   deploy-to-production:
     executor: docker-dotnet
     steps:
@@ -152,10 +175,31 @@ jobs:
           stage: "production"
 
 workflows:
+  check:
+    jobs:
+      - check-code-formatting:
+          filters:
+            branches:
+              ignore: master
+      - build-and-test:
+          filters:
+            branches:
+              ignore: master
+      - build-and-test-new:
+          filters:
+            branches:
+              ignore: master
+
   check-and-deploy-development:
     jobs:
-      - check-code-formatting
-      - build-and-test
+      - check-code-formatting:
+          filters:
+            branches:
+              only: development
+      - build-and-test:
+          filters:
+            branches:
+              only: development
       - assume-role-development:
           context: api-assume-role-development-context
           requires:
@@ -181,25 +225,24 @@ workflows:
           filters:
             branches:
               only: master
+      - build-and-test-new:
+          filters:
+            branches:
+              only: master
       - assume-role-staging:
           context: api-assume-role-staging-context
           requires:
               - build-and-test
-          filters:
-             branches:
-               only: master
+              - build-and-test-new
       - terraform-init-and-apply-to-staging:
           requires:
             - assume-role-staging
-          filters:
-            branches:
-              only: master
       - deploy-to-staging:
           requires:
             - terraform-init-and-apply-to-staging
-          filters:
-            branches:
-              only: master
+      - deploy-to-staging-new:
+          requires:
+            - terraform-init-and-apply-to-staging
       - permit-production-release:
           type: approval
           requires:

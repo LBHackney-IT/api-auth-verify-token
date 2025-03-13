@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAuthVerifyToken", "ApiAu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAuthVerifyToken.Tests", "ApiAuthVerifyToken.Tests\ApiAuthVerifyToken.Tests.csproj", "{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAuthVerifyTokenNew", "ApiAuthVerifyTokenNew\ApiAuthVerifyToken.csproj", "{FA41A1B7-FC7D-4BF0-874B-6D25C30BE45F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAuthVerifyTokenNew.Tests", "ApiAuthVerifyTokenNew.Tests\ApiAuthVerifyToken.Tests.csproj", "{53FBDDE7-D4D6-44FE-ACEB-CEEE0DED9E91}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,5 +23,13 @@ Global
 		{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA41A1B7-FC7D-4BF0-874B-6D25C30BE45F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA41A1B7-FC7D-4BF0-874B-6D25C30BE45F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA41A1B7-FC7D-4BF0-874B-6D25C30BE45F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA41A1B7-FC7D-4BF0-874B-6D25C30BE45F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53FBDDE7-D4D6-44FE-ACEB-CEEE0DED9E91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53FBDDE7-D4D6-44FE-ACEB-CEEE0DED9E91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53FBDDE7-D4D6-44FE-ACEB-CEEE0DED9E91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53FBDDE7-D4D6-44FE-ACEB-CEEE0DED9E91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
