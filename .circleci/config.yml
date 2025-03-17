@@ -79,7 +79,7 @@ commands:
           name: Deploy lambda
           command: |
             cd <<parameters.path>>
-            sls deploy --stage <<parameters.stage>> --conceal
+            npx --yes serverless deploy --stage <<parameters.stage>> --conceal
 jobs:
   check-code-formatting:
     executor: docker-dotnet
