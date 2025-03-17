@@ -219,30 +219,48 @@ workflows:
           filters:
             branches:
               only: development
+  temp-deploy-new-staging:
+    jobs:
+      - build-and-test-new
+      - assume-role-staging:
+          context: api-assume-role-staging-context
+          requires:
+            - build-and-test-new
+      - permit-staging-new-release:
+          type: approval
+          requires:
+            - assume-role-staging
+      - terraform-init-and-apply-to-staging:
+          requires:
+            - permit-staging-new-release
+      - deploy-to-staging-new:
+          requires:
+            - terraform-init-and-apply-to-staging
+
   check-and-deploy-staging-and-production:
     jobs:
       - build-and-test:
           filters:
             branches:
               only: master
-      - build-and-test-new:
-          filters:
-            branches:
-              only: master
+      # - build-and-test-new:
+      #     filters:
+      #       branches:
+      #         only: master
       - assume-role-staging:
           context: api-assume-role-staging-context
           requires:
-              - build-and-test
-              - build-and-test-new
+            - build-and-test
+            # - build-and-test-new
       - terraform-init-and-apply-to-staging:
           requires:
             - assume-role-staging
       - deploy-to-staging:
           requires:
             - terraform-init-and-apply-to-staging
-      - deploy-to-staging-new:
-          requires:
-            - terraform-init-and-apply-to-staging
+      # - deploy-to-staging-new:
+      #     requires:
+      #       - terraform-init-and-apply-to-staging
       - permit-production-release:
           type: approval
           requires:
