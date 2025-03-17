@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 
-namespace ApiAuthVerifyToken.Versioning
+namespace ApiAuthVerifyTokenNew.Versioning
 {
     public static class ApiVersionDescriptionExtensions
     {

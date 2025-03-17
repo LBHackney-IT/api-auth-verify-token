@@ -11,7 +11,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace ApiAuthVerifyToken.Tests.V1.Gateways
+namespace ApiAuthVerifyTokenNew.Tests.V1.Gateways
 {
     [TestFixture]
     public class DynamoDBGatewayTests : DynamoDBTests

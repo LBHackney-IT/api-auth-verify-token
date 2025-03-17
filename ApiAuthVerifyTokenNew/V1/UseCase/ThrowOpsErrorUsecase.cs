@@ -1,5 +1,5 @@
 
-namespace ApiAuthVerifyToken.V1.UseCase
+namespace ApiAuthVerifyTokenNew.V1.UseCase
 {
     public static class ThrowOpsErrorUsecase
     {

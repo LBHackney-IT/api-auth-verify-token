@@ -1,7 +1,7 @@
 using ApiAuthVerifyToken.V1.Domain;
 using ApiAuthVerifyToken.V1.Infrastructure;
 
-namespace ApiAuthVerifyToken.V1.Factories
+namespace ApiAuthVerifyTokenNew.V1.Factories
 {
     public static class EntityFactory
     {

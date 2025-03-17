@@ -4,7 +4,7 @@ using ApiAuthVerifyToken.V1.Infrastructure;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace ApiAuthVerifyToken.Tests.V1.Infrastructure
+namespace ApiAuthVerifyTokenNew.Tests.V1.Infrastructure
 {
     [TestFixture]
     public class DatabaseContextTest : DatabaseTests

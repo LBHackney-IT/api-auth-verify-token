@@ -8,7 +8,7 @@ using Bogus;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
 
-namespace ApiAuthVerifyToken.Tests.V1.TestHelper
+namespace ApiAuthVerifyTokenNew.Tests.V1.TestHelper
 {
     public static class GenerateJwtHelper
     {

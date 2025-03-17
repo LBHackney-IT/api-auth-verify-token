@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiAuthVerifyToken.V1.Domain
+namespace ApiAuthVerifyTokenNew.V1.Domain
 {
     public class AuthTokenServiceFlow
     {

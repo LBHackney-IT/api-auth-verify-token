@@ -7,7 +7,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
-namespace ApiAuthVerifyToken.V1.Helpers
+namespace ApiAuthVerifyTokenNew.V1.Helpers
 {
     public static class ValidateTokenHelper
     {

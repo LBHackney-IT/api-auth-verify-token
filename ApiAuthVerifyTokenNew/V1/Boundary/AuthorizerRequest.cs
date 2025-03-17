@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiAuthVerifyToken.V1.Boundary
+namespace ApiAuthVerifyTokenNew.V1.Boundary
 {
     public class AuthorizerRequest
     {

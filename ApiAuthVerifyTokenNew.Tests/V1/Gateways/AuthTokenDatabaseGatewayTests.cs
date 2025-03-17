@@ -6,7 +6,7 @@ using NUnit.Framework;
 using System;
 using ApiAuthVerifyToken.V1.Infrastructure;
 
-namespace ApiAuthVerifyToken.Tests.V1.Gateways
+namespace ApiAuthVerifyTokenNew.Tests.V1.Gateways
 {
     //For instruction on how to run tests please see the wiki: https://github.com/LBHackney-IT/lbh-base-api/wiki/Running-the-test-suite.
     [TestFixture]

@@ -6,7 +6,7 @@ using Microsoft.Extensions.HealthChecks;
 using Moq;
 using NUnit.Framework;
 
-namespace ApiAuthVerifyToken.Tests.V1.UseCase
+namespace ApiAuthVerifyTokenNew.Tests.V1.UseCase
 {
     [TestFixture]
     public class DbHealthCheckUseCaseTests

@@ -1,7 +1,7 @@
 using ApiAuthVerifyToken.V1.Boundary;
 using Microsoft.Extensions.HealthChecks;
 
-namespace ApiAuthVerifyToken.V1.UseCase
+namespace ApiAuthVerifyTokenNew.V1.UseCase
 {
     public class DbHealthCheckUseCase
     {

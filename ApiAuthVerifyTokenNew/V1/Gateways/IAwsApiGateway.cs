@@ -1,6 +1,6 @@
 using Amazon.SecurityToken.Model;
 
-namespace ApiAuthVerifyToken.V1.Gateways
+namespace ApiAuthVerifyTokenNew.V1.Gateways
 {
     public interface IAwsApiGateway
     {

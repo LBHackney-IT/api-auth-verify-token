@@ -10,7 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiAuthVerifyToken.Tests.V1.Helpers
+namespace ApiAuthVerifyTokenNew.Tests.V1.Helpers
 {
     public class VerifyAccessHelperTests
     {

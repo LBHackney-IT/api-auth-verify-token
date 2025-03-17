@@ -7,7 +7,7 @@ using ApiAuthVerifyToken.V1.UseCase.Interfaces;
 using System;
 using System.Linq;
 
-namespace ApiAuthVerifyToken.V1.UseCase
+namespace ApiAuthVerifyTokenNew.V1.UseCase
 {
     public class VerifyAccessUseCase : IVerifyAccessUseCase
     {

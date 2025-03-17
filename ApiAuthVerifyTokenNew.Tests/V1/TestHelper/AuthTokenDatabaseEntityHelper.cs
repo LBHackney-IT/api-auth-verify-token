@@ -1,7 +1,7 @@
 using ApiAuthVerifyToken.V1.Infrastructure;
 using AutoFixture;
 
-namespace ApiAuthVerifyToken.Tests.V1.TestHelper
+namespace ApiAuthVerifyTokenNew.Tests.V1.TestHelper
 {
     public static class AuthTokenDatabaseEntityHelper
     {

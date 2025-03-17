@@ -5,7 +5,7 @@ using ApiAuthVerifyToken.V1.Domain;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace ApiAuthVerifyToken.V1.Helpers
+namespace ApiAuthVerifyTokenNew.V1.Helpers
 {
     public static class VerifyAccessHelper
     {

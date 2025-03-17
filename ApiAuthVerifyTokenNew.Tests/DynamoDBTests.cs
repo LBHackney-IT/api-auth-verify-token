@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiAuthVerifyToken.Tests
+namespace ApiAuthVerifyTokenNew.Tests
 {
     [TestFixture]
     public class DynamoDBTests

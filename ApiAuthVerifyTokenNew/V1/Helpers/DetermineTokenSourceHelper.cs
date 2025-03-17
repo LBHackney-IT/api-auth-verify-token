@@ -4,7 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Text;
 
-namespace ApiAuthVerifyToken.V1.Helpers
+namespace ApiAuthVerifyTokenNew.V1.Helpers
 {
     public static class DetermineTokenSourceHelper
     {

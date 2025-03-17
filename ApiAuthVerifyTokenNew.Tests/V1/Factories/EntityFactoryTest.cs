@@ -5,7 +5,7 @@ using NUnit.Framework;
 using AutoFixture;
 using ApiAuthVerifyToken.V1.Infrastructure;
 
-namespace ApiAuthVerifyToken.Tests.V1.Factories
+namespace ApiAuthVerifyTokenNew.Tests.V1.Factories
 {
     [TestFixture]
     public class EntityFactoryTest

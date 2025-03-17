@@ -5,7 +5,7 @@ using Amazon.SecurityToken.Model;
 using ApiAuthVerifyToken.V1.Domain;
 using System;
 
-namespace ApiAuthVerifyToken.V1.Gateways
+namespace ApiAuthVerifyTokenNew.V1.Gateways
 {
     public class AwsApiGateway : IAwsApiGateway
     {

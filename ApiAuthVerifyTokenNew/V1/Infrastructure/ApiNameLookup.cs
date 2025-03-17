@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiAuthVerifyToken.V1.Infrastructure
+namespace ApiAuthVerifyTokenNew.V1.Infrastructure
 {
     [Table("api_lookup")]
     public class ApiNameLookup

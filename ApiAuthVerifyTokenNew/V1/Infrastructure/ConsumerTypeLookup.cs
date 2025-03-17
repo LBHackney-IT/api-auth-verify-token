@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace ApiAuthVerifyToken.V1.Infrastructure
+namespace ApiAuthVerifyTokenNew.V1.Infrastructure
 {
     [Table("consumer_type_lookup")]
     public class ConsumerTypeLookup

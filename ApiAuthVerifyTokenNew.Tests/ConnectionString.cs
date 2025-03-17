@@ -1,6 +1,6 @@
 using System;
 
-namespace ApiAuthVerifyToken.Tests
+namespace ApiAuthVerifyTokenNew.Tests
 {
     public static class ConnectionString
     {

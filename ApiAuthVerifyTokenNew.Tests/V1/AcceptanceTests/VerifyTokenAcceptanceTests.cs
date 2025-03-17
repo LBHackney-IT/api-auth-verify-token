@@ -15,7 +15,7 @@ using Amazon.SecurityToken.Model;
 using Bogus;
 using System.Collections.Generic;
 
-namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
+namespace ApiAuthVerifyTokenNew.Tests.V1.AcceptanceTests
 {
     public class VerifyTokenAcceptanceTests
     {

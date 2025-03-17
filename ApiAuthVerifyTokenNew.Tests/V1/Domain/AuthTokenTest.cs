@@ -3,7 +3,7 @@ using ApiAuthVerifyToken.V1.Domain;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace ApiAuthVerifyToken.Tests.V1.Domain
+namespace ApiAuthVerifyTokenNew.Tests.V1.Domain
 {
     [TestFixture]
     public class AuthTokenTest

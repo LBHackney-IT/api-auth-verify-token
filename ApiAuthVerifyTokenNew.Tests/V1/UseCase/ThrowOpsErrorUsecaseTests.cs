@@ -2,7 +2,7 @@ using ApiAuthVerifyToken.V1.UseCase;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace ApiAuthVerifyToken.Tests.V1.UseCase
+namespace ApiAuthVerifyTokenNew.Tests.V1.UseCase
 {
     [TestFixture]
     public class ThrowOpsErrorUsecaseTests

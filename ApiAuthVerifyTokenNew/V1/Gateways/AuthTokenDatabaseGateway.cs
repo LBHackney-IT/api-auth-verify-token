@@ -3,7 +3,7 @@ using ApiAuthVerifyToken.V1.Factories;
 using ApiAuthVerifyToken.V1.Domain;
 using ApiAuthVerifyToken.V1.Infrastructure;
 
-namespace ApiAuthVerifyToken.V1.Gateways
+namespace ApiAuthVerifyTokenNew.V1.Gateways
 {
     public class AuthTokenDatabaseGateway : IAuthTokenDatabaseGateway
     {

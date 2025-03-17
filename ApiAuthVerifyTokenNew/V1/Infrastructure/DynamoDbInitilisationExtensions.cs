@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace ApiAuthVerifyToken.V1.Infrastructure
+namespace ApiAuthVerifyTokenNew.V1.Infrastructure
 {
     public static class DynamoDbInitilisationExtensions
     {

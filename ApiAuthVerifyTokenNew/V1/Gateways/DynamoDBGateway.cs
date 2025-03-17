@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApiAuthVerifyToken.V1.Gateways
+namespace ApiAuthVerifyTokenNew.V1.Gateways
 {
     public class DynamoDBGateway : IDynamoDbGateway
     {

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace ApiAuthVerifyToken.V1.Infrastructure
+namespace ApiAuthVerifyTokenNew.V1.Infrastructure
 {
 
     public class TokenDatabaseContext : DbContext

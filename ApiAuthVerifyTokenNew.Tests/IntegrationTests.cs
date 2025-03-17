@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;
 using NUnit.Framework;
 
-namespace ApiAuthVerifyToken.Tests
+namespace ApiAuthVerifyTokenNew.Tests
 {
     public class IntegrationTests
     {

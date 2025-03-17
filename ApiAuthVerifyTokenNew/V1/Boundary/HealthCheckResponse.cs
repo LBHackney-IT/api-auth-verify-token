@@ -1,4 +1,4 @@
-namespace ApiAuthVerifyToken.V1.Boundary
+namespace ApiAuthVerifyTokenNew.V1.Boundary
 {
     public class HealthCheckResponse
     {

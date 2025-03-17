@@ -7,7 +7,7 @@ using ApiAuthVerifyToken.V1.UseCase;
 using ApiAuthVerifyToken.V1.UseCase.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 
-namespace ApiAuthVerifyToken
+namespace ApiAuthVerifyTokenNew
 {
     public static class ConfigureServices
     {
