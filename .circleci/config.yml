@@ -111,17 +111,17 @@ jobs:
       - run:
           name: Run tests
           command: docker compose run api-auth-verify-token-test
-  build-and-test-new:
-    executor: docker-python
-    steps:
-      - checkout
-      - setup_remote_docker
-      - run:
-          name: build
-          command: docker compose build api-auth-verify-token-test-new
-      - run:
-          name: Run tests
-          command: docker compose run api-auth-verify-token-test-new
+  # build-and-test-new:
+  #   executor: docker-python
+  #   steps:
+  #     - checkout
+  #     - setup_remote_docker
+  #     - run:
+  #         name: build
+  #         command: docker compose build api-auth-verify-token-test-new
+  #     - run:
+  #         name: Run tests
+  #         command: docker compose run api-auth-verify-token-test-new
   terraform-init-and-apply-to-development:
     executor: docker-terraform
     steps:
@@ -162,12 +162,12 @@ jobs:
     steps:
       - deploy-lambda:
           stage: "staging"
-  deploy-to-staging-new:
-    executor: docker-dotnet-8
-    steps:
-      - deploy-lambda:
-          stage: "staging"
-          path: "./ApiAuthVerifyTokenNew/"
+  # deploy-to-staging-new:
+  #   executor: docker-dotnet-8
+  #   steps:
+  #     - deploy-lambda:
+  #         stage: "staging"
+  #         path: "./ApiAuthVerifyTokenNew/"
   deploy-to-production:
     executor: docker-dotnet
     steps:
@@ -185,10 +185,10 @@ workflows:
           filters:
             branches:
               ignore: master
-      - build-and-test-new:
-          filters:
-            branches:
-              ignore: master
+      # - build-and-test-new:
+      #     filters:
+      #       branches:
+      #         ignore: master
 
   check-and-deploy-development:
     jobs:
@@ -219,71 +219,72 @@ workflows:
           filters:
             branches:
               only: development
+
   temp-deploy-new-staging:
     jobs:
-      - build-and-test-new
-      - assume-role-staging:
-          context: api-assume-role-staging-context
-          requires:
-            - build-and-test-new
-      - permit-staging-new-release:
-          type: approval
-          requires:
-            - assume-role-staging
-      - terraform-init-and-apply-to-staging:
-          requires:
-            - permit-staging-new-release
-      - deploy-to-staging-new:
-          requires:
-            - terraform-init-and-apply-to-staging
-
-  check-and-deploy-staging-and-production:
-    jobs:
-      - build-and-test:
-          filters:
-            branches:
-              only: master
-      # - build-and-test-new:
-      #     filters:
-      #       branches:
-      #         only: master
+      - build-and-test
       - assume-role-staging:
           context: api-assume-role-staging-context
           requires:
             - build-and-test
-            # - build-and-test-new
-      - terraform-init-and-apply-to-staging:
+      - permit-staging-release:
+          type: approval
           requires:
             - assume-role-staging
+      - terraform-init-and-apply-to-staging:
+          requires:
+            - permit-staging-release
       - deploy-to-staging:
           requires:
             - terraform-init-and-apply-to-staging
+
+  # check-and-deploy-staging-and-production:
+  #   jobs:
+  #     - build-and-test:
+  #         filters:
+  #           branches:
+  #             only: master
+  #     # - build-and-test-new:
+  #     #     filters:
+  #     #       branches:
+  #     #         only: master
+  #     - assume-role-staging:
+  #         context: api-assume-role-staging-context
+  #         requires:
+  #           - build-and-test
+  #           # - build-and-test-new
+  #     - terraform-init-and-apply-to-staging:
+  #         requires:
+  #           - assume-role-staging
+  #     - deploy-to-staging:
+  #         requires:
+  #           - terraform-init-and-apply-to-staging
       # - deploy-to-staging-new:
       #     requires:
       #       - terraform-init-and-apply-to-staging
-      - permit-production-release:
-          type: approval
-          requires:
-            - deploy-to-staging
-          filters:
-            branches:
-              only: master
-      - assume-role-production:
-          context: api-assume-role-production-context
-          requires:
-            - permit-production-release
-          filters:
-            branches:
-              only: master
-      - terraform-init-and-apply-to-production:
-          requires:
-            - assume-role-production
-          filters:
-            branches:
-              only: master
-      - deploy-to-production:
-          requires:
-            - terraform-init-and-apply-to-production
-          filters:
-            branches:
-              only: master
+      # - permit-production-release:
+      #     type: approval
+      #     requires:
+      #       - deploy-to-staging
+      #     filters:
+      #       branches:
+      #         only: master
+      # - assume-role-production:
+      #     context: api-assume-role-production-context
+      #     requires:
+      #       - permit-production-release
+      #     filters:
+      #       branches:
+      #         only: master
+      # - terraform-init-and-apply-to-production:
+      #     requires:
+      #       - assume-role-production
+      #     filters:
+      #       branches:
+      #         only: master
+      # - deploy-to-production:
+      #     requires:
+      #       - terraform-init-and-apply-to-production
+      #     filters:
+      #       branches:
+      #         only: master

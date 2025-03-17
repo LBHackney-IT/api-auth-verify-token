@@ -18,8 +18,8 @@ shell:
 test:
 	docker compose build api-auth-verify-token-test && docker compose up api-auth-verify-token-test
 
-test-new:
-	docker compose build api-auth-verify-token-test-new && docker compose up api-auth-verify-token-test-new
+# test-new:
+# 	docker compose build api-auth-verify-token-test-new && docker compose up api-auth-verify-token-test-new
 
 .PHONY: lint
 lint:
