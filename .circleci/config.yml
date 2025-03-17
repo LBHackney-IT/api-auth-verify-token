@@ -227,6 +227,8 @@ workflows:
             # - permit-staging-release
             - assume-role-staging
       - deploy-to-staging:
+          context:
+            - "Serverless Framework"
           requires:
             - terraform-init-and-apply-to-staging
 
