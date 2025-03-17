@@ -110,6 +110,8 @@ resources:
                           - Ref: 'AWS::AccountId'
                           - 'table/APIAuthenticatorData'
 custom:
+  deploymentBucket:
+    name: ${self:service}-${opt:stage}-serverlessdeploymentbucket
   vpc:
     development:
       securityGroupIds:
