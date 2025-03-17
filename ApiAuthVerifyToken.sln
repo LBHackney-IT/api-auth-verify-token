@@ -7,10 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiAuthVerifyToken", "ApiAu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiAuthVerifyToken.Tests", "ApiAuthVerifyToken.Tests\ApiAuthVerifyToken.Tests.csproj", "{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiAuthVerifyTokenNew", "ApiAuthVerifyTokenNew\ApiAuthVerifyTokenNew.csproj", "{310A6722-973C-4CAF-952B-EA7CBF4FEC88}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiAuthVerifyTokenNew.Tests", "ApiAuthVerifyTokenNew.Tests\ApiAuthVerifyTokenNew.Tests.csproj", "{466564FF-AD08-447B-ADAB-BB8A9395D9E0}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
