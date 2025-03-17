@@ -1,10 +1,10 @@
 using AutoFixture;
-using ApiAuthVerifyToken.V1.Domain;
-using ApiAuthVerifyToken.V1.Gateways;
+using ApiAuthVerifyTokenNew.V1.Domain;
+using ApiAuthVerifyTokenNew.V1.Gateways;
 using FluentAssertions;
 using NUnit.Framework;
 using System;
-using ApiAuthVerifyToken.V1.Infrastructure;
+using ApiAuthVerifyTokenNew.V1.Infrastructure;
 
 namespace ApiAuthVerifyTokenNew.Tests.V1.Gateways
 {

@@ -1,5 +1,5 @@
 using System.Threading;
-using ApiAuthVerifyToken.V1.UseCase;
+using ApiAuthVerifyTokenNew.V1.UseCase;
 using Bogus;
 using FluentAssertions;
 using Microsoft.Extensions.HealthChecks;

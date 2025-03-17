@@ -1,6 +1,6 @@
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using ApiAuthVerifyToken.V1.Gateways;
+using ApiAuthVerifyTokenNew.V1.Gateways;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;

@@ -1,9 +1,9 @@
-using ApiAuthVerifyToken.V1.Factories;
-using ApiAuthVerifyToken.V1.Domain;
+using ApiAuthVerifyTokenNew.V1.Factories;
+using ApiAuthVerifyTokenNew.V1.Domain;
 using FluentAssertions;
 using NUnit.Framework;
 using AutoFixture;
-using ApiAuthVerifyToken.V1.Infrastructure;
+using ApiAuthVerifyTokenNew.V1.Infrastructure;
 
 namespace ApiAuthVerifyTokenNew.Tests.V1.Factories
 {

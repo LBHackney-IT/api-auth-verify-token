@@ -2,7 +2,7 @@ using Amazon.APIGateway;
 using Amazon.APIGateway.Model;
 using Amazon.Lambda.Core;
 using Amazon.SecurityToken.Model;
-using ApiAuthVerifyToken.V1.Domain;
+using ApiAuthVerifyTokenNew.V1.Domain;
 using System;
 
 namespace ApiAuthVerifyTokenNew.V1.Gateways

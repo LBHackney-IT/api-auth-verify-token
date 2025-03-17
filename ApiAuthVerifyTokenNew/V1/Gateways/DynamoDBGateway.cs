@@ -1,9 +1,9 @@
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.Lambda.Core;
-using ApiAuthVerifyToken.V1.Domain;
-using ApiAuthVerifyToken.V1.Factories;
-using ApiAuthVerifyToken.V1.Infrastructure;
+using ApiAuthVerifyTokenNew.V1.Domain;
+using ApiAuthVerifyTokenNew.V1.Factories;
+using ApiAuthVerifyTokenNew.V1.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Text;

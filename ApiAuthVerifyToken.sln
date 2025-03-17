@@ -9,10 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiAuthVerifyToken.Tests", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiAuthVerifyTokenNew", "ApiAuthVerifyTokenNew\ApiAuthVerifyTokenNew.csproj", "{310A6722-973C-4CAF-952B-EA7CBF4FEC88}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{AAB7E288-D710-4B96-AD58-C0B02AB22032}"
-	ProjectSection(SolutionItems) = preProject
-		ApiAuthVerifyTokenNew.Tests\ApiAuthVerifyToken.Tests.csproj = ApiAuthVerifyTokenNew.Tests\ApiAuthVerifyToken.Tests.csproj
-	EndProjectSection
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiAuthVerifyTokenNew.Tests", "ApiAuthVerifyTokenNew.Tests\ApiAuthVerifyTokenNew.Tests.csproj", "{466564FF-AD08-447B-ADAB-BB8A9395D9E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,6 +29,10 @@ Global
 		{310A6722-973C-4CAF-952B-EA7CBF4FEC88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{310A6722-973C-4CAF-952B-EA7CBF4FEC88}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{310A6722-973C-4CAF-952B-EA7CBF4FEC88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{466564FF-AD08-447B-ADAB-BB8A9395D9E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{466564FF-AD08-447B-ADAB-BB8A9395D9E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{466564FF-AD08-447B-ADAB-BB8A9395D9E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{466564FF-AD08-447B-ADAB-BB8A9395D9E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using ApiAuthVerifyToken.V1.Gateways;
-using ApiAuthVerifyToken.V1.Infrastructure;
-using ApiAuthVerifyToken.V1.UseCase;
-using ApiAuthVerifyToken.V1.UseCase.Interfaces;
+using ApiAuthVerifyTokenNew.V1.Gateways;
+using ApiAuthVerifyTokenNew.V1.Infrastructure;
+using ApiAuthVerifyTokenNew.V1.UseCase;
+using ApiAuthVerifyTokenNew.V1.UseCase.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 
 namespace ApiAuthVerifyTokenNew

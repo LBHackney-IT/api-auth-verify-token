@@ -1,7 +1,7 @@
 using Amazon.Lambda.Core;
 using System;
-using ApiAuthVerifyToken.V1.Boundary;
-using ApiAuthVerifyToken.V1.Domain;
+using ApiAuthVerifyTokenNew.V1.Boundary;
+using ApiAuthVerifyTokenNew.V1.Domain;
 using System.Linq;
 using Newtonsoft.Json;
 

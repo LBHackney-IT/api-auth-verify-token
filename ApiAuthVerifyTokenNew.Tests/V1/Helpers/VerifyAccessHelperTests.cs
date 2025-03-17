@@ -1,6 +1,6 @@
-using ApiAuthVerifyToken.V1.Boundary;
-using ApiAuthVerifyToken.V1.Domain;
-using ApiAuthVerifyToken.V1.Helpers;
+using ApiAuthVerifyTokenNew.V1.Boundary;
+using ApiAuthVerifyTokenNew.V1.Domain;
+using ApiAuthVerifyTokenNew.V1.Helpers;
 using Bogus;
 using FluentAssertions;
 using Newtonsoft.Json;

@@ -1,4 +1,4 @@
-using ApiAuthVerifyToken.V1.Domain;
+using ApiAuthVerifyTokenNew.V1.Domain;
 
 namespace ApiAuthVerifyTokenNew.V1.Gateways
 {

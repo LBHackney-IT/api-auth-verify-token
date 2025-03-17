@@ -1,8 +1,8 @@
 using Amazon.DynamoDBv2.DocumentModel;
 using Amazon.DynamoDBv2.Model;
-using ApiAuthVerifyToken.V1.Domain;
-using ApiAuthVerifyToken.V1.Gateways;
-using ApiAuthVerifyToken.V1.Infrastructure;
+using ApiAuthVerifyTokenNew.V1.Domain;
+using ApiAuthVerifyTokenNew.V1.Gateways;
+using ApiAuthVerifyTokenNew.V1.Infrastructure;
 using AutoFixture;
 using Bogus;
 using FluentAssertions;

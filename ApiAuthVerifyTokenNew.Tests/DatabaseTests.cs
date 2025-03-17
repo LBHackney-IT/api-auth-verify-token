@@ -1,5 +1,5 @@
 using System;
-using ApiAuthVerifyToken.V1.Infrastructure;
+using ApiAuthVerifyTokenNew.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Npgsql;

@@ -2,8 +2,8 @@ using System;
 using System.Collections.Generic;
 using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
-using ApiAuthVerifyToken.V1.Helpers;
-using ApiAuthVerifyToken.V1.UseCase.Interfaces;
+using ApiAuthVerifyTokenNew.V1.Helpers;
+using ApiAuthVerifyTokenNew.V1.UseCase.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 

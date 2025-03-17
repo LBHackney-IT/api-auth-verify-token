@@ -1,9 +1,9 @@
 using Amazon.Lambda.Core;
-using ApiAuthVerifyToken.V1.Boundary;
-using ApiAuthVerifyToken.V1.Domain;
-using ApiAuthVerifyToken.V1.Gateways;
-using ApiAuthVerifyToken.V1.Helpers;
-using ApiAuthVerifyToken.V1.UseCase.Interfaces;
+using ApiAuthVerifyTokenNew.V1.Boundary;
+using ApiAuthVerifyTokenNew.V1.Domain;
+using ApiAuthVerifyTokenNew.V1.Gateways;
+using ApiAuthVerifyTokenNew.V1.Helpers;
+using ApiAuthVerifyTokenNew.V1.UseCase.Interfaces;
 using System;
 using System.Linq;
 

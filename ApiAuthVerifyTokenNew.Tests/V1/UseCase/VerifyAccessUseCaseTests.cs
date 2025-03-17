@@ -1,9 +1,9 @@
 using Amazon.SecurityToken.Model;
-using ApiAuthVerifyToken.Tests.V1.TestHelper;
-using ApiAuthVerifyToken.V1.Boundary;
-using ApiAuthVerifyToken.V1.Domain;
-using ApiAuthVerifyToken.V1.Gateways;
-using ApiAuthVerifyToken.V1.UseCase;
+using ApiAuthVerifyTokenNew.Tests.V1.TestHelper;
+using ApiAuthVerifyTokenNew.V1.Boundary;
+using ApiAuthVerifyTokenNew.V1.Domain;
+using ApiAuthVerifyTokenNew.V1.Gateways;
+using ApiAuthVerifyTokenNew.V1.UseCase;
 using AutoFixture;
 using Bogus;
 using FluentAssertions;

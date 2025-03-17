@@ -1,4 +1,4 @@
-using ApiAuthVerifyToken.V1.Boundary;
+using ApiAuthVerifyTokenNew.V1.Boundary;
 using Microsoft.Extensions.HealthChecks;
 
 namespace ApiAuthVerifyTokenNew.V1.UseCase

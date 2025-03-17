@@ -1,4 +1,4 @@
-using ApiAuthVerifyToken.V1.UseCase;
+using ApiAuthVerifyTokenNew.V1.UseCase;
 using FluentAssertions;
 using NUnit.Framework;
 

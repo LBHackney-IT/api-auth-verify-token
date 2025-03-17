@@ -28,7 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ApiAuthVerifyTokenNew\ApiAuthVerifyToken.csproj" />
+    <ProjectReference Include="..\ApiAuthVerifyTokenNew\ApiAuthVerifyTokenNew.csproj" />
   </ItemGroup>
 
 </Project>

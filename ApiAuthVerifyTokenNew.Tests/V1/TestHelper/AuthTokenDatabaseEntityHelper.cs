@@ -1,4 +1,4 @@
-using ApiAuthVerifyToken.V1.Infrastructure;
+using ApiAuthVerifyTokenNew.V1.Infrastructure;
 using AutoFixture;
 
 namespace ApiAuthVerifyTokenNew.Tests.V1.TestHelper
