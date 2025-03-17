@@ -5,6 +5,8 @@ provider:
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
+  deploymentBucket:
+    name: ${self:service}-${opt:stage}-serverlessdeploymentbucket
 package:
   artifact: ./bin/release/net8.0/api-auth-verify-token.zip
 
@@ -110,8 +112,6 @@ resources:
                           - Ref: 'AWS::AccountId'
                           - 'table/APIAuthenticatorData'
 custom:
-  deploymentBucket:
-    name: ${self:service}-${opt:stage}-serverlessdeploymentbucket
   vpc:
     development:
       securityGroupIds:
