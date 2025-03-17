@@ -9,7 +9,7 @@ package:
   artifact: ./bin/release/net8.0/api-auth-verify-token.zip
 
 functions:
-  ApiAuthVerifyToken:
+  ApiAuthVerifyTokenNew:
     name: ${self:service}-${self:provider.stage}-apiauthverifytoken-new
     handler: ApiAuthVerifyToken::ApiAuthVerifyToken.V1.Boundary.VerifyTokenHandler::VerifyToken
     role: lambdaExecutionRole
