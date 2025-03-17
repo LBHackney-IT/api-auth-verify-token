@@ -7,8 +7,8 @@ WORKDIR /app
 
 # Copy csproj and restore as distinct layers
 COPY ./ApiAuthVerifyToken.sln ./
-COPY ./ApiAuthVerifyTokenNew/ApiAuthVerifyToken.csproj ./ApiAuthVerifyTokenNew/
-COPY ./ApiAuthVerifyTokenNew.Tests/ApiAuthVerifyToken.Tests.csproj ./ApiAuthVerifyTokenNew.Tests/
+COPY ./ApiAuthVerifyTokenNew/ApiAuthVerifyTokenNew.csproj ./ApiAuthVerifyTokenNew/
+COPY ./ApiAuthVerifyTokenNew.Tests/ApiAuthVerifyTokenNew.Tests.csproj ./ApiAuthVerifyTokenNew.Tests/
 
 RUN dotnet restore ApiAuthVerifyTokenNew
 RUN dotnet restore ApiAuthVerifyTokenNew.Tests
@@ -16,5 +16,5 @@ RUN dotnet restore ApiAuthVerifyTokenNew.Tests
 # Copy everything else and build
 COPY . ./
 
-RUN dotnet build -c debug -o out ApiAuthVerifyTokenNew.Tests/ApiAuthVerifyToken.Tests.csproj
-CMD dotnet test ApiAuthVerifyTokenNew.Tests/ApiAuthVerifyToken.Tests.csproj
+RUN dotnet build -c debug -o out ApiAuthVerifyTokenNew.Tests/ApiAuthVerifyTokenNew.Tests.csproj
+CMD dotnet test ApiAuthVerifyTokenNew.Tests/ApiAuthVerifyTokenNew.Tests.csproj
