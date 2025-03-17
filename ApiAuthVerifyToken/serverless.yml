@@ -5,8 +5,8 @@ provider:
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
-  deploymentBucket:
-    name: ${self:service}-${opt:stage}-serverlessdeploymentbucket
+  # deploymentBucket:
+  #   name: ${self:service}-${opt:stage}-serverlessdeploymentbucket
 package:
   artifact: ./bin/release/net8.0/api-auth-verify-token.zip
 
