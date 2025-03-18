@@ -18,9 +18,6 @@ shell:
 test:
 	docker compose build api-auth-verify-token-test && docker compose up api-auth-verify-token-test
 
-# test-new:
-# 	docker compose build api-auth-verify-token-test-new && docker compose up api-auth-verify-token-test-new
-
 .PHONY: lint
 lint:
 	-dotnet tool install -g dotnet-format

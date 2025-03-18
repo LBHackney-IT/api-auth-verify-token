@@ -38,20 +38,6 @@ resources:
               - ":"
               - Ref: AWS::AccountId
               - ":*"
-    # ApiGatewayAllowGetRole:
-    #   Type: AWS::IAM::Policy
-    #   Properties:
-    #     PolicyName: ApiGatewayAllowGetRole
-    #     PolicyDocument:
-    #       Version: "2012-10-17"
-    #       Statement:
-    #         - Effect: Allow
-    #           Action:
-    #             - sts:AssumeRole
-    #           Resource:
-    #             - arn:aws:iam::${aws:accountId}:role/LBH_Api_Gateway_Allow_GET
-    #     Roles:
-    #       - Ref: IamRoleLambdaExecution
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
