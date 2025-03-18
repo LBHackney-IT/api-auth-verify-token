@@ -5,8 +5,6 @@ provider:
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
-  # deploymentBucket:
-  #   name: ${self:service}-${opt:stage}-serverlessdeploymentbucket
 package:
   artifact: ./bin/release/net8.0/api-auth-verify-token.zip
 
@@ -26,13 +24,13 @@ resources:
     ApiGatewayInvokePermission:
       Type: AWS::Lambda::Permission
       Properties:
-        FunctionName: 
+        FunctionName:
           Fn::GetAtt:
             - ApiAuthVerifyTokenNewLambdaFunction
             - Arn
         Action: lambda:InvokeFunction
         Principal: apigateway.amazonaws.com
-        SourceArn: 
+        SourceArn:
           Fn::Join:
             - ""
             - - "arn:aws:execute-api:"
@@ -47,7 +45,7 @@ resources:
         Path: /${self:service}/${self:provider.stage}/
         RoleName: ${self:service}-lambdaExecutionRole
         AssumeRolePolicyDocument:
-          Version: '2012-10-17'
+          Version: "2012-10-17"
           Statement:
             - Effect: Allow
               Principal:
@@ -59,7 +57,7 @@ resources:
         Policies:
           - PolicyName: manageLogs
             PolicyDocument:
-              Version: '2012-10-17'
+              Version: "2012-10-17"
               Statement:
                 - Effect: Allow
                   Action:
@@ -67,40 +65,35 @@ resources:
                     - logs:CreateLogStream
                     - logs:PutLogEvents
                   Resource:
-                    - 'Fn::Join':
-                        - ':'
-                        - - 'arn:aws:logs'
-                          - Ref: 'AWS::Region'
-                          - Ref: 'AWS::AccountId'
-                          - 'log-group:/aws/lambda/*:*:*'
-                # - Effect: "Allow"
-                #   Action:
-                #     - "s3:PutObject"
-                #     - "s3:GetObject"
-                #   Resource:
-                #     Fn::Join:
-                #       - ""
-                #       - - "arn:aws:s3:::"
-                #         - "Ref": "ServerlessDeploymentBucket"
+                    - "Fn::Join":
+                        - ":"
+                        - - "arn:aws:logs"
+                          - Ref: "AWS::Region"
+                          - Ref: "AWS::AccountId"
+                          - "log-group:/aws/lambda/*:*:*"
           - PolicyName: lambdaInvocation
             PolicyDocument:
-              Version: '2012-10-17'
+              Version: "2012-10-17"
               Statement:
                 - Effect: Allow
                   Action:
                     - "lambda:InvokeFunction"
                   Resource: "*"
-          # - PolicyName: assumeRoleForGettingCredentials
-          #   PolicyDocument:
-          #     Version: '2012-10-17'
-          #     Statement:
-          #       - Effect: Allow
-          #         Action:
-          #           - "apigateway:GET"
-          #         Resource: "*"
+          - PolicyName: assumeRoleForGettingCredentials
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - "sts:AssumeRole"
+                  Resource:
+                    Fn::Join:
+                      - ""
+                      - - "arn:aws:iam:::"
+                        - "role/LBH_Api_Gateway_Allow_GET"
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
-              Version: '2012-10-17'
+              Version: "2012-10-17"
               Statement:
                 - Effect: Allow
                   Action:
@@ -108,7 +101,7 @@ resources:
                   Resource: "*"
           - PolicyName: dynamoDBAccess
             PolicyDocument:
-              Version: '2012-10-17'
+              Version: "2012-10-17"
               Statement:
                 - Effect: Allow
                   Action:
@@ -119,12 +112,12 @@ resources:
                     - "dynamodb:Query"
                     - "dynamodb:Scan"
                   Resource:
-                    - 'Fn::Join':
-                        - ':'
-                        - - 'arn:aws:dynamodb'
-                          - Ref: 'AWS::Region'
-                          - Ref: 'AWS::AccountId'
-                          - 'table/APIAuthenticatorData'
+                    - "Fn::Join":
+                        - ":"
+                        - - "arn:aws:dynamodb"
+                          - Ref: "AWS::Region"
+                          - Ref: "AWS::AccountId"
+                          - "table/APIAuthenticatorData"
 custom:
   vpc:
     development:
