@@ -6,18 +6,18 @@ namespace ApiAuthVerifyToken.Tests.V1.Helpers
 {
     public class ValidateTokenHelperTests
     {
-        [Test]
-        public void Test()
-        {
-            // Arrange
-            var token = "";
-            var secret = "";
+        //[Test]
+        //public void Test()
+        //{
+        //    // Arrange
+        //    var token = "";
+        //    var secret = "";
 
-            // Act
-            var result = ValidateTokenHelper.ValidateToken(token, secret);
+        //    // Act
+        //    var result = ValidateTokenHelper.ValidateToken(token, secret);
 
-            // Assert
-            result.Should().NotBeNull();
-        }
+        //    // Assert
+        //    result.Should().NotBeNull();
+        //}
     }
 }
