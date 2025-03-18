@@ -97,13 +97,7 @@ resources:
                 - Effect: Allow
                   Action:
                     - "apigateway:GET"
-                    # - "sts:AssumeRole"
                   Resource: "*"
-                  # Resource:
-                    # Fn::Join:
-                    #   - ""
-                    #   - - "arn:aws:iam:::"
-                    #     - "role/LBH_Api_Gateway_Allow_GET"
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
               Version: '2012-10-17'
