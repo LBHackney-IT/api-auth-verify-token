@@ -90,14 +90,14 @@ resources:
                   Action:
                     - "lambda:InvokeFunction"
                   Resource: "*"
-          - PolicyName: assumeRoleForGettingCredentials
-            PolicyDocument:
-              Version: '2012-10-17'
-              Statement:
-                - Effect: Allow
-                  Action:
-                    - "apigateway:GET"
-                  Resource: "*"
+          # - PolicyName: assumeRoleForGettingCredentials
+          #   PolicyDocument:
+          #     Version: '2012-10-17'
+          #     Statement:
+          #       - Effect: Allow
+          #         Action:
+          #           - "apigateway:GET"
+          #         Resource: "*"
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
               Version: '2012-10-17'
