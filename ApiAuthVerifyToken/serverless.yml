@@ -38,6 +38,23 @@ resources:
               - ":"
               - Ref: AWS::AccountId
               - ":*"
+    ApiGatewayInvokePermissionHousingStaging:
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName:
+          Fn::GetAtt:
+            - ApiAuthVerifyTokenNewLambdaFunction
+            - Arn
+        Action: lambda:InvokeFunction
+        Principal: apigateway.amazonaws.com
+        SourceArn:
+          Fn::Join:
+            - ""
+            - - "arn:aws:execute-api:"
+              - Ref: AWS::Region
+              - ":"
+              - ${self:custom.housingStagingAccountIds.${self:provider.stage}}
+              - ":*"
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
@@ -119,6 +136,9 @@ resources:
                           - Ref: "AWS::AccountId"
                           - "table/APIAuthenticatorData"
 custom:
+  housingStagingAccountIds:
+    staging: "087586271961"
+    production: "00000000"
   vpc:
     development:
       securityGroupIds:
