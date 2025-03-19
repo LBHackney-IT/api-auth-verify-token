@@ -30,16 +30,7 @@ resources:
             - Arn
         Action: lambda:InvokeFunction
         Principal: apigateway.amazonaws.com
-        SourceArn:
-          Fn::Sub: "arn:aws:execute-api:${AWS::Region}:*:*"
-        # SourceArn:
-        #   Fn::Join:
-        #     - ""
-        #     - - "arn:aws:execute-api:"
-        #       - Ref: AWS::Region
-        #       - ":"
-        #       - Ref: AWS::AccountId
-        #       - ":*"
+        SourceAccount: "*"
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
