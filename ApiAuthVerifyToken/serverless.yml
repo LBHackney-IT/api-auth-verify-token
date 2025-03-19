@@ -30,7 +30,7 @@ resources:
             - Arn
         Action: lambda:InvokeFunction
         Principal: apigateway.amazonaws.com
-        SourceAccount: "*"
+        # SourceAccount: "*"
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
