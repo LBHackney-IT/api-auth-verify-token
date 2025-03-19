@@ -54,7 +54,7 @@ resources:
               - Ref: AWS::Region
               - ":"
               - ${self:custom.housingStagingAccountIds.${self:provider.stage}}
-              - ":*/authorizers/*"
+              - ":*"
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
@@ -108,6 +108,19 @@ resources:
                       - - "arn:aws:iam::"
                         - Ref: "AWS::AccountId"
                         - ":role/LBH_Api_Gateway_Allow_GET"
+          - PolicyName: assumeRoleForGettingCredentialsHousingStaging
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - "sts:AssumeRole"
+                  Resource:
+                    Fn::Join:
+                      - ""
+                      - - "arn:aws:iam::"
+                        - ${self:custom.housingStagingAccountIds.${self:provider.stage}}
+                        - ":role/LBH_Api_Gateway_Allow_GET"                      
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
               Version: "2012-10-17"
