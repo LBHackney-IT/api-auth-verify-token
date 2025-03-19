@@ -38,7 +38,7 @@ resources:
               - ":"
               - Ref: AWS::AccountId
               - ":*"
-    ApiGatewayInvokePermissionHousingStaging:
+    AllowHousingStagingCrossAccountAuthorizer:
       Type: AWS::Lambda::Permission
       Properties:
         FunctionName:
@@ -54,7 +54,7 @@ resources:
               - Ref: AWS::Region
               - ":"
               - ${self:custom.housingStagingAccountIds.${self:provider.stage}}
-              - ":h3yhtbro5d/*/*" 
+              - "*/authorizers/*" 
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
