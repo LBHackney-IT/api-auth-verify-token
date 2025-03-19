@@ -10,7 +10,7 @@ package:
 
 functions:
   ApiAuthVerifyTokenNew:
-    name: ${self:service}-${self:provider.stage}-apiauthverifytoken-new
+    name: ${self:service}-${self:provider.stage}-apiauthverifytokennew
     handler: ApiAuthVerifyToken::ApiAuthVerifyToken.V1.Boundary.VerifyTokenHandler::VerifyToken
     role: lambdaExecutionRole
     environment:
