@@ -54,7 +54,7 @@ resources:
               - Ref: AWS::Region
               - ":"
               - ${self:custom.housingStagingAccountIds.${self:provider.stage}}
-              - "*/authorizers/*" 
+              - ":*/authorizers/*" 
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
