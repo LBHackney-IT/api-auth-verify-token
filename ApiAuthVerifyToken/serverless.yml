@@ -47,7 +47,7 @@ resources:
             - Arn
         Action: lambda:InvokeFunction
         Principal: apigateway.amazonaws.com
-        SourceArn: "arn:aws:execute-api:eu-west-2:087586271961:h3yhtbro5d/authorizers/gv1gsm14ul"
+        SourceArn: "arn:aws:execute-api:eu-west-2:087586271961:h3yhtbro5d/authorizers/*"
         # SourceArn:
         #   Fn::Join:
         #     - ""
