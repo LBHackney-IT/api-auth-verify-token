@@ -69,9 +69,6 @@ commands:
       - checkout
       - setup_remote_docker
       - node/install
-      # - run:
-      #     name: Install serverless CLI
-      #     command: npm i -g serverless@"<3.0.0"
       - run:
           name: Build lambda
           command: |

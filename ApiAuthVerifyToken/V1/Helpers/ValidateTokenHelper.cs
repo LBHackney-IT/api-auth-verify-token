@@ -28,6 +28,10 @@ namespace ApiAuthVerifyToken.V1.Helpers
         {
             try
             {
+                // System.IdentityModel.Tokens.Jwt fails to decode the token because JWT 
+                // doesn't contain a "KID" header I couldn't find a workaround for this 
+                // issue, so I switched to the JWT (https://www.nuget.org/packages/JWT) 
+                // package to verify the tokens
                 var tokenJson = _decoder.Decode(token, secret, verify: true);
                 if (tokenJson == null) return null;
 
@@ -42,6 +46,8 @@ namespace ApiAuthVerifyToken.V1.Helpers
 
         private static List<Claim> ExtractClaims(string token)
         {
+            // To avoid changing the interface, the previous implementation using 
+            // JwtSecurityTokenHandler still works great for extracting the Claims from the JWT
             var handler = new JwtSecurityTokenHandler();
             var parsedToken = handler.ReadToken(token) as JwtSecurityToken;
             return parsedToken?.Claims.ToList() ?? new List<Claim>();
