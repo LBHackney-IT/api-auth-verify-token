@@ -163,56 +163,57 @@ workflows:
             branches:
               ignore: master
 
-  check-and-deploy-development:
-    jobs:
-      - check-code-formatting:
-          filters:
-            branches:
-              only: development
-      - build-and-test:
-          filters:
-            branches:
-              only: development
-      - assume-role-development:
-          context: api-assume-role-development-context
-          requires:
-            - build-and-test
-          filters:
-            branches:
-              only: development
-      - terraform-init-and-apply-to-development:
-          requires:
-            - assume-role-development
-          filters:
-            branches:
-              only: development
-      - deploy-to-development:
-          requires:
-            - assume-role-development
-          filters:
-            branches:
-              only: development
+  # check-and-deploy-development:
+  #   jobs:
+  #     - check-code-formatting:
+  #         filters:
+  #           branches:
+  #             only: development
+  #     - build-and-test:
+  #         filters:
+  #           branches:
+  #             only: development
+  #     - assume-role-development:
+  #         context: api-assume-role-development-context
+  #         requires:
+  #           - build-and-test
+  #         filters:
+  #           branches:
+  #             only: development
+  #     - terraform-init-and-apply-to-development:
+  #         requires:
+  #           - assume-role-development
+  #         filters:
+  #           branches:
+  #             only: development
+  #     - deploy-to-development:
+  #         requires:
+  #           - assume-role-development
+  #         filters:
+  #           branches:
+  #             only: development
 
   temp-deploy-new-staging:
     jobs:
-      - build-and-test
+      # - build-and-test
       - assume-role-staging:
           context: api-assume-role-staging-context
-          requires:
-            - build-and-test
+          # requires:
+          #   - build-and-test
       # - permit-staging-release:
       #     type: approval
       #     requires:
       #       - assume-role-staging
-      - terraform-init-and-apply-to-staging:
-          requires:
-            # - permit-staging-release
-            - assume-role-staging
+      # - terraform-init-and-apply-to-staging:
+      #     requires:
+      #       # - permit-staging-release
+      #       - assume-role-staging
       - deploy-to-staging:
           context:
             - "Serverless Framework"
           requires:
-            - terraform-init-and-apply-to-staging
+            - assume-role-staging
+            # - terraform-init-and-apply-to-staging
 
   # check-and-deploy-staging-and-production:
   #   jobs:
