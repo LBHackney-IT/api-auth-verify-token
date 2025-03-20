@@ -21,7 +21,8 @@ functions:
 
 resources:
   Resources:
-    ApiGatewayInvokePermission:
+    AllowApisAccountAuthorizer:
+      # ProductionApis or StagingApis
       Type: AWS::Lambda::Permission
       Properties:
         FunctionName:
@@ -38,7 +39,8 @@ resources:
               - ":"
               - Ref: AWS::AccountId
               - ":*"
-    AllowHousingStagingCrossAccountAuthorizer:
+    AllowHousingCrossAccountAuthorizer:
+      # Housing-Production or Housing-Staging
       Type: AWS::Lambda::Permission
       Properties:
         FunctionName:
@@ -47,15 +49,14 @@ resources:
             - Arn
         Action: lambda:InvokeFunction
         Principal: apigateway.amazonaws.com
-        # SourceArn: "arn:aws:execute-api:eu-west-2:087586271961:*"
         SourceArn:
           Fn::Join:
             - ""
             - - "arn:aws:execute-api:"
               - Ref: AWS::Region
               - ":"
-              - ${self:custom.housingStagingAccountIds.${self:provider.stage}}
-              - ":*/authorizers/*" 
+              - ${self:custom.housingAccountIds.${self:provider.stage}}
+              - ":*/authorizers/*"
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
@@ -96,7 +97,7 @@ resources:
                   Action:
                     - "lambda:InvokeFunction"
                   Resource: "*"
-          - PolicyName: assumeRoleForGettingCredentials
+          - PolicyName: assumeRoleForGettingCredentialsApiAccount
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -109,7 +110,7 @@ resources:
                       - - "arn:aws:iam::"
                         - Ref: "AWS::AccountId"
                         - ":role/LBH_Api_Gateway_Allow_GET"
-          - PolicyName: assumeRoleForGettingCredentialsHousingStaging
+          - PolicyName: assumeRoleForGettingCredentialsHousingAccount
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -120,8 +121,8 @@ resources:
                     Fn::Join:
                       - ""
                       - - "arn:aws:iam::"
-                        - ${self:custom.housingStagingAccountIds.${self:provider.stage}}
-                        - ":role/LBH_Api_Gateway_Allow_GET"                      
+                        - ${self:custom.housingAccountIds.${self:provider.stage}}
+                        - ":role/LBH_Api_Gateway_Allow_GET"
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
               Version: "2012-10-17"
@@ -150,9 +151,9 @@ resources:
                           - Ref: "AWS::AccountId"
                           - "table/APIAuthenticatorData"
 custom:
-  housingStagingAccountIds:
+  housingAccountIds:
     staging: "087586271961"
-    production: "00000000"
+    production: "282997303675"
   vpc:
     development:
       securityGroupIds:
