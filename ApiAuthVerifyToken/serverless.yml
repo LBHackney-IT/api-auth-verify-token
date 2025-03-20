@@ -47,15 +47,15 @@ resources:
             - Arn
         Action: lambda:InvokeFunction
         Principal: apigateway.amazonaws.com
-        SourceArn: "arn:aws:execute-api:eu-west-2:087586271961:*"
-        # SourceArn:
-        #   Fn::Join:
-        #     - ""
-        #     - - "arn:aws:execute-api:"
-        #       - Ref: AWS::Region
-        #       - ":"
-        #       - ${self:custom.housingStagingAccountIds.${self:provider.stage}}
-        #       - ":*/authorizers/*" 
+        # SourceArn: "arn:aws:execute-api:eu-west-2:087586271961:*"
+        SourceArn:
+          Fn::Join:
+            - ""
+            - - "arn:aws:execute-api:"
+              - Ref: AWS::Region
+              - ":"
+              - ${self:custom.housingStagingAccountIds.${self:provider.stage}}
+              - ":*/authorizers/*" 
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
