@@ -220,15 +220,21 @@ workflows:
           context: api-assume-role-staging-context
           requires:
             - build-and-test
+          filters:
+            branches:
+              only: master
       - terraform-init-and-apply-to-staging:
           requires:
             - assume-role-staging
+          filters:
+            branches:
+              only: master
       - deploy-to-staging:
           requires:
             - terraform-init-and-apply-to-staging
-      - deploy-to-staging-new:
-          requires:
-            - terraform-init-and-apply-to-staging
+          filters:
+            branches:
+              only: master
       - permit-production-release:
           type: approval
           requires:
