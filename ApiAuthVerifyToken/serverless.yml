@@ -147,7 +147,7 @@ resources:
                       - - "arn:aws:iam::"
                         - ${self:custom.housingAccountIds.${self:provider.stage}}
                         - ":role/LBH_Api_Gateway_Allow_GET"
-          - PolicyName: assumeRoleForGettingCredentialsDRAccount
+          # - PolicyName: assumeRoleForGettingCredentialsDRAccount
             # Disaster-recovery (prod only)
             # PolicyDocument:
             #   Version: "2012-10-17"
