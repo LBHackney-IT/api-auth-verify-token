@@ -149,22 +149,22 @@ resources:
                         - ":role/LBH_Api_Gateway_Allow_GET"
           - PolicyName: assumeRoleForGettingCredentialsDRAccount
             # Disaster-recovery (prod only)
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: Allow
-                  Action:
-                    - "sts:AssumeRole"
-                  Resource:
-                    Fn::Join:
-                      - ""
-                      - - "arn:aws:iam::"
-                        - ${self:custom.disasterRecoveryAccountIds.production}
-                        - ":role/LBH_Api_Gateway_Allow_GET"
-                  Condition:
-                    Fn::Equals:
-                      - ${self:provider.stage}
-                      - "production"
+            # PolicyDocument:
+            #   Version: "2012-10-17"
+            #   Statement:
+            #     - Effect: Allow
+            #       Action:
+            #         - "sts:AssumeRole"
+            #       Resource:
+            #         Fn::Join:
+            #           - ""
+            #           - - "arn:aws:iam::"
+            #             - ${self:custom.disasterRecoveryAccountIds.production}
+            #             - ":role/LBH_Api_Gateway_Allow_GET"
+            #       Condition:
+            #         Fn::Equals:
+            #           - ${self:provider.stage}
+            #           - "production"
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
               Version: "2012-10-17"
