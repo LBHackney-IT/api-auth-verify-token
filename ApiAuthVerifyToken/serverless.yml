@@ -57,6 +57,28 @@ resources:
               - ":"
               - ${self:custom.housingAccountIds.${self:provider.stage}}
               - ":*/authorizers/*"
+    AllowDRCrossAccountAuthorizer:
+      # Disaster-recovery (prod only)
+      Condition:
+        Fn::Equals:
+          - ${self:provider.stage}
+          - "production"
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName:
+          Fn::GetAtt:
+            - ApiAuthVerifyTokenNewLambdaFunction
+            - Arn
+        Action: lambda:InvokeFunction
+        Principal: apigateway.amazonaws.com
+        SourceArn:
+          Fn::Join:
+            - ""
+            - - "arn:aws:execute-api:"
+              - Ref: AWS::Region
+              - ":"
+              - ${self:custom.disasterRecoveryAccountIds.${self:provider.stage}}
+              - ":*/authorizers/*"
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
@@ -98,6 +120,7 @@ resources:
                     - "lambda:InvokeFunction"
                   Resource: "*"
           - PolicyName: assumeRoleForGettingCredentialsApiAccount
+            # ProductionApis or StagingApis
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -111,6 +134,7 @@ resources:
                         - Ref: "AWS::AccountId"
                         - ":role/LBH_Api_Gateway_Allow_GET"
           - PolicyName: assumeRoleForGettingCredentialsHousingAccount
+            # Housing-Production or Housing-Staging
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -123,6 +147,24 @@ resources:
                       - - "arn:aws:iam::"
                         - ${self:custom.housingAccountIds.${self:provider.stage}}
                         - ":role/LBH_Api_Gateway_Allow_GET"
+          - PolicyName: assumeRoleForGettingCredentialsDRAccount
+            # Disaster-recovery (prod only)
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - "sts:AssumeRole"
+                  Resource:
+                    Fn::Join:
+                      - ""
+                      - - "arn:aws:iam::"
+                        - ${self:custom.disasterRecoveryAccountIds.${self:provider.stage}}
+                        - ":role/LBH_Api_Gateway_Allow_GET"
+                  Condition:
+                    Fn::Equals:
+                      - ${self:provider.stage}
+                      - "production"
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
               Version: "2012-10-17"
@@ -154,6 +196,8 @@ custom:
   housingAccountIds:
     staging: "087586271961"
     production: "282997303675"
+  disasterRecoveryAccountIds:
+    production: "851725205572"
   vpc:
     development:
       securityGroupIds:
