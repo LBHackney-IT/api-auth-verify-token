@@ -20,6 +20,11 @@ functions:
       AWS_ROLE_NAME_FOR_STS_API_GATEWAY_GET: ${ssm:/api-auth-token-generator/${self:provider.stage}/sts-role-name}
 
 resources:
+  Conditions:
+    CreateDRPolicies: !Equals
+      - ${self:provider.stage}
+      - "production"
+
   Resources:
     AllowApisAccountAuthorizer:
       # ProductionApis or StagingApis
@@ -59,10 +64,7 @@ resources:
               - ":*/authorizers/*"
     AllowDRCrossAccountAuthorizer:
       # Disaster-recovery (prod only)
-      Condition:
-        Fn::Equals:
-          - ${self:provider.stage}
-          - "production"
+      Condition: CreateDRPolicies
       Type: AWS::Lambda::Permission
       Properties:
         FunctionName:
@@ -148,23 +150,23 @@ resources:
                         - ${self:custom.housingAccountIds.${self:provider.stage}}
                         - ":role/LBH_Api_Gateway_Allow_GET"
           # - PolicyName: assumeRoleForGettingCredentialsDRAccount
-            # Disaster-recovery (prod only)
-            # PolicyDocument:
-            #   Version: "2012-10-17"
-            #   Statement:
-            #     - Effect: Allow
-            #       Action:
-            #         - "sts:AssumeRole"
-            #       Resource:
-            #         Fn::Join:
-            #           - ""
-            #           - - "arn:aws:iam::"
-            #             - ${self:custom.disasterRecoveryAccountIds.production}
-            #             - ":role/LBH_Api_Gateway_Allow_GET"
-            #       Condition:
-            #         Fn::Equals:
-            #           - ${self:provider.stage}
-            #           - "production"
+          # Disaster-recovery (prod only)
+          # PolicyDocument:
+          #   Version: "2012-10-17"
+          #   Statement:
+          #     - Effect: Allow
+          #       Action:
+          #         - "sts:AssumeRole"
+          #       Resource:
+          #         Fn::Join:
+          #           - ""
+          #           - - "arn:aws:iam::"
+          #             - ${self:custom.disasterRecoveryAccountIds.production}
+          #             - ":role/LBH_Api_Gateway_Allow_GET"
+          #       Condition:
+          #         Fn::Equals:
+          #           - ${self:provider.stage}
+          #           - "production"
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
               Version: "2012-10-17"
