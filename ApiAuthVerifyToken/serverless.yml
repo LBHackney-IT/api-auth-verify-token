@@ -77,7 +77,7 @@ resources:
             - - "arn:aws:execute-api:"
               - Ref: AWS::Region
               - ":"
-              - ${self:custom.disasterRecoveryAccountIds.${self:provider.stage}}
+              - ${self:custom.disasterRecoveryAccountIds.production}
               - ":*/authorizers/*"
     lambdaExecutionRole:
       Type: AWS::IAM::Role
@@ -159,7 +159,7 @@ resources:
                     Fn::Join:
                       - ""
                       - - "arn:aws:iam::"
-                        - ${self:custom.disasterRecoveryAccountIds.${self:provider.stage}}
+                        - ${self:custom.disasterRecoveryAccountIds.production}
                         - ":role/LBH_Api_Gateway_Allow_GET"
                   Condition:
                     Fn::Equals:
