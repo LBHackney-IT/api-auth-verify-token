@@ -81,6 +81,25 @@ resources:
               - ":"
               - ${self:custom.disasterRecoveryAccountIds.production}
               - ":*/authorizers/*"
+    assumeRoleForDRPolicy:
+      Type: AWS::IAM::Policy
+      Condition: CreateDRPolicies
+      Properties:
+        PolicyName: assumeRoleForGettingCredentialsDRAccount
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - "sts:AssumeRole"
+              Resource:
+                Fn::Join:
+                  - ""
+                  - - "arn:aws:iam::"
+                    - ${self:custom.disasterRecoveryAccountIds.production}
+                    - ":role/LBH_Api_Gateway_Allow_GET"
+        Roles:
+          - Ref: lambdaExecutionRole
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
@@ -149,21 +168,6 @@ resources:
                       - - "arn:aws:iam::"
                         - ${self:custom.housingAccountIds.${self:provider.stage}}
                         - ":role/LBH_Api_Gateway_Allow_GET"
-          - PolicyName: assumeRoleForGettingCredentialsDRAccount
-            # Disaster-recovery (prod only)
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: Allow
-                  Action:
-                    - "sts:AssumeRole"
-                  Resource:
-                    Fn::Join:
-                      - ""
-                      - - "arn:aws:iam::"
-                        - ${self:custom.disasterRecoveryAccountIds.production}
-                        - ":role/LBH_Api_Gateway_Allow_GET"
-                  Condition: CreateDRPolicies
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
               Version: "2012-10-17"
