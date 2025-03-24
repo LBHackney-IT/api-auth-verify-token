@@ -197,6 +197,7 @@ resources:
                           - "table/APIAuthenticatorData"
 custom:
   housingAccountIds:
+    development: "364864573329"
     staging: "087586271961"
     production: "282997303675"
   disasterRecoveryAccountIds:
