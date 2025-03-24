@@ -154,11 +154,15 @@ workflows:
       - check-code-formatting:
           filters:
             branches:
-              ignore: master
+              ignore:
+                - master
+                - development
       - build-and-test:
           filters:
             branches:
-              ignore: master
+              ignore:
+                - master
+                - development
 
   check-and-deploy-development:
     jobs:
