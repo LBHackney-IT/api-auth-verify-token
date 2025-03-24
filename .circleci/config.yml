@@ -173,14 +173,18 @@ workflows:
       - build-and-test:
           filters:
             branches:
-              only: development
+              only:
+                - development
+                - fix-dev-deploy
       - assume-role-development:
           context: api-assume-role-development-context
           requires:
             - build-and-test
           filters:
             branches:
-              only: development
+              only:
+                - development
+                - fix-dev-deploy
       - terraform-init-and-apply-to-development:
           requires:
             - assume-role-development
@@ -194,7 +198,9 @@ workflows:
             - "Serverless Framework"
           filters:
             branches:
-              only: development
+              only:
+                - development
+                - fix-dev-deploy
 
   check-and-deploy-staging-and-production:
     jobs:
