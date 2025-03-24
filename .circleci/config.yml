@@ -190,27 +190,6 @@ workflows:
             branches:
               only: development
 
-  temp-deploy-new-staging-for-testing-purposes:
-    jobs:
-      # - build-and-test
-      - assume-role-staging:
-          context: api-assume-role-staging-context
-          # requires:
-          #   - build-and-test
-      # - permit-staging-release:
-      #     type: approval
-      #     requires:
-      #       - assume-role-staging
-      # - terraform-init-and-apply-to-staging:
-      #     requires:
-      #       - permit-staging-release
-      - deploy-to-staging:
-          context:
-            - "Serverless Framework"
-          requires:
-            # - terraform-init-and-apply-to-staging
-            - assume-role-staging
-
   check-and-deploy-staging-and-production:
     jobs:
       - build-and-test:
