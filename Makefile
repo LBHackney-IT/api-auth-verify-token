@@ -1,22 +1,22 @@
 .PHONY: setup
 setup:
-	docker-compose build
+	docker compose build
 
 .PHONY: build
 build:
-	docker-compose build base-api
+	docker compose build base-api
 
 .PHONY: serve
 serve:
-	docker-compose build base-api && docker-compose up base-api
+	docker compose build base-api && docker compose up base-api
 
 .PHONY: shell
 shell:
-	docker-compose run base-api bash
+	docker compose run base-api bash
 
 .PHONY: test
 test:
-	docker-compose up test-database & docker-compose build base-api-test && docker-compose up base-api-test
+	docker compose build api-auth-verify-token-test && docker compose up api-auth-verify-token-test
 
 .PHONY: lint
 lint:

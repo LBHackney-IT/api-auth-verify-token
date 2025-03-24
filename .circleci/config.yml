@@ -1,19 +1,19 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@0.1.9
   aws_assume_role: lbh-hackit/aws_assume_role@0.1.0
+  node: circleci/node@7.0.0
 
 executors:
   docker-python:
     docker:
-      - image: circleci/python:3.7
+      - image: cimg/python:3.12
   docker-terraform:
     docker:
       - image: "hashicorp/terraform:0.12.29"
   docker-dotnet:
     docker:
-      - image: mcr.microsoft.com/dotnet/core/sdk:3.1
+      - image: mcr.microsoft.com/dotnet/sdk:8.0
 
 references:
   workspace_root: &workspace_root "~"
@@ -61,29 +61,25 @@ commands:
     parameters:
       stage:
         type: string
+      path:
+        type: string
+        default: "./ApiAuthVerifyToken/"
     steps:
       - *attach_workspace
       - checkout
       - setup_remote_docker
-      - run:
-          name: Install Node.js
-          command: |
-            curl -sL https://deb.nodesource.com/setup_13.x | bash -
-            apt-get update && apt-get install -y nodejs
-      - run:
-          name: Install serverless CLI
-          command: npm i -g serverless
+      - node/install
       - run:
           name: Build lambda
           command: |
-            cd ./ApiAuthVerifyToken/
+            cd <<parameters.path>>
             chmod +x ./build.sh
             ./build.sh
       - run:
           name: Deploy lambda
           command: |
-            cd ./ApiAuthVerifyToken/
-            sls deploy --stage <<parameters.stage>> --conceal
+            cd <<parameters.path>>
+            npx --yes --debug serverless deploy --stage <<parameters.stage>> --conceal
 jobs:
   check-code-formatting:
     executor: docker-dotnet
@@ -102,10 +98,10 @@ jobs:
       - setup_remote_docker
       - run:
           name: build
-          command: docker-compose build api-auth-verify-token-test
+          command: docker compose build api-auth-verify-token-test
       - run:
           name: Run tests
-          command: docker-compose run api-auth-verify-token-test
+          command: docker compose run api-auth-verify-token-test
   terraform-init-and-apply-to-development:
     executor: docker-terraform
     steps:
@@ -153,10 +149,31 @@ jobs:
           stage: "production"
 
 workflows:
+  check:
+    jobs:
+      - check-code-formatting:
+          filters:
+            branches:
+              ignore:
+                - master
+                - development
+      - build-and-test:
+          filters:
+            branches:
+              ignore:
+                - master
+                - development
+
   check-and-deploy-development:
     jobs:
-      - check-code-formatting
-      - build-and-test
+      - check-code-formatting:
+          filters:
+            branches:
+              only: development
+      - build-and-test:
+          filters:
+            branches:
+              only: development
       - assume-role-development:
           context: api-assume-role-development-context
           requires:
@@ -176,6 +193,7 @@ workflows:
           filters:
             branches:
               only: development
+
   check-and-deploy-staging-and-production:
     jobs:
       - build-and-test:
@@ -185,10 +203,10 @@ workflows:
       - assume-role-staging:
           context: api-assume-role-staging-context
           requires:
-              - build-and-test
+            - build-and-test
           filters:
-             branches:
-               only: master
+            branches:
+              only: master
       - terraform-init-and-apply-to-staging:
           requires:
             - assume-role-staging
