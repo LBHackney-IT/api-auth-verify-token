@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAuthVerifyToken", "ApiAuthVerifyToken\ApiAuthVerifyToken.csproj", "{6F482163-3F51-487F-8F7D-37A1D4DAEA8B}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiAuthVerifyToken", "ApiAuthVerifyToken\ApiAuthVerifyToken.csproj", "{6F482163-3F51-487F-8F7D-37A1D4DAEA8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAuthVerifyToken.Tests", "ApiAuthVerifyToken.Tests\ApiAuthVerifyToken.Tests.csproj", "{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiAuthVerifyToken.Tests", "ApiAuthVerifyToken.Tests\ApiAuthVerifyToken.Tests.csproj", "{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,5 +21,19 @@ Global
 		{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE8E4E61-EB76-416B-8417-E8F2F6A0C0D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{310A6722-973C-4CAF-952B-EA7CBF4FEC88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{310A6722-973C-4CAF-952B-EA7CBF4FEC88}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{310A6722-973C-4CAF-952B-EA7CBF4FEC88}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{310A6722-973C-4CAF-952B-EA7CBF4FEC88}.Release|Any CPU.Build.0 = Release|Any CPU
+		{466564FF-AD08-447B-ADAB-BB8A9395D9E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{466564FF-AD08-447B-ADAB-BB8A9395D9E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{466564FF-AD08-447B-ADAB-BB8A9395D9E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{466564FF-AD08-447B-ADAB-BB8A9395D9E0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {041ABF76-4241-466B-9034-59E4C0520DCC}
 	EndGlobalSection
 EndGlobal

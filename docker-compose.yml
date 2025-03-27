@@ -38,6 +38,7 @@ services:
     links:
       - test-database
       - dynamodb-database
+
   test-database:
     image: test-database
     build:
