@@ -215,7 +215,7 @@ custom:
   desAccountIds:
     development: "549011513230"
     staging: "549011513230"
-    production: "658402009206
+    production: "658402009206"
   disasterRecoveryAccountIds:
     production: "851725205572"
   vpc:
