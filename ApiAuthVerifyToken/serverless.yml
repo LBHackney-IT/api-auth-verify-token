@@ -62,6 +62,18 @@ resources:
               - ":"
               - ${self:custom.housingAccountIds.${self:provider.stage}}
               - ":*/authorizers/*"
+    AllowDESCrossAccountAuthorizer:
+      # Document-Evidence-Store Staging and Production
+      Type: AWS::Lambda::Permission
+      Properties:
+        FunctionName:
+          Fn::GetAtt:
+            - ApiAuthVerifyTokenNewLambdaFunction
+            - Arn
+        Action: lambda:InvokeFunction
+        Principal: apigateway.amazonaws.com
+        SourceArn:
+          Fn::Sub: arn:aws:execute-api:${AWS::Region}:${self:custom.desAccountIds.${self:provider.stage}}:*/authorizers/*
     AllowDRCrossAccountAuthorizer:
       # Disaster-recovery (prod only)
       Condition: CreateDRPolicies
@@ -200,6 +212,10 @@ custom:
     development: "364864573329"
     staging: "087586271961"
     production: "282997303675"
+  desAccountIds:
+    development: null
+    staging: "549011513230"
+    production: "658402009206
   disasterRecoveryAccountIds:
     production: "851725205572"
   vpc:
