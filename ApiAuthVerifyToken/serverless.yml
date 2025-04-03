@@ -213,7 +213,7 @@ custom:
     staging: "087586271961"
     production: "282997303675"
   desAccountIds:
-    development: null
+    development: "549011513230"
     staging: "549011513230"
     production: "658402009206
   disasterRecoveryAccountIds:
