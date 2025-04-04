@@ -115,8 +115,8 @@ resources:
     lambdaExecutionRole:
       Type: AWS::IAM::Role
       Properties:
-        Path: /api-auth-verify-token/${self:provider.stage}/
-        RoleName: api-auth-verify-token-lambdaExecutionRole
+        Path: /${self:service}/${self:provider.stage}/
+        RoleName: ${self:service}-lambdaExecutionRole
         AssumeRolePolicyDocument:
           Version: "2012-10-17"
           Statement:
