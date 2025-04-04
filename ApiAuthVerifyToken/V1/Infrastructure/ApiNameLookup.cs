@@ -16,5 +16,8 @@ namespace ApiAuthVerifyToken.V1.Infrastructure
         [Required]
         [Column("api_name")]
         public string ApiName { get; set; }
+
+        [Column("api_gateway_id")]
+        public string ApiGatewayId { get; set; }
     }
 }
