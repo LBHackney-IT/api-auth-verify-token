@@ -101,6 +101,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
             var request = GenerateAuthorizerRequest(GenerateJwtHelper.GenerateJwtTokenUserFlow(groups));
             var dbData = _fixture.Create<APIDataUserFlow>();
             var apiName = _faker.Random.Word();
+            _mockDatabaseGateway.Setup(x => x.GetApiGatewayName(request.ApiAwsId)).Returns(apiName);
             _mockDynamoDbGateway.Setup(x => x.GetAPIDataByNameAndEnvironmentAsync(apiName, request.Environment)).Returns(dbData);
 
             _classUnderTest.ExecuteUserAuth(request);
@@ -121,6 +122,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
                 .With(x => x.AwsAccount, request.AwsAccountId)
                 .With(x => x.ApiName, apiName).Create();
 
+            _mockDatabaseGateway.Setup(x => x.GetApiGatewayName(It.IsAny<string>())).Returns(apiName);
             _mockDynamoDbGateway.Setup(x => x.GetAPIDataByNameAndEnvironmentAsync(apiName, request.Environment)).Returns(dbData);
 
             var result = _classUnderTest.ExecuteUserAuth(request);
@@ -138,6 +140,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
                 .With(x => x.AllowedGroups, groups)
                 .With(x => x.ApiName, apiName).Create();
 
+            _mockDatabaseGateway.Setup(x => x.GetApiGatewayName(It.IsAny<string>())).Returns(apiName);
             _mockDynamoDbGateway.Setup(x => x.GetAPIDataByNameAndEnvironmentAsync(apiName, request.Environment)).Returns(dbData);
 
             var result = _classUnderTest.ExecuteUserAuth(request);
