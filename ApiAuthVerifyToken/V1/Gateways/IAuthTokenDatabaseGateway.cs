@@ -5,6 +5,5 @@ namespace ApiAuthVerifyToken.V1.Gateways
     public interface IAuthTokenDatabaseGateway
     {
         AuthTokenServiceFlow GetTokenData(int tokenId);
-        string GetApiGatewayName(string apiId);
     }
 }

@@ -31,13 +31,5 @@ namespace ApiAuthVerifyToken.V1.Gateways
 
             return token.ToDomain(endpointName.ApiEndpointName, apiName.ApiName, consumerType.TypeName);
         }
-
-        // Fetches the API name based on the API ID (as on AWS) from a lookup table
-        public string GetApiGatewayName(string apiId)
-        {
-            var apiName = _databaseContext.ApiNameLookups.Where(lookup => lookup.ApiGatewayId == apiId)
-                .Select(lookup => lookup.ApiName).FirstOrDefault();
-            return apiName;
-        }
     }
 }
