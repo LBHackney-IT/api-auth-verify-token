@@ -9,5 +9,6 @@ namespace ApiAuthVerifyToken.V1.Gateways
     public interface IDynamoDbGateway
     {
         APIDataUserFlow GetAPIDataByNameAndEnvironmentAsync(string apiName, string environment);
+        APIDataUserFlow GetAPIDataByApiIdAsync(string apiAwsId);
     }
 }
