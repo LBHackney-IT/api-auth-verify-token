@@ -11,7 +11,6 @@ using System;
 using System.Linq;
 using ApiAuthVerifyToken.Tests.V1.TestHelper;
 using ApiAuthVerifyToken.V1.Boundary;
-using Amazon.SecurityToken.Model;
 using Bogus;
 using System.Collections.Generic;
 

@@ -39,6 +39,5 @@ namespace ApiAuthVerifyToken.V1.Gateways
                 .Select(lookup => lookup.ApiName).FirstOrDefault();
             return apiName;
         }
-
     }
 }
