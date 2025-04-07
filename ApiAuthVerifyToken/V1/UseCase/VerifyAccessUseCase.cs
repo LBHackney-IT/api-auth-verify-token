@@ -48,10 +48,9 @@ namespace ApiAuthVerifyToken.V1.UseCase
             user.Groups = validTokenClaims.Where(x => x.Type == "groups").Select(y => y.Value).ToList();
             user.Email = validTokenClaims.Find(x => x.Type == "email").Value;
 
-            var apiName = _databaseGateway.GetApiGatewayName(authorizerRequest.ApiAwsId);
-            LambdaLogger.Log($"API name retrieved - {apiName}");
-            //check if API is in the DynamoDB
-            var apiDataInDb = _dynamoDbGateway.GetAPIDataByNameAndEnvironmentAsync(apiName, authorizerRequest.Environment);
+            var apiDataInDb = _dynamoDbGateway.GetAPIDataByApiIdAsync(authorizerRequest.ApiAwsId);
+            var apiName = apiDataInDb.ApiName;
+            LambdaLogger.Log($"API name retrieved for id {authorizerRequest.ApiAwsId} - {apiName}");
             return new AccessDetails
             {
                 Allow = VerifyAccessHelper.ShouldHaveAccessUserFlow(user, authorizerRequest, apiDataInDb, apiName),
