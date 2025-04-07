@@ -101,15 +101,13 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
 
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwtUserFlow;
-            var apiName = _fixture.Create<string>();
             var dbData = _fixture.Build<APIDataUserFlow>()
                 .With(x => x.AllowedGroups, _allowedGroups)
                 .With(x => x.Environment, lambdaRequest.RequestContext.Stage)
                 .With(x => x.AwsAccount, lambdaRequest.RequestContext.AccountId)
-                .With(x => x.ApiName, apiName).Create();
+                .With(x => x.ApiGatewayId, lambdaRequest.RequestContext.ApiId).Create();
 
-            _mockDatabaseGateway.Setup(x => x.GetApiGatewayName(lambdaRequest.RequestContext.ApiId)).Returns(apiName);
-            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByNameAndEnvironmentAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(dbData);
+            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByApiIdAsync(lambdaRequest.RequestContext.ApiId)).Returns(dbData);
 
             var result = _classUnderTest.VerifyToken(lambdaRequest);
 

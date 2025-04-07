@@ -68,6 +68,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
             attributes["apiName"] = new AttributeValue { S = apiData.ApiName };
             attributes["environment"] = new AttributeValue { S = apiData.Environment };
             attributes["awsAccount"] = new AttributeValue { S = apiData.AwsAccount };
+            attributes["apiGatewayId"] = new AttributeValue { S = apiData.ApiGatewayId };
             attributes["allowedGroups"] = new AttributeValue { SS = new List<string>(apiData.AllowedGroups) };
 
             PutItemRequest request = new PutItemRequest

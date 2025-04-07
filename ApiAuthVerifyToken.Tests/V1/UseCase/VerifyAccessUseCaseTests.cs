@@ -98,14 +98,13 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
         {
             var groups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             var request = GenerateAuthorizerRequest(GenerateJwtHelper.GenerateJwtTokenUserFlow(groups));
-            var dbData = _fixture.Create<APIDataUserFlow>();
             var apiName = _faker.Random.Word();
-            _mockDatabaseGateway.Setup(x => x.GetApiGatewayName(request.ApiAwsId)).Returns(apiName);
-            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByNameAndEnvironmentAsync(apiName, request.Environment)).Returns(dbData);
+            var dbData = _fixture.Build<APIDataUserFlow>().With(x => x.ApiName, apiName).Create();
+            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByApiIdAsync(request.ApiAwsId)).Returns(dbData);
 
             _classUnderTest.ExecuteUserAuth(request);
 
-            _mockDynamoDbGateway.Verify(x => x.GetAPIDataByNameAndEnvironmentAsync(apiName, request.Environment), Times.Once);
+            _mockDynamoDbGateway.Verify(x => x.GetAPIDataByApiIdAsync(request.ApiAwsId), Times.Once);
         }
 
         [Test]
@@ -121,8 +120,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
                 .With(x => x.AwsAccount, request.AwsAccountId)
                 .With(x => x.ApiName, apiName).Create();
 
-            _mockDatabaseGateway.Setup(x => x.GetApiGatewayName(It.IsAny<string>())).Returns(apiName);
-            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByNameAndEnvironmentAsync(apiName, request.Environment)).Returns(dbData);
+            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByApiIdAsync(request.ApiAwsId)).Returns(dbData);
 
             var result = _classUnderTest.ExecuteUserAuth(request);
 
@@ -139,8 +137,7 @@ namespace ApiAuthVerifyToken.Tests.V1.UseCase
                 .With(x => x.AllowedGroups, groups)
                 .With(x => x.ApiName, apiName).Create();
 
-            _mockDatabaseGateway.Setup(x => x.GetApiGatewayName(It.IsAny<string>())).Returns(apiName);
-            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByNameAndEnvironmentAsync(apiName, request.Environment)).Returns(dbData);
+            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByApiIdAsync(request.ApiAwsId)).Returns(dbData);
 
             var result = _classUnderTest.ExecuteUserAuth(request);
 
