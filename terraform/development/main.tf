@@ -57,5 +57,16 @@ resource "aws_dynamodb_table" "api_authenticator_dynamodb_table" {
         terraform-managed = true
         project_name      = "api-authenticator"
     }
+
+    global_secondary_index {
+        name            = "apiGatewayIdIndex"
+        hash_key        = "apiGatewayId"
+        projection_type = "ALL"
+    }
+
+    attribute {
+        name = "apiGatewayId"
+        type = "S"
+    }
 }
 
