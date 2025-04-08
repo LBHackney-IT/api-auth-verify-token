@@ -19,7 +19,8 @@ namespace ApiAuthVerifyToken.Tests
         [SetUp]
         public void RunBeforeAnyTests()
         {
-            var clientConfig = new AmazonDynamoDBConfig { ServiceURL = "http://dynamodb-database:8000" };
+            var dynamoDbLocalServiceUrl = Environment.GetEnvironmentVariable("DynamoDb_LocalServiceUrl") ?? "http://localhost:8000";
+            var clientConfig = new AmazonDynamoDBConfig { ServiceURL = dynamoDbLocalServiceUrl };
             DynamoDBClient = new AmazonDynamoDBClient(clientConfig);
             try
             {
