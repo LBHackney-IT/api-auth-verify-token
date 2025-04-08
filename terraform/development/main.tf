@@ -27,7 +27,9 @@ terraform {
 
 resource "aws_dynamodb_table" "api_authenticator_dynamodb_table" {
     name                  = "APIAuthenticatorData"
-    billing_mode          = "PAY_PER_REQUEST"
+    billing_mode          = "PROVISIONED"
+    read_capacity         = 10
+    write_capacity        = 10
     hash_key              = "apiName"
     range_key             = "environment"
 	
@@ -39,34 +41,12 @@ resource "aws_dynamodb_table" "api_authenticator_dynamodb_table" {
         name              = "environment"
         type              = "S"
     }
-    attribute {
-        name = "apiGatewayId"
-        type = "S"
-    }
-
-    global_secondary_index {
-        name               = "apiGatewayIdIndex"
-        hash_key           = "apiGatewayId"
-        range_key          = "apiName"
-        projection_type    = "ALL"
-    }
 
     tags = {
         Name              = "api-authenticator-development"
         Environment       = "development"
         terraform-managed = true
         project_name      = "api-authenticator"
-    }
-
-    global_secondary_index {
-        name            = "apiGatewayIdIndex"
-        hash_key        = "apiGatewayId"
-        projection_type = "ALL"
-    }
-
-    attribute {
-        name = "apiGatewayId"
-        type = "S"
     }
 }
 
