@@ -18,10 +18,6 @@ shell:
 test:
 	docker compose build api-auth-verify-token-test && docker compose up api-auth-verify-token-test
 
-test-raw:
-	# requires db dockers running
-	dotnet test
-
 .PHONY: lint
 lint:
 	-dotnet tool install -g dotnet-format
