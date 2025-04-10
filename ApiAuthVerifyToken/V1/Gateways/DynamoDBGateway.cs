@@ -6,6 +6,7 @@ using ApiAuthVerifyToken.V1.Factories;
 using ApiAuthVerifyToken.V1.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,7 +15,6 @@ namespace ApiAuthVerifyToken.V1.Gateways
     public class DynamoDBGateway : IDynamoDbGateway
     {
         private readonly IDynamoDBContext _dynamoDbContext;
-        const string ApiGatewayIdIndex = "apiGatewayIdIndex"; // Secondary index to query by ApiGatewayId
         public DynamoDBGateway(IDynamoDBContext dynamoDbContext)
         {
             _dynamoDbContext = dynamoDbContext;
@@ -24,22 +24,21 @@ namespace ApiAuthVerifyToken.V1.Gateways
         {
             try
             {
-                var search = _dynamoDbContext.QueryAsync<APIDataUserFlowDbEntity>(
-                    apiAwsId,
-                    new DynamoDBOperationConfig
+                var table = _dynamoDbContext.GetTargetTable<APIDataUserFlowDbEntity>();
+                var search = table.Query(
+                    new QueryOperationConfig
                     {
-                        IndexName = ApiGatewayIdIndex,
-                    }
-                );
+                        IndexName = "apiGatewayIdIndex",
+                        Limit = 1,
+                        Filter = new QueryFilter("apiGatewayId", QueryOperator.Equal, apiAwsId)
+                    });
 
-                List<APIDataUserFlowDbEntity> results = search.GetRemainingAsync().Result;
-                if (results.Count == 0)
-                {
-                    LambdaLogger.Log($"API with id {apiAwsId} does not exist in DynamoDB");
-                    throw new APIEntryNotFoundException();
-                }
-                return results[0]?.ToDomain();
+                var documents = search.GetRemainingAsync().Result;
+                if (documents.Count == 0)
+                    throw new APIEntryNotFoundException($"API with id {apiAwsId} does not exist in DynamoDB");
 
+                var entity = _dynamoDbContext.FromDocument<APIDataUserFlowDbEntity>(documents[0]);
+                return entity?.ToDomain();
             }
             catch (Exception ex)
             {
