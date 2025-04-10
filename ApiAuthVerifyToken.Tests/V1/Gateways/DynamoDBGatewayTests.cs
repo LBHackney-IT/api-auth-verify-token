@@ -54,6 +54,21 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
         }
 
         [Test]
+        public void CanGetApiDataByApiId()
+        {
+            var apiData = _fixture.Create<APIDataUserFlowDbEntity>();
+            AddDataToDynamoDb(apiData);
+
+            var otherApiData = _fixture.Create<APIDataUserFlowDbEntity>();
+            AddDataToDynamoDb(otherApiData);
+
+            var result = _classUnderTest.GetAPIDataByApiIdAsync(apiData.ApiGatewayId);
+
+            result.Should().BeEquivalentTo(apiData);
+        }
+
+
+        [Test]
         public void VerifyThatGatewayThrowsExceptionWhenNoMatchIsFound()
         {
 
@@ -76,6 +91,10 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
                 TableName = "APIAuthenticatorData",
                 Item = attributes
             };
+
+            // assert that the table has a global secondary index
+            var table = DynamoDBClient.DescribeTableAsync("APIAuthenticatorData").GetAwaiter().GetResult();
+            table.Table.GlobalSecondaryIndexes.Should().NotBeNullOrEmpty();
 
             DynamoDBClient.PutItemAsync(request).GetAwaiter().GetResult();
         }
