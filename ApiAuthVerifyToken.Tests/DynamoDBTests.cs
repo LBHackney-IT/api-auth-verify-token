@@ -23,10 +23,37 @@ namespace ApiAuthVerifyToken.Tests
             DynamoDBClient = new AmazonDynamoDBClient(clientConfig);
             try
             {
-                var request = new CreateTableRequest("APIAuthenticatorData",
-                new List<KeySchemaElement> { new KeySchemaElement("apiName", KeyType.HASH), new KeySchemaElement("environment", KeyType.RANGE) },
-                new List<AttributeDefinition> { new AttributeDefinition("apiName", ScalarAttributeType.S), new AttributeDefinition("environment", ScalarAttributeType.S) },
-                new ProvisionedThroughput(3, 3));
+                var request = new CreateTableRequest
+                {
+                    TableName = "APIAuthenticatorData",
+                    AttributeDefinitions = new List<AttributeDefinition>
+                    {
+                        new AttributeDefinition { AttributeName = "apiName", AttributeType = ScalarAttributeType.S },
+                        new AttributeDefinition { AttributeName = "environment", AttributeType = ScalarAttributeType.S },
+                        new AttributeDefinition { AttributeName = "apiGatewayId", AttributeType = ScalarAttributeType.S }
+                    },
+                    KeySchema = new List<KeySchemaElement>
+                    {
+                        new KeySchemaElement { AttributeName = "apiName", KeyType = KeyType.HASH },
+                        new KeySchemaElement { AttributeName = "environment", KeyType = KeyType.RANGE }
+                    },
+                    GlobalSecondaryIndexes = new List<GlobalSecondaryIndex>
+                    {
+                        new GlobalSecondaryIndex
+                        {
+                            IndexName = "apiGatewayIdIndex",
+                            KeySchema = new List<KeySchemaElement>
+                            {
+                                new KeySchemaElement { AttributeName = "apiGatewayId", KeyType = KeyType.HASH }
+                            },
+                            Projection = new Projection
+                            {
+                                ProjectionType = ProjectionType.ALL
+                            }
+                        }
+                    },
+                    BillingMode = BillingMode.PAY_PER_REQUEST
+                };
 
                 DynamoDBClient.CreateTableAsync(request).GetAwaiter().GetResult();
             }

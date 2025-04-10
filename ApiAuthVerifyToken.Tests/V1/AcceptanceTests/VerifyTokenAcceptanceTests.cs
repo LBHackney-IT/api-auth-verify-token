@@ -11,7 +11,6 @@ using System;
 using System.Linq;
 using ApiAuthVerifyToken.Tests.V1.TestHelper;
 using ApiAuthVerifyToken.V1.Boundary;
-using Amazon.SecurityToken.Model;
 using Bogus;
 using System.Collections.Generic;
 
@@ -21,9 +20,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
     {
         private VerifyTokenHandler _classUnderTest;
         private Mock<IAuthTokenDatabaseGateway> _mockDatabaseGateway;
-        private Mock<IAwsApiGateway> _mockAwsApiGateway;
         private Mock<IServiceProvider> _serviceProvider;
-        private Mock<IAwsStsGateway> _mockAwsStsGateway;
         private Mock<IDynamoDbGateway> _mockDynamoDbGateway;
         private string _jwtServiceFlow;
         private string _jwtUserFlow;
@@ -36,8 +33,6 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
             _serviceProvider = new Mock<IServiceProvider>();
             _classUnderTest = new VerifyTokenHandler(_serviceProvider.Object);
             _mockDatabaseGateway = new Mock<IAuthTokenDatabaseGateway>();
-            _mockAwsApiGateway = new Mock<IAwsApiGateway>();
-            _mockAwsStsGateway = new Mock<IAwsStsGateway>();
             _mockDynamoDbGateway = new Mock<IDynamoDbGateway>();
             //set up env vars
             Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(50));
@@ -53,7 +48,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
 
             _serviceProvider
                 .Setup(x => x.GetService(typeof(IVerifyAccessUseCase)))
-                .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object, _mockAwsStsGateway.Object, _mockDynamoDbGateway.Object));
+                .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockDynamoDbGateway.Object));
 
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwtServiceFlow;
@@ -70,8 +65,6 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
                 ExpirationDate = null
             };
             _mockDatabaseGateway.Setup(x => x.GetTokenData(It.IsAny<int>())).Returns(tokenData);
-            _mockAwsApiGateway.Setup(x => x.GetApiName(It.IsAny<string>(), It.IsAny<Credentials>())).Returns(apiName);
-            _mockAwsStsGateway.Setup(x => x.GetTemporaryCredentials(It.IsAny<string>())).Returns(new AssumeRoleResponse());
 
             var result = _classUnderTest.VerifyToken(lambdaRequest);
 
@@ -86,7 +79,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
 
             _serviceProvider
                 .Setup(x => x.GetService(typeof(IVerifyAccessUseCase)))
-                .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object, _mockAwsStsGateway.Object, _mockDynamoDbGateway.Object));
+                .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockDynamoDbGateway.Object));
 
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwtServiceFlow;
@@ -104,20 +97,17 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
 
             _serviceProvider
                 .Setup(x => x.GetService(typeof(IVerifyAccessUseCase)))
-                .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object, _mockAwsStsGateway.Object, _mockDynamoDbGateway.Object));
+                .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockDynamoDbGateway.Object));
 
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwtUserFlow;
-            var apiName = _fixture.Create<string>();
             var dbData = _fixture.Build<APIDataUserFlow>()
                 .With(x => x.AllowedGroups, _allowedGroups)
                 .With(x => x.Environment, lambdaRequest.RequestContext.Stage)
                 .With(x => x.AwsAccount, lambdaRequest.RequestContext.AccountId)
-                .With(x => x.ApiName, apiName).Create();
+                .With(x => x.ApiGatewayId, lambdaRequest.RequestContext.ApiId).Create();
 
-            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByNameAndEnvironmentAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(dbData);
-            _mockAwsApiGateway.Setup(x => x.GetApiName(It.IsAny<string>(), It.IsAny<Credentials>())).Returns(apiName);
-            _mockAwsStsGateway.Setup(x => x.GetTemporaryCredentials(It.IsAny<string>())).Returns(new AssumeRoleResponse());
+            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByApiIdAsync(lambdaRequest.RequestContext.ApiId)).Returns(dbData);
 
             var result = _classUnderTest.VerifyToken(lambdaRequest);
 
@@ -131,7 +121,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
 
             _serviceProvider
                 .Setup(x => x.GetService(typeof(IVerifyAccessUseCase)))
-                .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockAwsApiGateway.Object, _mockAwsStsGateway.Object, _mockDynamoDbGateway.Object));
+                .Returns(new VerifyAccessUseCase(_mockDatabaseGateway.Object, _mockDynamoDbGateway.Object));
 
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwtUserFlow;
@@ -144,8 +134,6 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
                 .With(x => x.ApiName, apiName).Create();
 
             _mockDynamoDbGateway.Setup(x => x.GetAPIDataByNameAndEnvironmentAsync(It.IsAny<string>(), It.IsAny<string>())).Returns(dbData);
-            _mockAwsApiGateway.Setup(x => x.GetApiName(It.IsAny<string>(), It.IsAny<Credentials>())).Returns(apiName);
-            _mockAwsStsGateway.Setup(x => x.GetTemporaryCredentials(It.IsAny<string>())).Returns(new AssumeRoleResponse());
 
             var result = _classUnderTest.VerifyToken(lambdaRequest);
 

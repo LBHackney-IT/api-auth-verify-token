@@ -11,6 +11,7 @@ namespace ApiAuthVerifyToken.V1.Domain
         public string Environment { get; set; }
         //AWS account where API is deployed
         public string AwsAccount { get; set; }
+        public string ApiGatewayId { get; set; }
         public List<string> AllowedGroups { get; set; }
     }
 }
