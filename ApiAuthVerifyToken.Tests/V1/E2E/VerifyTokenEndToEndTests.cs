@@ -36,35 +36,41 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
         private readonly Faker _faker = new Faker();
         private List<string> _allowedGroups;
 
+        private TokenDatabaseContext _tokenDatabaseContextForTest; // Field to hold the context
+        private NpgsqlConnection _dbConnectionForTest; // Field to hold the connection
+
         [SetUp]
         public void Setup()
         {
-            // Create real database connection
-            using var connection = new NpgsqlConnection(ConnectionString.TestDatabase());
-            connection.Open();
+            // Create and open the connection ONCE for the test fixture setup
+            _dbConnectionForTest = new NpgsqlConnection(ConnectionString.TestDatabase());
+            _dbConnectionForTest.Open();
 
             // Initialize real DynamoDB gateway
             _dynamoDbGateway = new DynamoDBGateway(DynamoDbContext);
 
             // Initialize real AuthTokenDatabaseGateway
             var optionsBuilder = new DbContextOptionsBuilder<TokenDatabaseContext>();
-            optionsBuilder.UseNpgsql(connection);
-            using (var tokenDatabaseContext = new TokenDatabaseContext(optionsBuilder.Options))
-            {
-                _authTokenDatabaseGateway = new AuthTokenDatabaseGateway(tokenDatabaseContext);
-            }
+            optionsBuilder.UseNpgsql(_dbConnectionForTest); // Use the persistent connection
+
+            // Create the context BUT NOT IN A USING BLOCK
+            _tokenDatabaseContextForTest = new TokenDatabaseContext(optionsBuilder.Options);
+
+            // Create the gateway using the context that will persist
+            _authTokenDatabaseGateway = new AuthTokenDatabaseGateway(_tokenDatabaseContextForTest);
 
             // Set up environment variables
             Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(50));
             Environment.SetEnvironmentVariable("hackneyUserAuthTokenJwtSecret", _faker.Random.AlphaNumeric(50));
 
             // Set up JWT tokens
-            _allowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
+             _allowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             _jwtServiceFlow = GenerateJwtHelper.GenerateJwtToken();
             _jwtUserFlow = GenerateJwtHelper.GenerateJwtTokenUserFlow(_allowedGroups);
 
             // Setup real service provider
             var services = new ServiceCollection();
+            // Register the manually created gateway instance
             services.AddSingleton<IAuthTokenDatabaseGateway>(_authTokenDatabaseGateway);
             services.AddSingleton<IDynamoDbGateway>(_dynamoDbGateway);
             services.AddSingleton<IVerifyAccessUseCase>(provider =>
@@ -75,11 +81,11 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             );
 
             _serviceProvider = services.BuildServiceProvider();
-
             _classUnderTest = new VerifyTokenHandler(_serviceProvider);
 
             ClearDynamoDbTable();
-            TruncateAllTables(connection);
+            // Pass the persistent connection to Truncate
+            TruncateAllTables(_dbConnectionForTest);
         }
 
         [TearDown]
@@ -87,9 +93,20 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
         {
             ClearDynamoDbTable();
 
-            using var connection = new NpgsqlConnection(ConnectionString.TestDatabase());
-            connection.Open();
-            TruncateAllTables(connection);
+            // Truncate before disposing context/connection might be safer
+            // Ensure connection is still open or reopen if necessary
+            if (_dbConnectionForTest.State != System.Data.ConnectionState.Open) {
+                _dbConnectionForTest.Open();
+            }
+            TruncateAllTables(_dbConnectionForTest);
+
+
+            // Explicitly dispose the context and connection created in Setup
+            _tokenDatabaseContextForTest?.Dispose();
+            _dbConnectionForTest?.Dispose(); // Close the connection
+
+            // Dispose the DI container if needed (though less critical if dependencies are managed manually)
+            (_serviceProvider as IDisposable)?.Dispose();
         }
 
         [Test]
@@ -134,6 +151,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
                 .With(x => x.Environment, lambdaRequest.RequestContext.Stage)
                 .With(x => x.AwsAccount, lambdaRequest.RequestContext.AccountId)
                 .With(x => x.ApiName, apiName)
+                .With(x => x.ApiGatewayId, lambdaRequest.RequestContext.ApiId)
                 .Create();
 
             AddDataToDynamoDb(apiData);

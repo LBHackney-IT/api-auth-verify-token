@@ -62,7 +62,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
             var otherApiData = _fixture.Create<APIDataUserFlowDbEntity>();
             AddDataToDynamoDb(otherApiData);
 
-            var result = _classUnderTest.GetAPIDataByApiIdAsync(apiData.ApiGatewayId);
+            var result = _classUnderTest.GetAPIDataByApiGatewayIdAsync(apiData.ApiGatewayId);
 
             result.Should().BeEquivalentTo(apiData);
         }

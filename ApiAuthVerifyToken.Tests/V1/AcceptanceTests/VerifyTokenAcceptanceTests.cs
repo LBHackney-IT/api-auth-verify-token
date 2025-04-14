@@ -107,7 +107,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
                 .With(x => x.AwsAccount, lambdaRequest.RequestContext.AccountId)
                 .With(x => x.ApiGatewayId, lambdaRequest.RequestContext.ApiId).Create();
 
-            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByApiIdAsync(lambdaRequest.RequestContext.ApiId)).Returns(dbData);
+            _mockDynamoDbGateway.Setup(x => x.GetAPIDataByApiGatewayIdAsync(lambdaRequest.RequestContext.ApiId)).Returns(dbData);
 
             var result = _classUnderTest.VerifyToken(lambdaRequest);
 

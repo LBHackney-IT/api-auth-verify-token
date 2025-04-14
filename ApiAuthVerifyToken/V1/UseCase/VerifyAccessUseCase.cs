@@ -49,7 +49,7 @@ namespace ApiAuthVerifyToken.V1.UseCase
             user.Groups = validTokenClaims.Where(x => x.Type == "groups").Select(y => y.Value).ToList();
             user.Email = validTokenClaims.Find(x => x.Type == "email").Value;
 
-            var apiDataInDb = _dynamoDbGateway.GetAPIDataByApiIdAsync(authorizerRequest.ApiAwsId);
+            var apiDataInDb = _dynamoDbGateway.GetAPIDataByApiGatewayIdAsync(authorizerRequest.ApiAwsId);
             var apiName = apiDataInDb.ApiName;
             LambdaLogger.Log($"API name retrieved for id {authorizerRequest.ApiAwsId} - {apiName}");
             return new AccessDetails

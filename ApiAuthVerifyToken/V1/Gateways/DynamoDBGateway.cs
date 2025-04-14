@@ -20,7 +20,7 @@ namespace ApiAuthVerifyToken.V1.Gateways
             _dynamoDbContext = dynamoDbContext;
         }
 
-        public APIDataUserFlow GetAPIDataByApiIdAsync(string apiGatewayId)
+        public APIDataUserFlow GetAPIDataByApiGatewayIdAsync(string apiGatewayId)
         {
             try
             {
