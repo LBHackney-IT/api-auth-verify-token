@@ -19,7 +19,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Npgsql;
 
-namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
+#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
+
+namespace ApiAuthVerifyToken.Tests.V1.E2E
 {
     [TestFixture]
     public class VerifyTokenEndToEndTests : DynamoDBTests
@@ -38,8 +40,7 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
         public void Setup()
         {
             // Create real database connection
-            var connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};Port=5432;Database={Environment.GetEnvironmentVariable("DB_DATABASE")};Username={Environment.GetEnvironmentVariable("DB_USERNAME")};Password={Environment.GetEnvironmentVariable("DB_PASSWORD")}";
-            using var connection = new NpgsqlConnection(connectionString);
+            using var connection = new NpgsqlConnection(ConnectionString.TestDatabase());
             connection.Open();
 
             // Initialize real DynamoDB gateway
@@ -76,6 +77,9 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
             _serviceProvider = services.BuildServiceProvider();
             
             _classUnderTest = new VerifyTokenHandler(_serviceProvider);
+            
+            ClearDynamoDbTable();
+            TruncateAllTables(connection);
         }
 
         [Test]
@@ -138,10 +142,13 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
             // Arrange
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwtServiceFlow;
+
+            var decoded = GenerateJwtHelper.DecodeJwtToken(lambdaRequest.Headers["Authorization"]);
+            var payload = decoded.Payload;
+            var tokenId = int.Parse(payload["id"].ToString(), System.Globalization.CultureInfo.InvariantCulture);
             
             var apiName = _fixture.Create<string>();
             var consumerName = _fixture.Create<string>();
-            var tokenId = 123; // Use a specific ID to store in the real database
             
             // Create token data in the real database
             var tokenData = new AuthTokenServiceFlow
@@ -155,9 +162,20 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
                 Enabled = true,
                 ExpirationDate = null
             };
-            
+
             // Store token data in the real database
             StoreTokenDataInDatabase(tokenData);
+
+            // Create and store API data in DynamoDB
+            var apiData = _fixture.Build<APIDataUserFlowDbEntity>()
+                .With(x => x.ApiName, apiName)
+                .With(x => x.Environment, lambdaRequest.RequestContext.Stage)
+                .With(x => x.AwsAccount, lambdaRequest.RequestContext.AccountId)
+                .With(x => x.ApiGatewayId, lambdaRequest.RequestContext.ApiId)
+                .With(x => x.AllowedGroups, new List<string> { consumerName })
+                .Create();
+            
+            AddDataToDynamoDb(apiData);
 
             // Act
             var result = _classUnderTest.VerifyToken(lambdaRequest);
@@ -184,35 +202,139 @@ namespace ApiAuthVerifyToken.Tests.V1.AcceptanceTests
             };
 
             DynamoDBClient.PutItemAsync(request).GetAwaiter().GetResult();
+
+            // check the item was added
+            var getItemRequest = new GetItemRequest
+            {
+                TableName = "APIAuthenticatorData",
+                Key = new Dictionary<string, AttributeValue>
+                {
+                    { "apiName", new AttributeValue { S = apiData.ApiName } },
+                    { "environment", new AttributeValue { S = apiData.Environment } }
+                }
+            };
+            var getItemResponse = DynamoDBClient.GetItemAsync(getItemRequest).GetAwaiter().GetResult();
+            getItemResponse.Item.Should().NotBeNull();
+            getItemResponse.Item["apiName"].S.Should().Be(apiData.ApiName);
+        }
+
+        private void ClearDynamoDbTable()
+        {
+            var scanRequest = new ScanRequest
+            {
+                TableName = "APIAuthenticatorData"
+            };
+
+            var scanResponse = DynamoDBClient.ScanAsync(scanRequest).GetAwaiter().GetResult();
+            foreach (var item in scanResponse.Items)
+            {
+                var deleteItemRequest = new DeleteItemRequest
+                {
+                    TableName = "APIAuthenticatorData",
+                    Key = new Dictionary<string, AttributeValue>
+                    {
+                        { "apiName", item["apiName"] },
+                        { "environment", item["environment"] }
+                    }
+                };
+                DynamoDBClient.DeleteItemAsync(deleteItemRequest).GetAwaiter().GetResult();
+            }
         }
         
-        private void StoreTokenDataInDatabase(AuthTokenServiceFlow tokenData)
+        private static void StoreTokenDataInDatabase(AuthTokenServiceFlow tokenData)
         {
             // Use the real gateway to store token data with raw SQL
-            if (_authTokenDatabaseGateway is AuthTokenDatabaseGateway gateway)
+            using var connection = new NpgsqlConnection(ConnectionString.TestDatabase());
+            connection.Open();
+
+            // Insert into api_lookup table
+            var apiLookupSql = @"INSERT INTO api_lookup (api_name, api_gateway_id) 
+                         VALUES (@apiName, @apiGatewayId) 
+                         RETURNING id";
+            using var apiLookupCmd = new NpgsqlCommand(apiLookupSql, connection);
+            apiLookupCmd.Parameters.AddWithValue("@apiName", ValidateInput(tokenData.ApiName));
+            apiLookupCmd.Parameters.AddWithValue("@apiGatewayId", ValidateInput(tokenData.ApiName + "_id"));
+            var apiLookupId = (int)apiLookupCmd.ExecuteScalar();
+
+            // Insert into api_endpoint_lookup table
+            var apiEndpointLookupSql = @"INSERT INTO api_endpoint_lookup (endpoint_name, api_lookup_id) 
+                             VALUES (@endpointName, @apiLookupId) 
+                             RETURNING id";
+            using var apiEndpointLookupCmd = new NpgsqlCommand(apiEndpointLookupSql, connection);
+            apiEndpointLookupCmd.Parameters.AddWithValue("@endpointName", tokenData.ApiEndpointName);
+            apiEndpointLookupCmd.Parameters.AddWithValue("@apiLookupId", apiLookupId);
+            var apiEndpointLookupId = (int)apiEndpointLookupCmd.ExecuteScalar();
+
+            // Ensure consumer_type_lookup table has a unique constraint on consumer_name
+            var ensureConstraintSql = @"DO $$
+                                BEGIN
+                                    IF NOT EXISTS (
+                                        SELECT 1
+                                        FROM information_schema.table_constraints
+                                        WHERE constraint_name = 'consumer_name_unique'
+                                    ) THEN
+                                        ALTER TABLE consumer_type_lookup 
+                                        ADD CONSTRAINT consumer_name_unique UNIQUE (consumer_name);
+                                    END IF;
+                                END $$;";
+            using var ensureConstraintCmd = new NpgsqlCommand(ensureConstraintSql, connection);
+            ensureConstraintCmd.ExecuteNonQuery();
+
+            // Insert into consumer_type_lookup table
+            var consumerTypeLookupSql = @"INSERT INTO consumer_type_lookup (consumer_name) 
+                                  VALUES (@consumerName) 
+                                  ON CONFLICT (consumer_name) DO NOTHING 
+                                  RETURNING id";
+            using var consumerTypeLookupCmd = new NpgsqlCommand(consumerTypeLookupSql, connection);
+            consumerTypeLookupCmd.Parameters.AddWithValue("@consumerName", tokenData.ConsumerName);
+            var consumerTypeLookupId = consumerTypeLookupCmd.ExecuteScalar() as int? ?? GetConsumerTypeId(connection, tokenData.ConsumerName);
+
+            // Insert into tokens table
+            var tokensSql = @"INSERT INTO tokens 
+                      (api_lookup_id, api_endpoint_lookup_id, http_method_type, environment, consumer_name, consumer_type_lookup, requested_by, authorized_by, date_created, expiration_date, enabled) 
+                      VALUES 
+                      (@apiLookupId, @apiEndpointLookupId, @httpMethodType, @environment, @consumerName, @consumerTypeLookup, @requestedBy, @authorizedBy, @dateCreated, @expirationDate, @enabled)";
+            using var tokensCmd = new NpgsqlCommand(tokensSql, connection);
+            tokensCmd.Parameters.AddWithValue("@apiLookupId", apiLookupId);
+            tokensCmd.Parameters.AddWithValue("@apiEndpointLookupId", apiEndpointLookupId);
+            tokensCmd.Parameters.AddWithValue("@httpMethodType", ValidateInput(tokenData.HttpMethodType));
+            tokensCmd.Parameters.AddWithValue("@environment", ValidateInput(tokenData.Environment));
+            tokensCmd.Parameters.AddWithValue("@consumerName", tokenData.ConsumerName);
+            tokensCmd.Parameters.AddWithValue("@consumerTypeLookup", consumerTypeLookupId);
+            tokensCmd.Parameters.AddWithValue("@requestedBy", "test"); 
+            tokensCmd.Parameters.AddWithValue("@authorizedBy", "test");
+            tokensCmd.Parameters.AddWithValue("@dateCreated", DateTime.UtcNow);
+            tokensCmd.Parameters.AddWithValue("@expirationDate", tokenData.ExpirationDate ?? (object)DBNull.Value);
+            tokensCmd.Parameters.AddWithValue("@enabled", tokenData.Enabled);
+            tokensCmd.ExecuteNonQuery();
+
+            // Ensure token is valid for the test
+            if (!tokenData.Enabled)
             {
-                var connectionString = $"Host={Environment.GetEnvironmentVariable("DB_HOST")};Port=5432;Database={Environment.GetEnvironmentVariable("DB_DATABASE")};Username={Environment.GetEnvironmentVariable("DB_USERNAME")};Password={Environment.GetEnvironmentVariable("DB_PASSWORD")}";
-                using var connection = new NpgsqlConnection(connectionString);
-                connection.Open();
-                
-                var sql = @"INSERT INTO auth_tokens 
-                            (id, api_endpoint_name, api_name, environment, http_method_type, consumer_name, enabled, expiration_date) 
-                            VALUES 
-                            (@id, @apiEndpoint, @apiName, @environment, @httpMethod, @consumer, @enabled, @expiration)";
-                
-                using var cmd = new NpgsqlCommand(sql, connection);
-                
-                cmd.Parameters.AddWithValue("@id", tokenData.Id);
-                cmd.Parameters.AddWithValue("@apiEndpoint", tokenData.ApiEndpointName);
-                cmd.Parameters.AddWithValue("@apiName", tokenData.ApiName);
-                cmd.Parameters.AddWithValue("@environment", tokenData.Environment);
-                cmd.Parameters.AddWithValue("@httpMethod", tokenData.HttpMethodType);
-                cmd.Parameters.AddWithValue("@consumer", tokenData.ConsumerName);
-                cmd.Parameters.AddWithValue("@enabled", tokenData.Enabled);
-                cmd.Parameters.AddWithValue("@expiration", tokenData.ExpirationDate ?? (object)DBNull.Value);
-                
-                cmd.ExecuteNonQuery();
+                throw new InvalidOperationException("Token must be enabled for validation.");
             }
+        }
+
+        private static string ValidateInput(string input, int maxLength = 6)
+        {
+            if (string.IsNullOrWhiteSpace(input))
+                throw new ArgumentException("Input cannot be null or empty.");
+            return input.Length > maxLength ? input.Substring(0, maxLength) : input.Trim();
+        }
+
+        private static int GetConsumerTypeId(NpgsqlConnection connection, string consumerName)
+        {
+            var sql = @"SELECT id FROM consumer_type_lookup WHERE consumer_name = @consumerName";
+            using var cmd = new NpgsqlCommand(sql, connection);
+            cmd.Parameters.AddWithValue("@consumerName", consumerName);
+            return (int)cmd.ExecuteScalar();
+        }
+
+        private static void TruncateAllTables(NpgsqlConnection connection)
+        {
+            var truncateSql = @"TRUNCATE TABLE api_lookup, api_endpoint_lookup, consumer_type_lookup, tokens CASCADE";
+            using var cmd = new NpgsqlCommand(truncateSql, connection);
+            cmd.ExecuteNonQuery();
         }
     }
 }

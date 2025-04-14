@@ -31,9 +31,10 @@ namespace ApiAuthVerifyToken.V1.UseCase
             var tokenData = _databaseGateway.GetTokenData(id);
             var apiName = tokenData.ApiName;
             LambdaLogger.Log($"API name - {apiName}");
+            var allow = VerifyAccessHelper.ShouldHaveAccessServiceFlow(authorizerRequest, tokenData, apiName);
             return new AccessDetails
             {
-                Allow = VerifyAccessHelper.ShouldHaveAccessServiceFlow(authorizerRequest, tokenData, apiName),
+                Allow = allow,
                 User = $"{tokenData.ConsumerName}{tokenData.Id}"
             };
         }

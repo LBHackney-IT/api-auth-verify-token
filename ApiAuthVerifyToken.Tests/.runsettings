@@ -5,7 +5,7 @@
       <DB_HOST>localhost</DB_HOST>
       <DB_PORT>5432</DB_PORT>
       <DB_PASSWORD>mypassword</DB_PASSWORD>
-      <DB_DATABASE>devdb</DB_DATABASE>
+      <DB_DATABASE>auth_token_generator_db</DB_DATABASE>
       <DynamoDb_LocalMode>true</DynamoDb_LocalMode>
       <DynamoDb_LocalServiceUrl>http://localhost:8000</DynamoDb_LocalServiceUrl>
       <AWS_REGION>eu-west-2</AWS_REGION>
