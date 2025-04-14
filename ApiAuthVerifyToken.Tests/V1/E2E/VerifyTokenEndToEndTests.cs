@@ -35,7 +35,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
         private readonly Fixture _fixture = new Fixture();
         private readonly Faker _faker = new Faker();
         private List<string> _allowedGroups;
-        
+
         [SetUp]
         public void Setup()
         {
@@ -45,7 +45,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
 
             // Initialize real DynamoDB gateway
             _dynamoDbGateway = new DynamoDBGateway(DynamoDbContext);
-            
+
             // Initialize real AuthTokenDatabaseGateway
             var optionsBuilder = new DbContextOptionsBuilder<TokenDatabaseContext>();
             optionsBuilder.UseNpgsql(connection);
@@ -53,32 +53,42 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             {
                 _authTokenDatabaseGateway = new AuthTokenDatabaseGateway(tokenDatabaseContext);
             }
-            
+
             // Set up environment variables
             Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(50));
             Environment.SetEnvironmentVariable("hackneyUserAuthTokenJwtSecret", _faker.Random.AlphaNumeric(50));
-            
+
             // Set up JWT tokens
             _allowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             _jwtServiceFlow = GenerateJwtHelper.GenerateJwtToken();
             _jwtUserFlow = GenerateJwtHelper.GenerateJwtTokenUserFlow(_allowedGroups);
-            
+
             // Setup real service provider
             var services = new ServiceCollection();
             services.AddSingleton<IAuthTokenDatabaseGateway>(_authTokenDatabaseGateway);
             services.AddSingleton<IDynamoDbGateway>(_dynamoDbGateway);
-            services.AddSingleton<IVerifyAccessUseCase>(provider => 
+            services.AddSingleton<IVerifyAccessUseCase>(provider =>
                 new VerifyAccessUseCase(
-                    provider.GetRequiredService<IAuthTokenDatabaseGateway>(), 
+                    provider.GetRequiredService<IAuthTokenDatabaseGateway>(),
                     provider.GetRequiredService<IDynamoDbGateway>()
                 )
             );
-            
+
             _serviceProvider = services.BuildServiceProvider();
-            
+
             _classUnderTest = new VerifyTokenHandler(_serviceProvider);
-            
+
             ClearDynamoDbTable();
+            TruncateAllTables(connection);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            ClearDynamoDbTable();
+
+            using var connection = new NpgsqlConnection(ConnectionString.TestDatabase());
+            connection.Open();
             TruncateAllTables(connection);
         }
 
@@ -88,7 +98,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             // Arrange
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwtUserFlow;
-            
+
             // Create and store API data in DynamoDB
             var apiData = _fixture.Build<APIDataUserFlowDbEntity>()
                 .With(x => x.AllowedGroups, _allowedGroups)
@@ -96,7 +106,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
                 .With(x => x.AwsAccount, lambdaRequest.RequestContext.AccountId)
                 .With(x => x.ApiGatewayId, lambdaRequest.RequestContext.ApiId)
                 .Create();
-                
+
             AddDataToDynamoDb(apiData);
 
             // Act
@@ -107,25 +117,25 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             result.PolicyDocument.Statement.First().Effect.Should().Be("Allow");
             result.PrincipalID.Should().NotBeNull();
         }
-        
+
         [Test]
         public void ApiNameLookupShouldReturnDenyEffectWhenUserGroupsAreNotAllowed()
         {
             // Arrange
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwtUserFlow;
-            
+
             // Create and store API data with different groups in DynamoDB
             var nonAllowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             var apiName = _fixture.Create<string>();
-            
+
             var apiData = _fixture.Build<APIDataUserFlowDbEntity>()
                 .With(x => x.AllowedGroups, nonAllowedGroups)
                 .With(x => x.Environment, lambdaRequest.RequestContext.Stage)
                 .With(x => x.AwsAccount, lambdaRequest.RequestContext.AccountId)
                 .With(x => x.ApiName, apiName)
                 .Create();
-                
+
             AddDataToDynamoDb(apiData);
 
             // Act
@@ -135,7 +145,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             result.Should().BeOfType<APIGatewayCustomAuthorizerResponse>();
             result.PolicyDocument.Statement.First().Effect.Should().Be("Deny");
         }
-        
+
         [Test]
         public void ServiceFlowShouldReturnAllowEffectWhenTokenIsValid()
         {
@@ -146,10 +156,10 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             var decoded = GenerateJwtHelper.DecodeJwtToken(lambdaRequest.Headers["Authorization"]);
             var payload = decoded.Payload;
             var tokenId = int.Parse(payload["id"].ToString(), System.Globalization.CultureInfo.InvariantCulture);
-            
+
             var apiName = _fixture.Create<string>();
             var consumerName = _fixture.Create<string>();
-            
+
             // Create token data in the real database
             var tokenData = new AuthTokenServiceFlow
             {
@@ -174,7 +184,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
                 .With(x => x.ApiGatewayId, lambdaRequest.RequestContext.ApiId)
                 .With(x => x.AllowedGroups, new List<string> { consumerName })
                 .Create();
-            
+
             AddDataToDynamoDb(apiData);
 
             // Act
@@ -185,7 +195,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             result.PolicyDocument.Statement.First().Effect.Should().Be("Allow");
             result.PrincipalID.Should().Be(consumerName + tokenData.Id);
         }
-        
+
         private void AddDataToDynamoDb(APIDataUserFlowDbEntity apiData)
         {
             Dictionary<string, AttributeValue> attributes = new Dictionary<string, AttributeValue>();
@@ -240,7 +250,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
                 DynamoDBClient.DeleteItemAsync(deleteItemRequest).GetAwaiter().GetResult();
             }
         }
-        
+
         private static void StoreTokenDataInDatabase(AuthTokenServiceFlow tokenData)
         {
             // Use the real gateway to store token data with raw SQL
@@ -254,7 +264,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             using var apiLookupCmd = new NpgsqlCommand(apiLookupSql, connection);
             apiLookupCmd.Parameters.AddWithValue("@apiName", ValidateInput(tokenData.ApiName));
             apiLookupCmd.Parameters.AddWithValue("@apiGatewayId", ValidateInput(tokenData.ApiName + "_id"));
-            var apiLookupId = (int)apiLookupCmd.ExecuteScalar();
+            var apiLookupId = (int) apiLookupCmd.ExecuteScalar();
 
             // Insert into api_endpoint_lookup table
             var apiEndpointLookupSql = @"INSERT INTO api_endpoint_lookup (endpoint_name, api_lookup_id) 
@@ -263,7 +273,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             using var apiEndpointLookupCmd = new NpgsqlCommand(apiEndpointLookupSql, connection);
             apiEndpointLookupCmd.Parameters.AddWithValue("@endpointName", tokenData.ApiEndpointName);
             apiEndpointLookupCmd.Parameters.AddWithValue("@apiLookupId", apiLookupId);
-            var apiEndpointLookupId = (int)apiEndpointLookupCmd.ExecuteScalar();
+            var apiEndpointLookupId = (int) apiEndpointLookupCmd.ExecuteScalar();
 
             // Ensure consumer_type_lookup table has a unique constraint on consumer_name
             var ensureConstraintSql = @"DO $$
@@ -301,10 +311,10 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             tokensCmd.Parameters.AddWithValue("@environment", ValidateInput(tokenData.Environment));
             tokensCmd.Parameters.AddWithValue("@consumerName", tokenData.ConsumerName);
             tokensCmd.Parameters.AddWithValue("@consumerTypeLookup", consumerTypeLookupId);
-            tokensCmd.Parameters.AddWithValue("@requestedBy", "test"); 
+            tokensCmd.Parameters.AddWithValue("@requestedBy", "test");
             tokensCmd.Parameters.AddWithValue("@authorizedBy", "test");
             tokensCmd.Parameters.AddWithValue("@dateCreated", DateTime.UtcNow);
-            tokensCmd.Parameters.AddWithValue("@expirationDate", tokenData.ExpirationDate ?? (object)DBNull.Value);
+            tokensCmd.Parameters.AddWithValue("@expirationDate", tokenData.ExpirationDate ?? (object) DBNull.Value);
             tokensCmd.Parameters.AddWithValue("@enabled", tokenData.Enabled);
             tokensCmd.ExecuteNonQuery();
 
@@ -327,7 +337,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             var sql = @"SELECT id FROM consumer_type_lookup WHERE consumer_name = @consumerName";
             using var cmd = new NpgsqlCommand(sql, connection);
             cmd.Parameters.AddWithValue("@consumerName", consumerName);
-            return (int)cmd.ExecuteScalar();
+            return (int) cmd.ExecuteScalar();
         }
 
         private static void TruncateAllTables(NpgsqlConnection connection)

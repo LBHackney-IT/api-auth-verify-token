@@ -21,7 +21,10 @@ namespace ApiAuthVerifyToken.Tests
         {
             var clientConfig = new AmazonDynamoDBConfig { ServiceURL = Environment.GetEnvironmentVariable("DynamoDb_LocalServiceUrl") };
             DynamoDBClient = new AmazonDynamoDBClient(clientConfig);
-            try
+
+            var tableAlreadyExists = DynamoDBClient.ListTablesAsync().GetAwaiter().GetResult().TableNames
+                .Any(x => x.Equals("APIAuthenticatorData", StringComparison.OrdinalIgnoreCase));
+            if (!tableAlreadyExists)
             {
                 var request = new CreateTableRequest
                 {
@@ -57,11 +60,6 @@ namespace ApiAuthVerifyToken.Tests
 
                 DynamoDBClient.CreateTableAsync(request).GetAwaiter().GetResult();
             }
-            catch (ResourceInUseException)
-            {
-
-            }
-
             DynamoDbContext = new DynamoDBContext(DynamoDBClient);
         }
         [TearDown]

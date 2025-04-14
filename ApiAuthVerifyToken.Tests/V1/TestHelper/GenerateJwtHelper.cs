@@ -28,14 +28,14 @@ namespace ApiAuthVerifyToken.Tests.V1.TestHelper
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-            Subject = new ClaimsIdentity(new Claim[]
+                Subject = new ClaimsIdentity(new Claim[]
             {
                 new Claim("id", requestDetails.Id.ToString(CultureInfo.InvariantCulture)),
                 new Claim("consumerName", requestDetails.ConsumerName),
                 new Claim("consumerType", requestDetails.ConsumerType.ToString(CultureInfo.InvariantCulture)),
             }),
-            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-            Expires = requestDetails.ExpiresAt ?? DateTime.Now.AddYears(10)
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+                Expires = requestDetails.ExpiresAt ?? DateTime.Now.AddYears(10)
             };
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
