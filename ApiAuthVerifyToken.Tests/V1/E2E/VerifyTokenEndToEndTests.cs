@@ -64,7 +64,7 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             Environment.SetEnvironmentVariable("hackneyUserAuthTokenJwtSecret", _faker.Random.AlphaNumeric(50));
 
             // Set up JWT tokens
-             _allowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
+            _allowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             _jwtServiceFlow = GenerateJwtHelper.GenerateJwtToken();
             _jwtUserFlow = GenerateJwtHelper.GenerateJwtTokenUserFlow(_allowedGroups);
 
@@ -95,7 +95,8 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
 
             // Truncate before disposing context/connection might be safer
             // Ensure connection is still open or reopen if necessary
-            if (_dbConnectionForTest.State != System.Data.ConnectionState.Open) {
+            if (_dbConnectionForTest.State != System.Data.ConnectionState.Open)
+            {
                 _dbConnectionForTest.Open();
             }
             TruncateAllTables(_dbConnectionForTest);
