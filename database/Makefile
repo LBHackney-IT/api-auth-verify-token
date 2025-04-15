@@ -1,3 +1,10 @@
+.ONESHELL:
+# Requires AWS CLI Profile matching ${STAGE}-apis to be set up
+# Requires AWS Session Manager Plugin to be installed:
+# 	https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html
+# On Windows you will need to run these commands using Git Bash, NOT Powershell / CMD
+
+
 LOCAL_PORT = 5432
 STAGE := staging
 PROFILE := "${STAGE}-apis"
@@ -25,7 +32,7 @@ DATABASE_PARAMS = '{"host":["${REMOTE_HOST}"], "portNumber":["${REMOTE_PORT}"], 
 
 # Use this command to connect to create a port forwarding session from localhost to the RDS instance via the jump-box
 # This will allow connecting to the database using a GUI tool like pgAdmin, or with local scripts
-# NOTE: On Windows you may need to run this command in a Git Bash terminal
+# NOTE: On Windows you may need to run this command in a Git Bash or WSL terminal
 port_forwarding:
 	echo "Connecting to ${DB_ENDPOINT} on local port ${LOCAL_PORT}\n===\nUsername: ${REMOTE_USERNAME}\nPassword: ${REMOTE_PASSWORD}\n==="
 	aws ssm start-session \
