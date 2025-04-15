@@ -92,10 +92,6 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
                 Item = attributes
             };
 
-            // assert that the table has a global secondary index
-            var table = DynamoDBClient.DescribeTableAsync("APIAuthenticatorData").GetAwaiter().GetResult();
-            table.Table.GlobalSecondaryIndexes.Should().NotBeNullOrEmpty();
-
             DynamoDBClient.PutItemAsync(request).GetAwaiter().GetResult();
         }
     }

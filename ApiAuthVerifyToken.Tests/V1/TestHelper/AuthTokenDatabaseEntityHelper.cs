@@ -11,16 +11,16 @@ namespace ApiAuthVerifyToken.Tests.V1.TestHelper
 
             var api = fixture.Build<ApiNameLookup>().Create();
             databaseContext.Add(api);
-            databaseContext.SaveChanges(); // Save to generate ID
+            databaseContext.SaveChanges();
 
             var apiEndpoint = fixture.Build<ApiEndpointNameLookup>()
                 .With(x => x.ApiLookupId, api.Id).Create();
             databaseContext.Add(apiEndpoint);
-            databaseContext.SaveChanges(); // Save to generate ID
+            databaseContext.SaveChanges();
 
             var consumerType = fixture.Build<ConsumerTypeLookup>().Create();
             databaseContext.Add(consumerType);
-            databaseContext.SaveChanges(); // Save to generate ID
+            databaseContext.SaveChanges();
 
             var entity = fixture.Build<AuthTokens>()
                 .With(x => x.ApiEndpointNameLookupId, apiEndpoint.Id)

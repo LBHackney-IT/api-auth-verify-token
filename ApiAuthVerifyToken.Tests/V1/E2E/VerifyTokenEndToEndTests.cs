@@ -20,8 +20,6 @@ using System.Linq;
 using Npgsql;
 using Amazon.DynamoDBv2.DataModel;
 
-#pragma warning disable CA2100 // Review SQL queries for security vulnerabilities
-
 namespace ApiAuthVerifyToken.Tests.V1.E2E
 {
     [TestFixture]
@@ -46,7 +44,6 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             _dynamoDbGateway = new DynamoDBGateway(DynamoDbContext);
 
             _authTokenDatabaseGateway = new AuthTokenDatabaseGateway(DatabaseContext);
-            // Removed initialization of _dbConnectionForTest
 
             Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(50));
             Environment.SetEnvironmentVariable("hackneyUserAuthTokenJwtSecret", _faker.Random.AlphaNumeric(50));
@@ -75,22 +72,17 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
         public void TearDown()
         {
             ClearDynamoDbTable();
-            DynamoDBClient?.Dispose(); // Use null-conditional operator
+            DynamoDBClient?.Dispose();
 
-            // TruncateAllTables();
-
-            // Base TearDown should handle context disposal if context is IDisposable
-            // (_serviceProvider as IDisposable)?.Dispose(); // Dispose DI container if necessary
+            TruncateAllTables();
         }
 
         [Test]
         public void ApiGatewayIdLookupShouldReturnAllowEffectWhenUserGroupsAreAllowed()
         {
-            // Arrange
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwtUserFlow;
 
-            // Create and store API data in DynamoDB
             var apiData = _fixture.Build<APIDataUserFlowDbEntity>()
                 .With(x => x.AllowedGroups, _allowedGroups)
                 .With(x => x.Environment, lambdaRequest.RequestContext.Stage)
@@ -100,10 +92,8 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
 
             AddDataToDynamoDb(apiData);
 
-            // Act
             var result = _classUnderTest.VerifyToken(lambdaRequest);
 
-            // Assert
             result.Should().BeOfType<APIGatewayCustomAuthorizerResponse>();
             result.PolicyDocument.Statement.First().Effect.Should().Be("Allow");
             result.PrincipalID.Should().NotBeNull();
@@ -112,11 +102,9 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
         [Test]
         public void ApiNameLookupShouldReturnDenyEffectWhenUserGroupsAreNotAllowed()
         {
-            // Arrange
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
             lambdaRequest.Headers["Authorization"] = _jwtUserFlow;
 
-            // Create and store API data with different groups in DynamoDB
             var nonAllowedGroups = new List<string> { _faker.Random.Word(), _faker.Random.Word() };
             var apiName = _fixture.Create<string>();
 
@@ -130,10 +118,8 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
 
             AddDataToDynamoDb(apiData);
 
-            // Act
             var result = _classUnderTest.VerifyToken(lambdaRequest);
 
-            // Assert
             result.Should().BeOfType<APIGatewayCustomAuthorizerResponse>();
             result.PolicyDocument.Statement.First().Effect.Should().Be("Deny");
         }
@@ -141,7 +127,6 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
         [Test]
         public void ServiceFlowShouldReturnAllowEffectWhenTokenIsValid()
         {
-            // Arrange
             var tokenId = 1;
             var token = GenerateJwtHelper.GenerateJwtToken(id: tokenId);
             var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
@@ -150,7 +135,6 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
 
             var apiName = _fixture.Create<string>();
 
-            // Create token data in the real database
             var tokenData = new AuthTokenServiceFlow
             {
                 Id = _fixture.Create<int>(),
@@ -164,10 +148,8 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
                 ExpirationDate = null
             };
 
-            // Store token data in the real database USING THE CONTEXT'S CONNECTION/TRANSACTION
-            StoreTokenDataInDatabase(DatabaseContext, tokenData); // Pass the context
+            StoreTokenDataInDatabase(DatabaseContext, tokenData);
 
-            // Create and store API data in DynamoDB
             var apiData = _fixture.Build<APIDataUserFlowDbEntity>()
                 .With(x => x.ApiName, apiName)
                 .With(x => x.Environment, lambdaRequest.RequestContext.Stage)
@@ -177,13 +159,11 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
                 .Create();
 
             AddDataToDynamoDb(apiData);
-            DatabaseContext.SaveChanges(); // Save changes to the database
+            DatabaseContext.SaveChanges();
 
-            // Act
             var result = _classUnderTest.VerifyToken(lambdaRequest);
 
-            // Assert
-            result.Should().BeOfType<APIGatewayCustomAuthorizerResponse>(); // Re-enable assertions
+            result.Should().BeOfType<APIGatewayCustomAuthorizerResponse>();
             result.PolicyDocument.Statement.First().Effect.Should().Be("Allow");
             result.PrincipalID.Should().Be(tokenData.ConsumerName + tokenId);
         }
@@ -231,11 +211,10 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
 
                 DynamoDBClient.CreateTableAsync(request).GetAwaiter().GetResult();
 
-                // Wait for table to become active (important for tests)
                 var tableStatus = string.Empty;
                 do
                 {
-                    System.Threading.Thread.Sleep(1000); // Wait 1 second
+                    System.Threading.Thread.Sleep(1000);
                     try
                     {
                         var describeResult = DynamoDBClient.DescribeTableAsync(new DescribeTableRequest { TableName = "APIAuthenticatorData" }).GetAwaiter().GetResult();
@@ -243,10 +222,8 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
                     }
                     catch (ResourceNotFoundException)
                     {
-                        // Table might not be immediately visible after creation
                     }
                 } while (tableStatus != TableStatus.ACTIVE);
-
             }
             DynamoDbContext = new DynamoDBContext(DynamoDBClient);
         }
@@ -258,18 +235,15 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             attributes["environment"] = new AttributeValue { S = apiData.Environment };
             attributes["awsAccount"] = new AttributeValue { S = apiData.AwsAccount };
             attributes["apiGatewayId"] = new AttributeValue { S = apiData.ApiGatewayId };
-            // Ensure AllowedGroups is not null or empty before adding
+
             if (apiData.AllowedGroups != null && apiData.AllowedGroups.Any())
             {
                 attributes["allowedGroups"] = new AttributeValue { SS = new List<string>(apiData.AllowedGroups) };
             }
             else
             {
-                // Handle case where AllowedGroups is empty or null if necessary,
-                // e.g., don't add the attribute or add an empty list based on DynamoDB schema/logic
-                attributes["allowedGroups"] = new AttributeValue { NULL = true }; // Or omit the attribute entirely
+                attributes["allowedGroups"] = new AttributeValue { NULL = true };
             }
-
 
             PutItemRequest request = new PutItemRequest
             {
@@ -279,7 +253,6 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
 
             DynamoDBClient.PutItemAsync(request).GetAwaiter().GetResult();
 
-            // check the item was added
             var getItemRequest = new GetItemRequest
             {
                 TableName = "APIAuthenticatorData",
@@ -309,7 +282,6 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
                     TableName = "APIAuthenticatorData",
                     Key = new Dictionary<string, AttributeValue>
                     {
-                        // Use the actual primary key schema defined for the table
                         { "apiName", item["apiName"] },
                         { "environment", item["environment"] }
                     }
@@ -318,32 +290,25 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             }
         }
 
-        // Modify StoreTokenDataInDatabase to accept the context
         private static void StoreTokenDataInDatabase(TokenDatabaseContext context, AuthTokenServiceFlow tokenData)
         {
-            // Use the context's existing connection and transaction
             var connection = context.Database.GetDbConnection() as NpgsqlConnection;
 
-            // Insert into api_lookup table
             var apiLookupSql = @"INSERT INTO api_lookup (api_name)
                          VALUES (@apiName)
                          RETURNING id";
-            // Removed api_gateway_id as it wasn't in the original AuthTokens entity or used later
-            using var apiLookupCmd = new NpgsqlCommand(apiLookupSql, connection); // Assign transaction
+            using var apiLookupCmd = new NpgsqlCommand(apiLookupSql, connection);
             apiLookupCmd.Parameters.AddWithValue("@apiName", ValidateInput(tokenData.ApiName));
-            // Removed setting api_gateway_id parameter
-            var apiLookupId = (int) apiLookupCmd.ExecuteScalar(); // This should no longer hang
+            var apiLookupId = (int) apiLookupCmd.ExecuteScalar();
 
-            // Insert into api_endpoint_lookup table
             var apiEndpointLookupSql = @"INSERT INTO api_endpoint_lookup (endpoint_name, api_lookup_id)
                              VALUES (@endpointName, @apiLookupId)
                              RETURNING id";
-            using var apiEndpointLookupCmd = new NpgsqlCommand(apiEndpointLookupSql, connection); // Assign transaction
-            apiEndpointLookupCmd.Parameters.AddWithValue("@endpointName", ValidateInput(tokenData.ApiEndpointName)); // Validate endpoint name too
+            using var apiEndpointLookupCmd = new NpgsqlCommand(apiEndpointLookupSql, connection);
+            apiEndpointLookupCmd.Parameters.AddWithValue("@endpointName", ValidateInput(tokenData.ApiEndpointName));
             apiEndpointLookupCmd.Parameters.AddWithValue("@apiLookupId", apiLookupId);
             var apiEndpointLookupId = (int) apiEndpointLookupCmd.ExecuteScalar();
 
-            // Insert into consumer_type_lookup table (using ON CONFLICT DO NOTHING)
             var consumerTypeLookupSql = @"INSERT INTO consumer_type_lookup (consumer_name)
                                   VALUES (@consumerName)
                                   ON CONFLICT DO NOTHING
@@ -357,7 +322,6 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
 
                 if (result == null || result == DBNull.Value)
                 {
-                    // Query the ID separately if the row already exists
                     var getIdSql = "SELECT id FROM consumer_type_lookup WHERE consumer_name = @consumerName";
                     using (var getIdCmd = new NpgsqlCommand(getIdSql, connection))
                     {
@@ -381,8 +345,8 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
                       (api_lookup_id, api_endpoint_lookup_id, http_method_type, environment, consumer_name, consumer_type_lookup, requested_by, authorized_by, date_created, expiration_date, enabled)
                       VALUES
                       (@apiLookupId, @apiEndpointLookupId, @httpMethodType, @environment, @consumerName, @consumerTypeLookupId, @requestedBy, @authorizedBy, @dateCreated, @expirationDate, @enabled)
-                      RETURNING id"; // Return the generated token ID
-            using var tokensCmd = new NpgsqlCommand(tokensSql, connection); // Assign transaction
+                      RETURNING id";
+            using var tokensCmd = new NpgsqlCommand(tokensSql, connection);
             tokensCmd.Parameters.AddWithValue("@apiLookupId", apiLookupId);
             tokensCmd.Parameters.AddWithValue("@apiEndpointLookupId", apiEndpointLookupId);
             tokensCmd.Parameters.AddWithValue("@httpMethodType", ValidateInput(tokenData.HttpMethodType, 6));
@@ -395,22 +359,14 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             tokensCmd.Parameters.AddWithValue("@expirationDate", tokenData.ExpirationDate.HasValue ? (object) tokenData.ExpirationDate.Value : DBNull.Value);
             tokensCmd.Parameters.AddWithValue("@enabled", tokenData.Enabled);
 
-            // Update the tokenData object with the real ID generated by the database
-            // We need this if the test logic relies on the actual ID.
             var generatedTokenId = (int) tokensCmd.ExecuteScalar();
-            tokenData.Id = generatedTokenId; // Update the object
-
-
-            // Do NOT call SaveChanges here - the transaction will be rolled back in TearDown by the base class
-            // Do NOT close the connection here - it's managed by the context/test runner/base class
+            tokenData.Id = generatedTokenId;
         }
 
-        // Helper to get ConsumerTypeId by Name if ON CONFLICT DO NOTHING is used (or for verification)
         private static int GetConsumerTypeIdByName(NpgsqlConnection connection, NpgsqlTransaction transaction, string consumerTypeName)
         {
-            // Adjust column name if needed (e.g., type_name)
             var sql = @"SELECT id FROM consumer_type_lookup WHERE type_name = @typeName";
-            using var cmd = new NpgsqlCommand(sql, connection, transaction); // Use existing transaction
+            using var cmd = new NpgsqlCommand(sql, connection, transaction);
             cmd.Parameters.AddWithValue("@typeName", consumerTypeName);
             var result = cmd.ExecuteScalar();
             if (result == null || result == DBNull.Value)
@@ -420,37 +376,26 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             return (int) result;
         }
 
-        // Removed GetConsumerTypeId method
-
-        // Ensure ValidateInput exists or add it back if needed
-        private static string ValidateInput(string input, int maxLength = 50) // Increased default length slightly
+        private static string ValidateInput(string input, int maxLength = 50)
         {
             if (input == null) throw new ArgumentNullException(nameof(input));
-
-            // Allow empty strings? Depending on requirements.
-            // If whitespace should be treated as empty:
-            // if (string.IsNullOrWhiteSpace(input)) return string.Empty;
 
             input = input.Trim();
             return input.Length > maxLength ? input.Substring(0, maxLength) : input;
         }
 
-
         private void TruncateAllTables()
         {
             if (DatabaseContext.Database.GetDbConnection() is not NpgsqlConnection connection || connection.State != System.Data.ConnectionState.Open)
             {
-                // Log or handle error: Cannot truncate if connection is not open or valid.
                 Console.WriteLine("Warning: Could not truncate tables, connection not open or invalid.");
                 return;
             }
-            // Ensure table names match your schema exactly (case-sensitive on some systems)
             var truncateSql = @"TRUNCATE TABLE public.api_lookup, public.api_endpoint_lookup, public.consumer_type_lookup, public.tokens RESTART IDENTITY CASCADE";
             using var cmd = connection.CreateCommand();
             cmd.CommandText = truncateSql;
             cmd.ExecuteNonQuery();
 
-            // check the tables are empty
             var checkSql = @"SELECT COUNT(*) FROM public.api_lookup; SELECT COUNT(*) FROM public.api_endpoint_lookup; SELECT COUNT(*) FROM public.consumer_type_lookup; SELECT COUNT(*) FROM public.tokens";
             using var checkCmd = connection.CreateCommand();
             checkCmd.CommandText = checkSql;

@@ -10,7 +10,6 @@ using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
 
 namespace ApiAuthVerifyToken.Tests.V1.UseCase
 {
