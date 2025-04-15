@@ -34,7 +34,7 @@ namespace ApiAuthVerifyToken.V1.Gateways
                     throw new APIEntryNotFoundException($"API with id {apiGatewayId} does not exist in DynamoDB");
                 if (documents.Count > 1)
                     LambdaLogger.Log($"WARNING: Multiple entries found for API with API Gateway ID {apiGatewayId} in DynamoDB: {documents.Select(d => d.ToJson())} - only the first will be returned");
-                
+
                 var selectedDocument = documents.First();
                 var entity = _dynamoDbContext.FromDocument<APIDataUserFlowDbEntity>(selectedDocument);
                 return entity?.ToDomain();
