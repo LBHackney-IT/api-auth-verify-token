@@ -146,6 +146,49 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
             result.PrincipalID.Should().Be(tokenData.ConsumerName + tokenId);
         }
 
+        [Test]
+        public void ServiceFlowShouldReturnDenyEffectWhenTokenIsInvalid()
+        {
+            // Arrange
+            var tokenId = 1;
+            var token = GenerateJwtHelper.GenerateJwtToken(id: tokenId);
+            var lambdaRequest = _fixture.Build<APIGatewayCustomAuthorizerRequest>().Create();
+            lambdaRequest.RequestContext.HttpMethod = "GET";
+            lambdaRequest.Headers["Authorization"] = token;
+            var apiName = _fixture.Create<string>();
+            var tokenData = new AuthTokenServiceFlow
+            {
+                Id = _fixture.Create<int>(),
+                ApiEndpointName = lambdaRequest.RequestContext.Path,
+                ApiName = apiName,
+                Environment = lambdaRequest.RequestContext.Stage,
+                HttpMethodType = lambdaRequest.RequestContext.HttpMethod,
+                ConsumerName = _faker.Random.Word(),
+                ConsumerType = _faker.Random.Word(),
+                Enabled = true,
+                ExpirationDate = null
+            };
+            StoreTokenDataInDatabase(tokenData);
+            var apiData = _fixture.Build<APIDataUserFlowDbEntity>()
+                .With(x => x.ApiName, apiName)
+                .With(x => x.Environment, lambdaRequest.RequestContext.Stage)
+                .With(x => x.AwsAccount, lambdaRequest.RequestContext.AccountId)
+                .With(x => x.ApiGatewayId, lambdaRequest.RequestContext.ApiId)
+                .With(x => x.AllowedGroups, new List<string> { _faker.Random.Word(), _faker.Random.Word() })
+                .Create();
+            AddDataToDynamoDb(apiData);
+            DatabaseContext.SaveChanges();
+
+            // Invalidate the token by changing the secret
+            Environment.SetEnvironmentVariable("jwtSecret", _faker.Random.AlphaNumeric(50));
+
+            // Act
+            var result = _classUnderTest.VerifyToken(lambdaRequest);
+
+            // Assert
+            result.PolicyDocument.Statement.First().Effect.Should().Be("Deny");
+        }
+
         private void SetupDynamoDb()
         {
             var clientConfig = new AmazonDynamoDBConfig { ServiceURL = Environment.GetEnvironmentVariable("DynamoDb_LocalServiceUrl") };
