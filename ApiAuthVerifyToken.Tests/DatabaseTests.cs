@@ -20,13 +20,13 @@ namespace ApiAuthVerifyToken.Tests
             builder.UseNpgsql(ConnectionString.TestDatabase());
             DatabaseContext = new TokenDatabaseContext(builder.Options);
             DatabaseContext.Database.EnsureCreated();
-            DatabaseContext.Database.BeginTransaction();
+            DatabaseContext.Database.OpenConnection();
         }
 
         [TearDown]
         public void RunAfterAnyTests()
         {
-            DatabaseContext.Database.RollbackTransaction();
+            DatabaseContext.Database.CloseConnection();
         }
     }
 }

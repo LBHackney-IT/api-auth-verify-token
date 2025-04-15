@@ -4,7 +4,6 @@ create table api_lookup
         constraint "PK_api_lookup"
             primary key,
     api_name       text not null,
-    api_gateway_id varchar(16)
 );
 
 create table api_endpoint_lookup
