@@ -5,6 +5,7 @@ using ApiAuthVerifyToken.V1.Domain;
 using ApiAuthVerifyToken.V1.Factories;
 using ApiAuthVerifyToken.V1.Infrastructure;
 using System;
+using System.Linq;
 
 namespace ApiAuthVerifyToken.V1.Gateways
 {
@@ -25,15 +26,17 @@ namespace ApiAuthVerifyToken.V1.Gateways
                     new QueryOperationConfig
                     {
                         IndexName = "apiGatewayIdIndex",
-                        Limit = 1,
                         Filter = new QueryFilter("apiGatewayId", QueryOperator.Equal, apiGatewayId)
                     });
 
                 var documents = search.GetRemainingAsync().Result;
                 if (documents.Count == 0)
                     throw new APIEntryNotFoundException($"API with id {apiGatewayId} does not exist in DynamoDB");
-
-                var entity = _dynamoDbContext.FromDocument<APIDataUserFlowDbEntity>(documents[0]);
+                if (documents.Count > 1)
+                    LambdaLogger.Log($"WARNING: Multiple entries found for API with API Gateway ID {apiGatewayId} in DynamoDB: {documents.Select(d => d.ToJson())} - only the first will be returned");
+                
+                var selectedDocument = documents.First();
+                var entity = _dynamoDbContext.FromDocument<APIDataUserFlowDbEntity>(selectedDocument);
                 return entity?.ToDomain();
             }
             catch (Exception ex)
