@@ -4,12 +4,8 @@ namespace ApiAuthVerifyToken.V1.Domain
 {
     public class TokenDataNotFoundException : Exception
     {
-        public TokenDataNotFoundException()
-        {
-        }
+        public TokenDataNotFoundException() : base() { }
 
-        public TokenDataNotFoundException(string message) : base(message)
-        {
-        }
+        public TokenDataNotFoundException(string message) : base(message) { }
     }
 }

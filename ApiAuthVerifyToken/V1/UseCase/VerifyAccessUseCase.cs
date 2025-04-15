@@ -30,8 +30,8 @@ namespace ApiAuthVerifyToken.V1.UseCase
 
             var tokenData = _databaseGateway.GetTokenData(id);
             var apiName = tokenData.ApiName;
-            LambdaLogger.Log($"API name - {apiName}");
             var allow = VerifyAccessHelper.ShouldHaveAccessServiceFlow(authorizerRequest, tokenData, apiName);
+            LambdaLogger.Log($"API name - {apiName} - allow service access? {allow}");
             return new AccessDetails
             {
                 Allow = allow,
@@ -51,7 +51,8 @@ namespace ApiAuthVerifyToken.V1.UseCase
 
             var apiDataInDb = _dynamoDbGateway.GetAPIDataByApiGatewayIdAsync(authorizerRequest.ApiAwsId);
             var apiName = apiDataInDb.ApiName;
-            LambdaLogger.Log($"API name retrieved for id {authorizerRequest.ApiAwsId} - {apiName}");
+            var allow = VerifyAccessHelper.ShouldHaveAccessUserFlow(user, authorizerRequest, apiDataInDb, apiName);
+            LambdaLogger.Log($"API name - {apiName} for id {authorizerRequest.ApiAwsId} - allow user access? {allow}");
             return new AccessDetails
             {
                 Allow = VerifyAccessHelper.ShouldHaveAccessUserFlow(user, authorizerRequest, apiDataInDb, apiName),

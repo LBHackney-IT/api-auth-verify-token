@@ -76,7 +76,6 @@ namespace ApiAuthVerifyToken.V1.Boundary
             }
             catch (Exception e)
             {
-                // throw;
                 LambdaLogger.Log("Verify token in catch:" + e.Message);
                 return new APIGatewayCustomAuthorizerResponse
                 {

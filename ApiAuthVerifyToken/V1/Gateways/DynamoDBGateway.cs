@@ -5,10 +5,6 @@ using ApiAuthVerifyToken.V1.Domain;
 using ApiAuthVerifyToken.V1.Factories;
 using ApiAuthVerifyToken.V1.Infrastructure;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ApiAuthVerifyToken.V1.Gateways
 {
