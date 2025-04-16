@@ -14,7 +14,7 @@ namespace ApiAuthVerifyToken.Tests.V1.Infrastructure
         {
             //remove any record that might be left in the table
             DatabaseContext.RemoveRange(DatabaseContext.Tokens);
-            var databaseEntity = AuthTokenDatabaseEntityHelper.CreateDatabaseEntity();
+            var databaseEntity = AuthTokenDatabaseEntityHelper.CreateDatabaseEntity(DatabaseContext);
 
             DatabaseContext.Add(databaseEntity);
             DatabaseContext.SaveChanges();
