@@ -50,13 +50,16 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
         {
             var api = _fixture.Build<ApiNameLookup>().Create();
             DatabaseContext.Add(api);
+            DatabaseContext.SaveChanges();
 
             var apiEndpoint = _fixture.Build<ApiEndpointNameLookup>()
                 .With(x => x.ApiLookupId, api.Id).Create();
             DatabaseContext.Add(apiEndpoint);
+            DatabaseContext.SaveChanges();
 
             var consumerType = _fixture.Build<ConsumerTypeLookup>().Create();
             DatabaseContext.Add(consumerType);
+            DatabaseContext.SaveChanges();
 
             var tokenData = _fixture.Build<AuthTokens>()
                 .With(x => x.ApiEndpointNameLookupId, apiEndpoint.Id)
@@ -64,8 +67,8 @@ namespace ApiAuthVerifyToken.Tests.V1.Gateways
                 .With(x => x.ConsumerTypeLookupId, consumerType.Id)
                 .Create();
             DatabaseContext.Add(tokenData);
-
             DatabaseContext.SaveChanges();
+
             return new AuthTokenServiceFlow
             {
                 ApiEndpointName = apiEndpoint.ApiEndpointName,

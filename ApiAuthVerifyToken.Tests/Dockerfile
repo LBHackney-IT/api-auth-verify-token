@@ -17,4 +17,4 @@ RUN dotnet restore ApiAuthVerifyToken.Tests
 COPY . ./
 
 RUN dotnet build -c debug -o out ApiAuthVerifyToken.Tests/ApiAuthVerifyToken.Tests.csproj
-CMD dotnet test ApiAuthVerifyToken.Tests/ApiAuthVerifyToken.Tests.csproj
+CMD dotnet test ApiAuthVerifyToken.Tests/ApiAuthVerifyToken.Tests.csproj --settings ApiAuthVerifyToken.Tests/.docker.runsettings

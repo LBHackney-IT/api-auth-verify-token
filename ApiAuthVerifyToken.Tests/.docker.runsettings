@@ -1,0 +1,16 @@
+<RunSettings>
+  <RunConfiguration>
+    <EnvironmentVariables>
+      <DB_USERNAME>postgres</DB_USERNAME>
+      <DB_HOST>test-database</DB_HOST>
+      <DB_PORT>5432</DB_PORT>
+      <DB_PASSWORD>mypassword</DB_PASSWORD>
+      <DB_DATABASE>auth_token_generator_db</DB_DATABASE>
+      <DynamoDb_LocalMode>true</DynamoDb_LocalMode>
+      <DynamoDb_LocalServiceUrl>http://dynamodb-database:8000</DynamoDb_LocalServiceUrl>
+      <AWS_REGION>eu-west-2</AWS_REGION>
+      <AWS_ACCESS_KEY_ID>local</AWS_ACCESS_KEY_ID>
+      <AWS_SECRET_ACCESS_KEY>local</AWS_SECRET_ACCESS_KEY>
+    </EnvironmentVariables>
+  </RunConfiguration>
+</RunSettings>
