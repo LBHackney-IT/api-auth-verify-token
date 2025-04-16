@@ -5,28 +5,9 @@ namespace ApiAuthVerifyToken.Tests.V1.TestHelper
 {
     public static class AuthTokenDatabaseEntityHelper
     {
-        public static AuthTokens CreateDatabaseEntity(TokenDatabaseContext databaseContext)
+        public static AuthTokens CreateDatabaseEntity()
         {
-            var fixture = new Fixture();
-
-            var api = fixture.Build<ApiNameLookup>().Create();
-            databaseContext.Add(api);
-            databaseContext.SaveChanges();
-
-            var apiEndpoint = fixture.Build<ApiEndpointNameLookup>()
-                .With(x => x.ApiLookupId, api.Id).Create();
-            databaseContext.Add(apiEndpoint);
-            databaseContext.SaveChanges();
-
-            var consumerType = fixture.Build<ConsumerTypeLookup>().Create();
-            databaseContext.Add(consumerType);
-            databaseContext.SaveChanges();
-
-            var entity = fixture.Build<AuthTokens>()
-                .With(x => x.ApiEndpointNameLookupId, apiEndpoint.Id)
-                .With(x => x.ApiLookupId, api.Id)
-                .With(x => x.ConsumerTypeLookupId, consumerType.Id)
-                .Create();
+            var entity = new Fixture().Create<AuthTokens>();
 
             return CreateDatabaseEntityFrom(entity);
         }
