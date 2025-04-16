@@ -11,13 +11,11 @@ using ApiAuthVerifyToken.V1.UseCase.Interfaces;
 using AutoFixture;
 using Bogus;
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Npgsql;
 using Amazon.DynamoDBv2.DataModel;
 
 namespace ApiAuthVerifyToken.Tests.V1.E2E
@@ -268,16 +266,6 @@ namespace ApiAuthVerifyToken.Tests.V1.E2E
                         { "environment", item["environment"] }
                     }
                 }).GetAwaiter().GetResult();
-            }
-        }
-
-        private void TruncateAllTables()
-        {
-            if (DatabaseContext.Database.GetDbConnection() is not NpgsqlConnection connection || connection.State != System.Data.ConnectionState.Open)
-                return;
-            using (var cmd = new NpgsqlCommand(@"TRUNCATE TABLE public.api_lookup, public.api_endpoint_lookup, public.consumer_type_lookup, public.tokens RESTART IDENTITY CASCADE", connection))
-            {
-                cmd.ExecuteNonQuery();
             }
         }
     }

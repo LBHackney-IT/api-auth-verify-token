@@ -1,6 +1,7 @@
 using System;
 using ApiAuthVerifyToken.V1.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 using NUnit.Framework;
 
 namespace ApiAuthVerifyToken.Tests
@@ -27,7 +28,7 @@ namespace ApiAuthVerifyToken.Tests
             DatabaseContext.Database.CloseConnection();
         }
 
-        public void StoreTokenDataInDatabase(ApiAuthVerifyToken.V1.Domain.AuthTokenServiceFlow tokenData)
+        protected void StoreTokenDataInDatabase(ApiAuthVerifyToken.V1.Domain.AuthTokenServiceFlow tokenData)
         {
             var connection = DatabaseContext.Database.GetDbConnection() as Npgsql.NpgsqlConnection;
             int apiLookupId = InsertAndReturnId(connection,
@@ -77,6 +78,16 @@ namespace ApiAuthVerifyToken.Tests
                 if (result == null || result == DBNull.Value)
                     throw new InvalidOperationException("Insert did not return an id.");
                 return (int) result;
+            }
+        }
+
+        protected void TruncateAllTables()
+        {
+            if (DatabaseContext.Database.GetDbConnection() is not NpgsqlConnection connection || connection.State != System.Data.ConnectionState.Open)
+                return;
+            using (var cmd = new NpgsqlCommand(@"TRUNCATE TABLE public.api_lookup, public.api_endpoint_lookup, public.consumer_type_lookup, public.tokens RESTART IDENTITY CASCADE", connection))
+            {
+                cmd.ExecuteNonQuery();
             }
         }
     }
