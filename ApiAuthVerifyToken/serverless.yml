@@ -211,12 +211,8 @@ resources:
                     - "dynamodb:Query"
                     - "dynamodb:Scan"
                   Resource:
-                    - "Fn::Join":
-                        - ":"
-                        - - "arn:aws:dynamodb"
-                          - Ref: "AWS::Region"
-                          - Ref: "AWS::AccountId"
-                          - "table/APIAuthenticatorData"
+                    - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/APIAuthenticatorData
+                    - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/APIAuthenticatorData/index/*
 custom:
   housingAccountIds:
     development: "364864573329"
