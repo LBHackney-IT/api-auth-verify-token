@@ -12,7 +12,7 @@ namespace ApiAuthVerifyToken.Tests.V1.TestHelper
 {
     public static class GenerateJwtHelper
     {
-        public static string GenerateJwtToken(DateTime? expiresAt = null, int? id = null)
+        public static string GenerateJwtToken(DateTime? expiresAt = null)
         {
             var faker = new Faker();
             var requestDetails = new
@@ -20,7 +20,7 @@ namespace ApiAuthVerifyToken.Tests.V1.TestHelper
                 ConsumerName = faker.Name.FullName(),
                 ConsumerType = faker.Random.Int(1, 2),
                 ExpiresAt = expiresAt,
-                Id = id ?? faker.Random.Int(1, 100)
+                Id = faker.Random.Int(1, 100)
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -29,11 +29,11 @@ namespace ApiAuthVerifyToken.Tests.V1.TestHelper
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
-            {
-                new Claim("id", requestDetails.Id.ToString(CultureInfo.InvariantCulture)),
-                new Claim("consumerName", requestDetails.ConsumerName),
-                new Claim("consumerType", requestDetails.ConsumerType.ToString(CultureInfo.InvariantCulture)),
-            }),
+                {
+                    new Claim("id", requestDetails.Id.ToString(CultureInfo.InvariantCulture)),
+                    new Claim("consumerName", requestDetails.ConsumerName),
+                    new Claim("consumerType", requestDetails.ConsumerType.ToString(CultureInfo.InvariantCulture)),
+                }),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Expires = requestDetails.ExpiresAt ?? DateTime.Now.AddYears(10)
             };
@@ -67,12 +67,6 @@ namespace ApiAuthVerifyToken.Tests.V1.TestHelper
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
-        }
-        public static JwtSecurityToken DecodeJwtToken(string token)
-        {
-            var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(token);
-            return jwtToken;
         }
     }
 }
