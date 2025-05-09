@@ -22,6 +22,47 @@ references:
       at: *workspace_root
 
 commands:
+  terraform-init-then-plan:
+    description: "Initializes and run plan from terraform configuration"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+          name: get and init
+      - run:
+          name: plan
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform plan -out=plan.out
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
+            - project/*
+  terraform-apply:
+    description: "Runs Terraform Apply"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          name: apply
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform apply -auto-approve plan.out
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
   terraform-init-then-apply:
     description: "Initializes and applies terraform configuration"
     parameters:
@@ -117,6 +158,16 @@ jobs:
     steps:
       - terraform-init-then-apply:
           environment: "production"
+  terraform-init-and-plan-pre-production:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-plan:
+          environment: "pre-production"
+  terraform-apply-pre-production:
+    executor: docker-terraform
+    steps:
+      - terraform-apply:
+          environment: "pre-production"
   assume-role-development:
     executor: docker-python
     steps:
@@ -132,6 +183,11 @@ jobs:
     steps:
       - assume-role-and-persist-workspace:
           aws-account: $AWS_ACCOUNT_PRODUCTION
+  assume-role-pre-production:
+    executor: docker-python
+    steps:
+      - assume-role-and-persist-workspace:
+          aws-account: $AWS_ACCOUNT_PRE_PRODUCTION
   deploy-to-development:
     executor: docker-dotnet
     steps:
@@ -147,6 +203,11 @@ jobs:
     steps:
       - deploy-lambda:
           stage: "production"
+  deploy-to-pre-production:
+    executor: docker-dotnet
+    steps:
+      - deploy-lambda:
+          stage: "pre-production"
 
 workflows:
   check:
@@ -248,6 +309,73 @@ workflows:
             - terraform-init-and-apply-to-production
           context:
             - "Serverless Framework"
+          filters:
+            branches:
+              only: master
+
+  deploy-terraform-pre-production:
+    jobs:
+      - permit-pre-production-terraform-workflow:
+          type: approval
+          filters:
+            branches:
+              only: master
+      - assume-role-pre-production:
+          context: api-assume-role-housing-pre-production-context
+          requires:
+            - permit-pre-production-terraform-workflow
+          filters:
+            branches:
+              only: master
+      - terraform-init-and-plan-pre-production:
+          requires:
+            - assume-role-pre-production
+          filters:
+            branches:
+              only: master
+      - permit-pre-production-terraform-deployment:
+          type: approval
+          requires:
+            - terraform-init-and-plan-pre-production
+          filters:
+            branches:
+              only: master
+      - terraform-apply-pre-production:
+          requires:
+            - permit-pre-production-terraform-deployment
+          filters:
+            branches:
+              only: master
+
+  deploy-code-pre-production:
+    jobs:
+      - permit-pre-production-code-workflow:
+          type: approval
+          filters:
+            branches:
+              only: master
+      - build-and-test:
+          requires:
+            - permit-pre-production-code-workflow
+          context: 
+            - api-nuget-token-context
+            - SonarCloud
+          filters:
+            branches:
+              only: master
+      - assume-role-pre-production:
+          context: api-assume-role-housing-pre-production-context
+          requires:
+            - build-and-test
+          filters:
+            branches:
+              only: master
+      - deploy-to-pre-production:
+          context:
+          - api-nuget-token-context
+          - "Serverless Framework"
+          requires:
+            - assume-role-pre-production        
           filters:
             branches:
               only: master
