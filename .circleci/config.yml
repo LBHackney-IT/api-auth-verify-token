@@ -143,6 +143,11 @@ jobs:
       - run:
           name: Run tests
           command: docker compose run api-auth-verify-token-test
+  terraform-init-and-plan-development:
+    executor: docker-terraform
+    steps:
+      - terraform-init-then-plan:
+          environment: "development"
   terraform-init-and-apply-to-development:
     executor: docker-terraform
     steps:
@@ -242,9 +247,22 @@ workflows:
           filters:
             branches:
               only: development
+      - terraform-init-and-plan-development:
+          requires: 
+            - assume-role-development
+          filters:
+            branches:
+              only: development
+      - permit-development-terraform-apply:
+          type: approval
+          requires: 
+            - terraform-init-and-plan-development
+          filters:
+            branches:
+              only: development
       - terraform-init-and-apply-to-development:
           requires:
-            - assume-role-development
+            - permit-development-terraform-apply
           filters:
             branches:
               only: development
