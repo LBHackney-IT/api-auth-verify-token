@@ -4,7 +4,7 @@ locals {
 }
 
 resource "aws_ssm_parameter" "postgres_hostname" {
-  name  = "api-auth-token-generator/${local.environment}/postgres-hostname"
+  name  = "/api-auth-token-generator/${local.environment}/postgres-hostname"
   type  = "String"
   value = "to_be_set_manually"
 
@@ -16,7 +16,7 @@ resource "aws_ssm_parameter" "postgres_hostname" {
 }
 
 resource "aws_ssm_parameter" "postgres_port" {
-  name  = "api-auth-token-generator/${local.environment}/postgres-port"
+  name  = "/api-auth-token-generator/${local.environment}/postgres-port"
   type  = "String"
   value = "to_be_set_manually"
 
@@ -28,7 +28,7 @@ resource "aws_ssm_parameter" "postgres_port" {
 }
 
 resource "aws_ssm_parameter" "postgres_username" {
-  name  = "api-auth-token-generator/${local.environment}/postgres-username"
+  name  = "/api-auth-token-generator/${local.environment}/postgres-username"
   type  = "String"
   value = "to_be_set_manually"
 
@@ -40,7 +40,7 @@ resource "aws_ssm_parameter" "postgres_username" {
 }
 
 resource "aws_ssm_parameter" "postgres_password" {
-  name  = "api-auth-token-generator/${local.environment}/postgres-password"
+  name  = "/api-auth-token-generator/${local.environment}/postgres-password"
   type  = "String"
   value = "to_be_set_manually"
 
@@ -52,7 +52,7 @@ resource "aws_ssm_parameter" "postgres_password" {
 }
 
 resource "aws_ssm_parameter" "token_secret" {
-  name  = "api-auth-token-generator/${local.environment}/token-secret"
+  name  = "/api-auth-token-generator/${local.environment}/token-secret"
   type  = "String"
   value = "to_be_set_manually"
 
@@ -64,7 +64,7 @@ resource "aws_ssm_parameter" "token_secret" {
 }
 
 resource "aws_ssm_parameter" "hackney_jwt_secret" {
-  name  = "common/hackney-jwt-secret"
+  name  = "/common/hackney-jwt-secret"
   type  = "String"
   value = "to_be_set_manually"
 
@@ -76,7 +76,7 @@ resource "aws_ssm_parameter" "hackney_jwt_secret" {
 }
 
 resource "aws_ssm_parameter" "sts_role_name" {
-  name  = "api-auth-token-generator/${local.environment}/sts-role-name"
+  name  = "/api-auth-token-generator/${local.environment}/sts-role-name"
   type  = "String"
   value = "to_be_set_manually"
 
