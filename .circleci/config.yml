@@ -411,9 +411,6 @@ workflows:
       - build-and-test:
           requires:
             - permit-pre-production-code-workflow
-          context: 
-            - api-nuget-token-context
-            - SonarCloud
           filters:
             branches:
               only: master
@@ -426,7 +423,6 @@ workflows:
               only: master
       - deploy-to-pre-production:
           context:
-          - api-nuget-token-context
           - "Serverless Framework"
           requires:
             - assume-role-pre-production        
