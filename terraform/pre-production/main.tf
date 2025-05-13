@@ -17,13 +17,13 @@ data "aws_region" "current" {}
 
 terraform {
   backend "s3" {
-    bucket  = "terraform-state-staging-apis"
-    encrypt = true
-    region  = "eu-west-2"
-    key     = "services/api-authenticator/state"
+    bucket         = "housing-pre-production-terraform-state"
+    encrypt        = true
+    region         = "eu-west-2"
+    key            = "services/api-authenticator/state"
+    dynamodb_table = "housing-pre-production-terraform-state-lock"
   }
 }
-
 
 resource "aws_dynamodb_table" "api_authenticator_dynamodb_table" {
   name         = "APIAuthenticatorData"
@@ -41,13 +41,13 @@ resource "aws_dynamodb_table" "api_authenticator_dynamodb_table" {
   }
 
   tags = {
-    Name              = "api-authenticator-staging"
-    Environment       = "stg"
+    Name              = "api-authenticator-pre-production"
+    Environment       = "prod"
     terraform-managed = true
     project_name      = "api-authenticator"
-    Application       = "API Authenticator"
+    Application       = "MTFH Housing Pre-Production"
     TeamEmail         = "developementteam@hackney.gov.uk"
-    BackupPolicy      = "Stg"
+    BackupPolicy      = "Prod"
     Confidentiality   = "Internal"
   }
 
@@ -62,4 +62,3 @@ resource "aws_dynamodb_table" "api_authenticator_dynamodb_table" {
     type = "S"
   }
 }
-
