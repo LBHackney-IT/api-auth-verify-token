@@ -51,6 +51,19 @@ resource "aws_ssm_parameter" "postgres_password" {
   }
 }
 
+resource "aws_ssm_parameter" "postgres_database" {
+  name  = "/api-auth-token-generator/${local.environment}/postgres-database"
+  type  = "String"
+  value = "to_be_set_manually"
+
+  lifecycle {
+    ignore_changes = [
+      value,
+    ]
+  }
+}
+
+
 resource "aws_ssm_parameter" "token_secret" {
   name  = "/api-auth-token-generator/${local.environment}/token-secret"
   type  = "String"
