@@ -188,7 +188,7 @@ resources:
                       - - "arn:aws:iam::"
                         - ${self:custom.housingAccountIds.${self:provider.stage}}
                         - ":role/LBH_Api_Gateway_Allow_GET"
-                  Condition: EnableCrossAccountAccess
+                  Condition: !Ref EnableCrossAccountAccess
           - PolicyName: assumeRoleForGettingCredentialsDESAccount
             # Document-Evidence-Store Staging and Production
             PolicyDocument:
@@ -199,7 +199,7 @@ resources:
                     - "sts:AssumeRole"
                   Resource:
                     Fn::Sub: arn:aws:iam::${self:custom.desAccountIds.${self:provider.stage}}:role/LBH_Api_Gateway_Allow_GET
-                  Condition: EnableCrossAccountAccess                  
+                  Condition: !Ref EnableCrossAccountAccess                  
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
               Version: "2012-10-17"
