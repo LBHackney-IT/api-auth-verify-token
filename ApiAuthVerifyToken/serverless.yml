@@ -24,10 +24,14 @@ resources:
     CreateDRPolicies: !Equals
       - ${self:provider.stage}
       - "production"
+    #pre-production is self contained with its own authorizer
+    EnableCrossAccountAccess: !Not !Equals
+      - ${self:provider.stage}
+      - "pre-production"
 
   Resources:
     AllowApisAccountAuthorizer:
-      # ProductionApis or StagingApis
+      # ProductionApis, StagingApis or housing-pre-production
       Type: AWS::Lambda::Permission
       Properties:
         FunctionName:
@@ -46,6 +50,7 @@ resources:
               - ":*"
     AllowHousingCrossAccountAuthorizer:
       # Housing-Production or Housing-Staging
+      Condition: EnableCrossAccountAccess
       Type: AWS::Lambda::Permission
       Properties:
         FunctionName:
@@ -64,6 +69,7 @@ resources:
               - ":*/authorizers/*"
     AllowDESCrossAccountAuthorizer:
       # Document-Evidence-Store Staging and Production
+      Condition: EnableCrossAccountAccess
       Type: AWS::Lambda::Permission
       Properties:
         FunctionName:
@@ -153,7 +159,7 @@ resources:
                     - "lambda:InvokeFunction"
                   Resource: "*"
           - PolicyName: assumeRoleForGettingCredentialsApiAccount
-            # ProductionApis or StagingApis
+            # ProductionApis, StagingApis and housing-pre-production
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -168,6 +174,7 @@ resources:
                         - ":role/LBH_Api_Gateway_Allow_GET"
           - PolicyName: assumeRoleForGettingCredentialsHousingAccount
             # Housing-Production or Housing-Staging
+            Condition: EnableCrossAccountAccess
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -182,6 +189,7 @@ resources:
                         - ":role/LBH_Api_Gateway_Allow_GET"
           - PolicyName: assumeRoleForGettingCredentialsDESAccount
             # Document-Evidence-Store Staging and Production
+            Condition: EnableCrossAccountAccess
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -218,7 +226,6 @@ custom:
     development: "364864573329"
     staging: "087586271961"
     production: "282997303675"
-    pre-production: "578479666894"
   desAccountIds:
     development: "549011513230"
     staging: "549011513230"
