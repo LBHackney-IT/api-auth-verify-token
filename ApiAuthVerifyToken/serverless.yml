@@ -25,7 +25,11 @@ resources:
       - ${self:provider.stage}
       - "production"
     #pre-production is self contained with its own authorizer
-    EnableCrossAccountAccess: !Not [!Equals [!${self:provider.stage}, "pre-production"]]
+    EnableCrossAccountAccess: 
+      Fn::Not:
+      - Fn::Equals:
+        - ${self:provider.stage}
+        - "pre-production"
 
   Resources:
     AllowApisAccountAuthorizer:
