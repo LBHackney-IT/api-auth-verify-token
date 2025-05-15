@@ -233,6 +233,8 @@ custom:
     development: "549011513230"
     staging: "549011513230"
     production: "658402009206"
+    #dummy account number to ensure all variables can be resolved for all stages. Won't be used for any real resource
+    pre-production: "123456789012" 
   disasterRecoveryAccountIds:
     production: "851725205572"
   vpc:
