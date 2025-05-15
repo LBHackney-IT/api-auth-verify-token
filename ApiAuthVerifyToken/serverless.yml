@@ -161,7 +161,7 @@ resources:
                     - "lambda:InvokeFunction"
                   Resource: "*"
           - PolicyName: assumeRoleForGettingCredentialsApiAccount
-            # ProductionApis, StagingApis and housing-pre-production
+            # ProductionApis, StagingApis and Housing-Pre-Production
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -174,20 +174,23 @@ resources:
                       - - "arn:aws:iam::"
                         - Ref: "AWS::AccountId"
                         - ":role/LBH_Api_Gateway_Allow_GET"
-          - PolicyName: assumeRoleForGettingCredentialsHousingAccount
+          - !If 
+            - EnableCrossAccountAccess              
+            - PolicyName: assumeRoleForGettingCredentialsHousingAccount
             # Housing-Production or Housing-Staging
-            PolicyDocument:
-              Version: "2012-10-17"
-              Statement:
-                - Effect: Allow
-                  Action:
-                    - "sts:AssumeRole"
-                  Resource:
-                    Fn::Join:
-                      - ""
-                      - - "arn:aws:iam::"
-                        - ${self:custom.housingAccountIds.${self:provider.stage}}
-                        - ":role/LBH_Api_Gateway_Allow_GET"
+              PolicyDocument:
+                Version: "2012-10-17"
+                Statement:
+                  - Effect: Allow
+                    Action:
+                      - "sts:AssumeRole"
+                    Resource:
+                      Fn::Join:
+                        - ""
+                        - - "arn:aws:iam::"
+                          - ${self:custom.housingAccountIds.${self:provider.stage}}
+                          - ":role/LBH_Api_Gateway_Allow_GET"
+            - !Ref AWS::NoValue
           - !If 
             - EnableCrossAccountAccess
             - PolicyName: assumeRoleForGettingCredentialsDESAccount
