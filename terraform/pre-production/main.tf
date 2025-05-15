@@ -47,7 +47,7 @@ resource "aws_dynamodb_table" "api_authenticator_dynamodb_table" {
     project_name      = "api-authenticator"
     Application       = "MTFH Housing Pre-Production"
     TeamEmail         = "developementteam@hackney.gov.uk"
-    BackupPolicy      = "Prod"
+    BackupPolicy      = "Stg"
     Confidentiality   = "Internal"
   }
 
