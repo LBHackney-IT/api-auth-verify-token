@@ -176,10 +176,10 @@ resources:
                         - ":role/LBH_Api_Gateway_Allow_GET"
           - PolicyName: assumeRoleForGettingCredentialsHousingAccount
             # Housing-Production or Housing-Staging
-            Condition: EnableCrossAccountAccess
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
+                - !If EnableCrossAccountAccess
                 - Effect: Allow
                   Action:
                     - "sts:AssumeRole"
@@ -191,10 +191,10 @@ resources:
                         - ":role/LBH_Api_Gateway_Allow_GET"
           - PolicyName: assumeRoleForGettingCredentialsDESAccount
             # Document-Evidence-Store Staging and Production
-            Condition: EnableCrossAccountAccess
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
+                - !If EnableCrossAccountAccess
                 - Effect: Allow
                   Action:
                     - "sts:AssumeRole"
