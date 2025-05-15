@@ -25,7 +25,7 @@ resources:
       - ${self:provider.stage}
       - "production"
     #pre-production is self contained with its own authorizer
-    EnableCrossAccountAccess: !Not !Equals
+    EnableCrossAccountAccess: !Not
       - ${self:provider.stage}
       - "pre-production"
 
