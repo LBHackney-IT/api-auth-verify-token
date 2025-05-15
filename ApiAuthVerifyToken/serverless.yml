@@ -179,7 +179,6 @@ resources:
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
-                - !If EnableCrossAccountAccess
                 - Effect: Allow
                   Action:
                     - "sts:AssumeRole"
@@ -189,19 +188,18 @@ resources:
                       - - "arn:aws:iam::"
                         - ${self:custom.housingAccountIds.${self:provider.stage}}
                         - ":role/LBH_Api_Gateway_Allow_GET"
-                - !AWS::NoValue
+                  Condition: EnableCrossAccountAccess
           - PolicyName: assumeRoleForGettingCredentialsDESAccount
             # Document-Evidence-Store Staging and Production
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
-                - !If EnableCrossAccountAccess
                 - Effect: Allow
                   Action:
                     - "sts:AssumeRole"
                   Resource:
                     Fn::Sub: arn:aws:iam::${self:custom.desAccountIds.${self:provider.stage}}:role/LBH_Api_Gateway_Allow_GET
-                - !AWS::NoValue
+                  Condition: EnableCrossAccountAccess                  
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
               Version: "2012-10-17"
