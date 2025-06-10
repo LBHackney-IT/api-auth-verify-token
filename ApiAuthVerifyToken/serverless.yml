@@ -240,10 +240,10 @@ custom:
         - subnet-0ed7d7713d1127656
     production:
       securityGroupIds:
-        - sg-0ede9ba9bc55868b6
+        - sg-07d5d1b647871ed04
       subnetIds:
-        - subnet-01d3657f97a243261
-        - subnet-0b7b8fea07efabf34
+        - subnet-05e595c59b7d6c8df
+        - subnet-0e6bc9b4ac24493cc
     pre-production:
       subnetIds:
         - subnet-08aa35159a8706faa
