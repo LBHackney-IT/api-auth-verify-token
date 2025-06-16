@@ -180,6 +180,20 @@ resources:
                       - - "arn:aws:iam::"
                         - ${self:custom.housingAccountIds.${self:provider.stage}}
                         - ":role/LBH_Api_Gateway_Allow_GET"
+          - PolicyName: assumeRoleForGettingCredentialsDevelopmentAPIAccount
+            # Development APIs
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - "sts:AssumeRole"
+                  Resource:
+                    Fn::Join:
+                      - ""
+                      - - "arn:aws:iam::"
+                        - ${self:custom.developmentAPIAccountId.${self:provider.stage}}
+                        - ":role/LBH_Api_Gateway_Allow_GET"
           - PolicyName: assumeRoleForGettingCredentialsDESAccount
             # Document-Evidence-Store Staging and Production
             PolicyDocument:
@@ -225,6 +239,8 @@ custom:
     production: "658402009206"
   disasterRecoveryAccountIds:
     production: "851725205572"
+  developmentAPIAccountId:
+    development: "859159924354"
   vpc:
     development:
       securityGroupIds:
