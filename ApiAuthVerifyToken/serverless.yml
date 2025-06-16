@@ -192,7 +192,7 @@ resources:
                     Fn::Join:
                       - ""
                       - - "arn:aws:iam::"
-                        - ${self:custom.developmentAPIAccountId.${self:provider.stage}}
+                        - ${self:custom.developmentAPIAccountId.development}
                         - ":role/LBH_Api_Gateway_Allow_GET"
           - PolicyName: assumeRoleForGettingCredentialsDESAccount
             # Document-Evidence-Store Staging and Production
