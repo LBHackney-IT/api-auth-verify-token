@@ -274,7 +274,7 @@ custom:
         - subnet-0ed7d7713d1127656
     production:
       securityGroupIds:
-        - sg-07d5d1b647871ed04
+        - sg-0b076513e3b203f95
       subnetIds:
         - subnet-05e595c59b7d6c8df
         - subnet-0e6bc9b4ac24493cc
