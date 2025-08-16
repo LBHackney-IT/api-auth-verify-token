@@ -29,7 +29,6 @@ namespace ApiAuthVerifyToken.V1.Factories
                 ApiName = data.ApiName,
                 Environment = data.Environment,
                 AwsAccount = data.AwsAccount,
-                ApiGatewayId = data.ApiGatewayId,
                 AllowedGroups = data.AllowedGroups
             };
         }

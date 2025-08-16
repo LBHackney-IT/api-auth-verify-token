@@ -12,10 +12,14 @@ namespace ApiAuthVerifyToken.V1.UseCase
     public class VerifyAccessUseCase : IVerifyAccessUseCase
     {
         private IAuthTokenDatabaseGateway _databaseGateway;
+        private IAwsApiGateway _awsApiGateway;
+        private IAwsStsGateway _awsStsGateway;
         private IDynamoDbGateway _dynamoDbGateway;
-        public VerifyAccessUseCase(IAuthTokenDatabaseGateway databaseGateway, IDynamoDbGateway dynamoDbGateway)
+        public VerifyAccessUseCase(IAuthTokenDatabaseGateway databaseGateway, IAwsApiGateway awsApiGateway, IAwsStsGateway stsGateway, IDynamoDbGateway dynamoDbGateway)
         {
             _databaseGateway = databaseGateway;
+            _awsApiGateway = awsApiGateway;
+            _awsStsGateway = stsGateway;
             _dynamoDbGateway = dynamoDbGateway;
         }
         public AccessDetails ExecuteServiceAuth(AuthorizerRequest authorizerRequest)
@@ -29,12 +33,12 @@ namespace ApiAuthVerifyToken.V1.UseCase
             if (!int.TryParse(tokenId, out int id)) return ReturnNotAuthorised(authorizerRequest);
 
             var tokenData = _databaseGateway.GetTokenData(id);
-            var apiName = tokenData.ApiName;
-            var allow = VerifyAccessHelper.ShouldHaveAccessServiceFlow(authorizerRequest, tokenData, apiName);
-            LambdaLogger.Log($"API name - {apiName} - allow service access? {allow}");
+            var credentials = _awsStsGateway.GetTemporaryCredentials(authorizerRequest.AwsAccountId).Credentials;
+            var apiName = _awsApiGateway.GetApiName(authorizerRequest.ApiAwsId, credentials);
+            LambdaLogger.Log($"API name retrieved - {apiName}");
             return new AccessDetails
             {
-                Allow = allow,
+                Allow = VerifyAccessHelper.ShouldHaveAccessServiceFlow(authorizerRequest, tokenData, apiName),
                 User = $"{tokenData.ConsumerName}{tokenData.Id}"
             };
         }
@@ -49,10 +53,13 @@ namespace ApiAuthVerifyToken.V1.UseCase
             user.Groups = validTokenClaims.Where(x => x.Type == "groups").Select(y => y.Value).ToList();
             user.Email = validTokenClaims.Find(x => x.Type == "email").Value;
 
-            var apiDataInDb = _dynamoDbGateway.GetAPIDataByApiGatewayIdAsync(authorizerRequest.ApiAwsId);
-            var apiName = apiDataInDb.ApiName;
-            var allow = VerifyAccessHelper.ShouldHaveAccessUserFlow(user, authorizerRequest, apiDataInDb, apiName);
-            LambdaLogger.Log($"API name - {apiName} for id {authorizerRequest.ApiAwsId} - allow user access? {allow}");
+            //get STS credentials and pass them to API gateway
+            var credentials = _awsStsGateway.GetTemporaryCredentials(authorizerRequest.AwsAccountId).Credentials;
+            //get API name
+            var apiName = _awsApiGateway.GetApiName(authorizerRequest.ApiAwsId, credentials);
+            LambdaLogger.Log($"API name retrieved - {apiName}");
+            //check if API is in the DynamoDB
+            var apiDataInDb = _dynamoDbGateway.GetAPIDataByNameAndEnvironmentAsync(apiName, authorizerRequest.Environment);
             return new AccessDetails
             {
                 Allow = VerifyAccessHelper.ShouldHaveAccessUserFlow(user, authorizerRequest, apiDataInDb, apiName),
