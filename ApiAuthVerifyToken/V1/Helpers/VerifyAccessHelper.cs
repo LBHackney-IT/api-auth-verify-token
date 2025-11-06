@@ -44,7 +44,7 @@ namespace ApiAuthVerifyToken.V1.Helpers
                 LambdaLogger.Log($"User with email {user.Email} is DENIED access for {apiName} " +
                   $" in {authorizerRequest.Environment} stage. User does not have access to {apiName} " +
                   $"for {apiData.Environment} stage in the following AWS account {apiData.AwsAccount}. User is in the following " +
-                  $"Google groups: {String.Join("," user.Groups)}");
+                  $"Google groups: {String.Join(",", user.Groups)}");
                 return false;
             }
 
