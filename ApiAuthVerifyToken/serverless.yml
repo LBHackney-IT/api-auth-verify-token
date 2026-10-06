@@ -232,7 +232,7 @@ custom:
     development: "364864573329"
     staging: "087586271961"
     production: "282997303675"
-    pre-production: ""
+    pre-production: "578479666894"
   desAccountIds:
     development: "549011513230"
     staging: "549011513230"
@@ -263,4 +263,3 @@ custom:
       subnetIds:
         - subnet-08aa35159a8706faa
         - subnet-0b848c5b14f841dfb
-
