@@ -237,7 +237,6 @@ custom:
     development: "549011513230"
     staging: "549011513230"
     production: "658402009206"
-    pre-production: ""
   disasterRecoveryAccountIds:
     production: "851725205572"
   vpc:
