@@ -227,14 +227,17 @@ resources:
                     - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/APIAuthenticatorData
                     - Fn::Sub: arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/APIAuthenticatorData/index/*
 custom:
+  # pre-production entries must exist for variable resolution but are unused: EnableCrossAccountAccess is false there
   housingAccountIds:
     development: "364864573329"
     staging: "087586271961"
     production: "282997303675"
+    pre-production: ""
   desAccountIds:
     development: "549011513230"
     staging: "549011513230"
     production: "658402009206"
+    pre-production: ""
   disasterRecoveryAccountIds:
     production: "851725205572"
   vpc:
