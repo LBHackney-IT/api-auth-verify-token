@@ -80,7 +80,7 @@ resources:
         Action: lambda:InvokeFunction
         Principal: apigateway.amazonaws.com
         SourceArn:
-          Fn::Sub: arn:aws:execute-api:${AWS::Region}:${self:custom.desAccountIds.${self:provider.stage}}:*/authorizers/*
+          Fn::Sub: arn:aws:execute-api:${AWS::Region}:${self:custom.desAccountIds.${self:provider.stage}, ''}:*/authorizers/*
     AllowDRCrossAccountAuthorizer:
       # Disaster-recovery (prod only)
       Condition: CreateDRPolicies
@@ -201,7 +201,7 @@ resources:
                       Action:
                         - "sts:AssumeRole"
                       Resource:
-                        Fn::Sub: arn:aws:iam::${self:custom.desAccountIds.${self:provider.stage}}:role/LBH_Api_Gateway_Allow_GET
+                        Fn::Sub: arn:aws:iam::${self:custom.desAccountIds.${self:provider.stage}, ''}:role/LBH_Api_Gateway_Allow_GET
               - Ref: AWS::NoValue
           - PolicyName: getAPIGatewayAPIName
             PolicyDocument:
