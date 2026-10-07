@@ -1,12 +1,12 @@
 service: api-auth-verify-token-new
 provider:
   name: aws
-  runtime: dotnet8
+  runtime: dotnet10
   vpc: ${self:custom.vpc.${opt:stage}}
   stage: ${opt:stage}
   region: eu-west-2
 package:
-  artifact: ./bin/release/net8.0/api-auth-verify-token.zip
+  artifact: ./bin/release/net10.0/api-auth-verify-token.zip
 
 functions:
   ApiAuthVerifyTokenNew:
@@ -231,6 +231,7 @@ custom:
     development: "364864573329"
     staging: "087586271961"
     production: "282997303675"
+    pre-production: "578479666894"
   desAccountIds:
     development: "549011513230"
     staging: "549011513230"
