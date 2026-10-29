@@ -14,6 +14,9 @@ executors:
   docker-dotnet:
     docker:
       - image: mcr.microsoft.com/dotnet/sdk:10.0
+  docker-node:
+    docker:
+      - image: cimg/node:20.19
 
 references:
   workspace_root: &workspace_root "~"
@@ -121,6 +124,60 @@ commands:
           command: |
             cd <<parameters.path>>
             npx --yes --debug serverless deploy --stage <<parameters.stage>> --conceal
+  remove-serverless-stack:
+    description: "Removes a Serverless stack without creating deployment artifacts"
+    parameters:
+      stage:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          name: Install Serverless Framework v4
+          command: sudo npm install --global serverless@4
+      - run:
+          name: Remove Serverless stack
+          no_output_timeout: 45m
+          command: |
+            cd ./ApiAuthVerifyToken/
+            serverless remove --config serverless.teardown.yml --stage <<parameters.stage>> --region eu-west-2
+  terraform-destroy-plan:
+    description: "Creates a Terraform destroy plan for review"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          name: Create destroy plan
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+            terraform plan -destroy -input=false -out=destroy.plan
+            mkdir -p ~/destroy-plan
+            cp destroy.plan ~/destroy-plan/destroy.plan
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - .aws
+            - destroy-plan/destroy.plan
+  terraform-destroy:
+    description: "Applies the reviewed Terraform destroy plan"
+    parameters:
+      environment:
+        type: string
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          name: Destroy Terraform resources
+          command: |
+            cd ./terraform/<<parameters.environment>>/
+            terraform get -update=true
+            terraform init
+            terraform apply -auto-approve ~/destroy-plan/destroy.plan
 jobs:
   check-code-formatting:
     executor: docker-dotnet
@@ -223,6 +280,21 @@ jobs:
     steps:
       - deploy-lambda:
           stage: "pre-production"
+  remove-serverless-pre-production:
+    executor: docker-node
+    steps:
+      - remove-serverless-stack:
+          stage: "pre-production"
+  terraform-destroy-plan-pre-production:
+    executor: docker-terraform
+    steps:
+      - terraform-destroy-plan:
+          environment: "pre-production"
+  terraform-destroy-pre-production:
+    executor: docker-terraform
+    steps:
+      - terraform-destroy:
+          environment: "pre-production"
 
 workflows:
   check:
@@ -233,12 +305,14 @@ workflows:
               ignore:
                 - master
                 - development
+                - feat/ssi-1369-teardown-pre-production
       - build-and-test:
           filters:
             branches:
               ignore:
                 - master
                 - development
+                - feat/ssi-1369-teardown-pre-production
 
   check-and-deploy-development:
     jobs:
@@ -429,3 +503,37 @@ workflows:
           filters:
             branches:
               only: master
+
+  teardown-pre-production:
+    jobs:
+      - assume-role-pre-production:
+          context: api-assume-role-housing-pre-production-context
+          filters:
+            branches:
+              only: feat/ssi-1369-teardown-pre-production
+      - remove-serverless-pre-production:
+          context: "Serverless Framework"
+          requires:
+            - assume-role-pre-production
+          filters:
+            branches:
+              only: feat/ssi-1369-teardown-pre-production
+      - terraform-destroy-plan-pre-production:
+          requires:
+            - remove-serverless-pre-production
+          filters:
+            branches:
+              only: feat/ssi-1369-teardown-pre-production
+      - permit-pre-production-terraform-destroy:
+          type: approval
+          requires:
+            - terraform-destroy-plan-pre-production
+          filters:
+            branches:
+              only: feat/ssi-1369-teardown-pre-production
+      - terraform-destroy-pre-production:
+          requires:
+            - permit-pre-production-terraform-destroy
+          filters:
+            branches:
+              only: feat/ssi-1369-teardown-pre-production
